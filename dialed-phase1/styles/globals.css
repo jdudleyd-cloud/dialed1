@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@400;600;700;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  background-color: #0a0a0a;
+  color: #fff;
+  font-family: 'Saira Condensed', sans-serif;
+  overflow: hidden;
+}
+
+#__next {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Broadcast aesthetic */
+.broadcast-card {
+  background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+  border: 2px solid #ffeb3b;
+  border-radius: 4px;
+}
+
+.broadcast-btn {
+  background: #ffeb3b;
+  color: #0a0a0a;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.broadcast-btn:hover {
+  background: #ff4444;
+  color: #fff;
+}
+
+.broadcast-stat {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #ffeb3b;
+}
