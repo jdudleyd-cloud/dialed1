@@ -52,7 +52,7 @@ export default function AppLayout() {
   const courseLabel = selectedCourse === 'kensington' ? 'KENSINGTON' : 'PALMER PARK'
 
   return (
-    <div className="flex flex-col bg-broadcast-black" style={{ height: '100dvh' }}>
+    <div className="bg-broadcast-black" style={{ position: 'fixed', inset: 0 }}>
       {/* Name prompt modal */}
       {showNamePrompt && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
@@ -75,8 +75,8 @@ export default function AppLayout() {
         </div>
       )}
 
-      {/* Header */}
-      <header className="bg-broadcast-black border-b-2 border-broadcast-yellow px-4 py-2 flex-shrink-0">
+      {/* Header — fixed to top */}
+      <header className="fixed top-0 left-0 right-0 z-40 bg-broadcast-black border-b-2 border-broadcast-yellow px-4 py-2">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-black text-broadcast-yellow font-saira tracking-tight">
             DIALED
@@ -90,8 +90,8 @@ export default function AppLayout() {
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="flex-1 overflow-auto">
+      {/* Main Content — scrollable between fixed header and nav */}
+      <main className="absolute left-0 right-0 overflow-y-auto" style={{ top: 45, bottom: 56 }}>
         {loading ? (
           <div className="flex items-center justify-center h-full">
             <div className="text-broadcast-yellow font-saira animate-pulse">Initializing...</div>
@@ -126,8 +126,8 @@ export default function AppLayout() {
         ) : null}
       </main>
 
-      {/* Tab Navigation */}
-      <nav className="bg-broadcast-black border-t-2 border-broadcast-yellow flex flex-shrink-0">
+      {/* Tab Navigation — fixed to bottom */}
+      <nav className="fixed bottom-0 left-0 right-0 z-40 bg-broadcast-black border-t-2 border-broadcast-yellow flex" style={{ height: 56 }}>
         {['PLAY', 'BAG', 'COURSE', 'HISTORY'].map(tab => (
           <button
             key={tab}
