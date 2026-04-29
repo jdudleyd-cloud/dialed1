@@ -1,0 +1,5083 @@
+{
+  "generated": "2026-04-29T00:32:26.336689",
+  "version": "3.0",
+  "system": "DIALED Phase 2 - Production Grade",
+  "features": [
+    "Ultra-detailed disc suitability scoring",
+    "Wind condition modeling",
+    "Temperature & air density effects",
+    "Throw mechanics analysis",
+    "Environmental physics",
+    "Multi-condition recommendations",
+    "180+ disc flight data",
+    "Intelligent hazard analysis"
+  ],
+  "palmer_park_samples": {
+    "hole_1": {
+      "hole": 1,
+      "course": "Palmer Park Detroit DGC",
+      "basic_info": {
+        "par": 3,
+        "distance_am": 307,
+        "distance_pro": 437,
+        "terrain": "flat_open",
+        "hazards": [
+          "water_left",
+          "trees_right"
+        ],
+        "doglegs": "slight_left"
+      },
+      "conditions": {
+        "calm": {
+          "name": "Calm",
+          "recommendations": {
+            "backhand": {
+              "throw_name": "Backhand",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 93.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 93 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 93.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 93 - distance_fairway"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 93.0,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 93 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 93.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 93 - distance"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 93.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 93 - all_purpose"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 1.0,
+                "accuracy": "high",
+                "control": 0.9,
+                "wind_sensitivity": "medium"
+              }
+            },
+            "forehand": {
+              "throw_name": "Forehand",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 91.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 91.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - distance_fairway"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 91.5,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 92 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 91.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 92 - distance"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 91.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - all_purpose"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.85,
+                "accuracy": "medium",
+                "control": 0.7,
+                "wind_sensitivity": "high"
+              }
+            },
+            "sidearm": {
+              "throw_name": "Sidearm",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 90.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 90.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - distance_fairway"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 90.5,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 90 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 90.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 90 - distance"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 90.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - all_purpose"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.75,
+                "accuracy": "low",
+                "control": 0.6,
+                "wind_sensitivity": "very_high"
+              }
+            },
+            "tomahawk": {
+              "throw_name": "Tomahawk",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 88.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 88 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 88.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 88 - distance_fairway"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 88.0,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 88 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 88.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 88 - distance"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 88.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 88 - all_purpose"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.5,
+                "accuracy": "very_low",
+                "control": 0.4,
+                "wind_sensitivity": "extreme"
+              }
+            }
+          }
+        },
+        "light": {
+          "name": "Light Wind",
+          "recommendations": {
+            "backhand": {
+              "throw_name": "Backhand",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 93.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 93 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 93.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 93 - distance_fairway"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 93.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 93 - all_purpose"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 91.0,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 91 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 91.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 91 - distance"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 1.0,
+                "accuracy": "high",
+                "control": 0.9,
+                "wind_sensitivity": "medium"
+              }
+            },
+            "forehand": {
+              "throw_name": "Forehand",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 91.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 91.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - distance_fairway"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 91.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - all_purpose"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 89.5,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 90 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 89.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 90 - distance"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.85,
+                "accuracy": "medium",
+                "control": 0.7,
+                "wind_sensitivity": "high"
+              }
+            },
+            "sidearm": {
+              "throw_name": "Sidearm",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 90.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 90.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - distance_fairway"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 90.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - all_purpose"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 88.5,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 88 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 88.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 88 - distance"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.75,
+                "accuracy": "low",
+                "control": 0.6,
+                "wind_sensitivity": "very_high"
+              }
+            },
+            "tomahawk": {
+              "throw_name": "Tomahawk",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 88.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 88 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 88.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 88 - distance_fairway"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 88.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 88 - all_purpose"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 86.0,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 86 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 86.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 86 - distance"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.5,
+                "accuracy": "very_low",
+                "control": 0.4,
+                "wind_sensitivity": "extreme"
+              }
+            }
+          }
+        },
+        "moderate": {
+          "name": "Moderate Wind",
+          "recommendations": {
+            "backhand": {
+              "throw_name": "Backhand",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 93.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 93 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 93.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 93 - distance_fairway"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 93.0,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 93 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 93.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 93 - distance"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 93.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 93 - all_purpose"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 1.0,
+                "accuracy": "high",
+                "control": 0.9,
+                "wind_sensitivity": "medium"
+              }
+            },
+            "forehand": {
+              "throw_name": "Forehand",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 91.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 91.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - distance_fairway"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 91.5,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 92 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 91.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 92 - distance"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 91.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - all_purpose"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.85,
+                "accuracy": "medium",
+                "control": 0.7,
+                "wind_sensitivity": "high"
+              }
+            },
+            "sidearm": {
+              "throw_name": "Sidearm",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 90.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 90.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - distance_fairway"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 90.5,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 90 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 90.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 90 - distance"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 90.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - all_purpose"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.75,
+                "accuracy": "low",
+                "control": 0.6,
+                "wind_sensitivity": "very_high"
+              }
+            },
+            "tomahawk": {
+              "throw_name": "Tomahawk",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 88.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 88 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 88.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 88 - distance_fairway"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 88.0,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 88 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 88.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 88 - distance"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 88.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 88 - all_purpose"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.5,
+                "accuracy": "very_low",
+                "control": 0.4,
+                "wind_sensitivity": "extreme"
+              }
+            }
+          }
+        },
+        "strong": {
+          "name": "Strong Wind",
+          "recommendations": {
+            "backhand": {
+              "throw_name": "Backhand",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 95.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 95 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 95.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 95 - distance_fairway"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 95.0,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 95 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 95.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 95 - distance"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 95.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 95 - all_purpose"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 1.0,
+                "accuracy": "high",
+                "control": 0.9,
+                "wind_sensitivity": "medium"
+              }
+            },
+            "forehand": {
+              "throw_name": "Forehand",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 93.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 94 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 93.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 94 - distance_fairway"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 93.5,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 94 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 93.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 94 - distance"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 93.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 94 - all_purpose"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.85,
+                "accuracy": "medium",
+                "control": 0.7,
+                "wind_sensitivity": "high"
+              }
+            },
+            "sidearm": {
+              "throw_name": "Sidearm",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 92.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 92.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - distance_fairway"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 92.5,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 92 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 92.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 92 - distance"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 92.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - all_purpose"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.75,
+                "accuracy": "low",
+                "control": 0.6,
+                "wind_sensitivity": "very_high"
+              }
+            },
+            "tomahawk": {
+              "throw_name": "Tomahawk",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 90.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 90.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - distance_fairway"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 90.0,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 90 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 90.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 90 - distance"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 90.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - all_purpose"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.5,
+                "accuracy": "very_low",
+                "control": 0.4,
+                "wind_sensitivity": "extreme"
+              }
+            }
+          }
+        }
+      }
+    },
+    "hole_9": {
+      "hole": 9,
+      "course": "Palmer Park Detroit DGC",
+      "basic_info": {
+        "par": 4,
+        "distance_am": 413,
+        "distance_pro": 621,
+        "terrain": "flat_open",
+        "hazards": [
+          "trees_center",
+          "water_left"
+        ],
+        "doglegs": "left"
+      },
+      "conditions": {
+        "calm": {
+          "name": "Calm",
+          "recommendations": {
+            "backhand": {
+              "throw_name": "Backhand",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 93.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 93 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 93.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 93 - distance_fairway"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 93.0,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 93 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 93.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 93 - distance"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 93.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 93 - all_purpose"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 1.0,
+                "accuracy": "high",
+                "control": 0.9,
+                "wind_sensitivity": "medium"
+              }
+            },
+            "forehand": {
+              "throw_name": "Forehand",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 91.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 91.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - distance_fairway"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 91.5,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 92 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 91.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 92 - distance"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 91.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - all_purpose"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.85,
+                "accuracy": "medium",
+                "control": 0.7,
+                "wind_sensitivity": "high"
+              }
+            },
+            "sidearm": {
+              "throw_name": "Sidearm",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 90.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 90.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - distance_fairway"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 90.5,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 90 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 90.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 90 - distance"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 90.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - all_purpose"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.75,
+                "accuracy": "low",
+                "control": 0.6,
+                "wind_sensitivity": "very_high"
+              }
+            },
+            "tomahawk": {
+              "throw_name": "Tomahawk",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 88.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 88 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 88.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 88 - distance_fairway"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 88.0,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 88 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 88.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 88 - distance"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 88.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 88 - all_purpose"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.5,
+                "accuracy": "very_low",
+                "control": 0.4,
+                "wind_sensitivity": "extreme"
+              }
+            }
+          }
+        },
+        "light": {
+          "name": "Light Wind",
+          "recommendations": {
+            "backhand": {
+              "throw_name": "Backhand",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 93.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 93 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 93.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 93 - distance_fairway"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 93.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 93 - all_purpose"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 91.0,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 91 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 91.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 91 - distance"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 1.0,
+                "accuracy": "high",
+                "control": 0.9,
+                "wind_sensitivity": "medium"
+              }
+            },
+            "forehand": {
+              "throw_name": "Forehand",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 91.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 91.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - distance_fairway"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 91.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - all_purpose"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 89.5,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 90 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 89.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 90 - distance"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.85,
+                "accuracy": "medium",
+                "control": 0.7,
+                "wind_sensitivity": "high"
+              }
+            },
+            "sidearm": {
+              "throw_name": "Sidearm",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 90.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 90.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - distance_fairway"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 90.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - all_purpose"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 88.5,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 88 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 88.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 88 - distance"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.75,
+                "accuracy": "low",
+                "control": 0.6,
+                "wind_sensitivity": "very_high"
+              }
+            },
+            "tomahawk": {
+              "throw_name": "Tomahawk",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 88.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 88 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 88.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 88 - distance_fairway"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 88.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 88 - all_purpose"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 86.0,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 86 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 86.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 86 - distance"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.5,
+                "accuracy": "very_low",
+                "control": 0.4,
+                "wind_sensitivity": "extreme"
+              }
+            }
+          }
+        },
+        "moderate": {
+          "name": "Moderate Wind",
+          "recommendations": {
+            "backhand": {
+              "throw_name": "Backhand",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 93.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 93 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 93.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 93 - distance_fairway"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 93.0,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 93 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 93.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 93 - distance"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 93.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 93 - all_purpose"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 1.0,
+                "accuracy": "high",
+                "control": 0.9,
+                "wind_sensitivity": "medium"
+              }
+            },
+            "forehand": {
+              "throw_name": "Forehand",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 91.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 91.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - distance_fairway"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 91.5,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 92 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 91.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 92 - distance"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 91.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - all_purpose"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.85,
+                "accuracy": "medium",
+                "control": 0.7,
+                "wind_sensitivity": "high"
+              }
+            },
+            "sidearm": {
+              "throw_name": "Sidearm",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 90.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 90.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - distance_fairway"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 90.5,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 90 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 90.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 90 - distance"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 90.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - all_purpose"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.75,
+                "accuracy": "low",
+                "control": 0.6,
+                "wind_sensitivity": "very_high"
+              }
+            },
+            "tomahawk": {
+              "throw_name": "Tomahawk",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 88.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 88 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 88.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 88 - distance_fairway"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 88.0,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 88 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 88.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 88 - distance"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 88.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 88 - all_purpose"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.5,
+                "accuracy": "very_low",
+                "control": 0.4,
+                "wind_sensitivity": "extreme"
+              }
+            }
+          }
+        },
+        "strong": {
+          "name": "Strong Wind",
+          "recommendations": {
+            "backhand": {
+              "throw_name": "Backhand",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 95.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 95 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 95.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 95 - distance_fairway"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 95.0,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 95 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 95.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 95 - distance"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 95.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 95 - all_purpose"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 1.0,
+                "accuracy": "high",
+                "control": 0.9,
+                "wind_sensitivity": "medium"
+              }
+            },
+            "forehand": {
+              "throw_name": "Forehand",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 93.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 94 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 93.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 94 - distance_fairway"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 93.5,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 94 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 93.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 94 - distance"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 93.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 94 - all_purpose"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.85,
+                "accuracy": "medium",
+                "control": 0.7,
+                "wind_sensitivity": "high"
+              }
+            },
+            "sidearm": {
+              "throw_name": "Sidearm",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 92.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 92.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - distance_fairway"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 92.5,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 92 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 92.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 92 - distance"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 92.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - all_purpose"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.75,
+                "accuracy": "low",
+                "control": 0.6,
+                "wind_sensitivity": "very_high"
+              }
+            },
+            "tomahawk": {
+              "throw_name": "Tomahawk",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 90.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 90.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - distance_fairway"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 90.0,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 90 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 90.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 90 - distance"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 90.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - all_purpose"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.5,
+                "accuracy": "very_low",
+                "control": 0.4,
+                "wind_sensitivity": "extreme"
+              }
+            }
+          }
+        }
+      }
+    },
+    "hole_18": {
+      "hole": 18,
+      "course": "Palmer Park Detroit DGC",
+      "basic_info": {
+        "par": 4,
+        "distance_am": 410,
+        "distance_pro": 503,
+        "terrain": "flat_wooded",
+        "hazards": [
+          "trees_both_sides"
+        ],
+        "doglegs": "left"
+      },
+      "conditions": {
+        "calm": {
+          "name": "Calm",
+          "recommendations": {
+            "backhand": {
+              "throw_name": "Backhand",
+              "top_5": {
+                "Discraft Raptor": {
+                  "score": 98.5,
+                  "speed": 9,
+                  "glide": 4,
+                  "turn": 0,
+                  "fade": 3,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 98 - beef"
+                },
+                "Discraft Avenger SS": {
+                  "score": 98.5,
+                  "speed": 10,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 98 - distance"
+                },
+                "Innova Luna Aviar": {
+                  "score": 98.5,
+                  "speed": 3,
+                  "glide": 2,
+                  "turn": 0,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 98 - stable_putter"
+                },
+                "Innova Teebird": {
+                  "score": 98.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 98 - reliable"
+                },
+                "Innova Boss": {
+                  "score": 98.5,
+                  "speed": 11,
+                  "glide": 3,
+                  "turn": 0,
+                  "fade": 4,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 98 - beef_stable"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 1.0,
+                "accuracy": "high",
+                "control": 0.9,
+                "wind_sensitivity": "medium"
+              }
+            },
+            "forehand": {
+              "throw_name": "Forehand",
+              "top_5": {
+                "Discraft Raptor": {
+                  "score": 97.0,
+                  "speed": 9,
+                  "glide": 4,
+                  "turn": 0,
+                  "fade": 3,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 97 - beef"
+                },
+                "Discraft Avenger SS": {
+                  "score": 97.0,
+                  "speed": 10,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 97 - distance"
+                },
+                "Innova Luna Aviar": {
+                  "score": 97.0,
+                  "speed": 3,
+                  "glide": 2,
+                  "turn": 0,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 97 - stable_putter"
+                },
+                "Innova Teebird": {
+                  "score": 97.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 97 - reliable"
+                },
+                "Innova Boss": {
+                  "score": 97.0,
+                  "speed": 11,
+                  "glide": 3,
+                  "turn": 0,
+                  "fade": 4,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 97 - beef_stable"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.85,
+                "accuracy": "medium",
+                "control": 0.7,
+                "wind_sensitivity": "high"
+              }
+            },
+            "sidearm": {
+              "throw_name": "Sidearm",
+              "top_5": {
+                "Discraft Raptor": {
+                  "score": 96.0,
+                  "speed": 9,
+                  "glide": 4,
+                  "turn": 0,
+                  "fade": 3,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 96 - beef"
+                },
+                "Discraft Avenger SS": {
+                  "score": 96.0,
+                  "speed": 10,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 96 - distance"
+                },
+                "Innova Luna Aviar": {
+                  "score": 96.0,
+                  "speed": 3,
+                  "glide": 2,
+                  "turn": 0,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 96 - stable_putter"
+                },
+                "Innova Teebird": {
+                  "score": 96.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 96 - reliable"
+                },
+                "Innova Boss": {
+                  "score": 96.0,
+                  "speed": 11,
+                  "glide": 3,
+                  "turn": 0,
+                  "fade": 4,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 96 - beef_stable"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.75,
+                "accuracy": "low",
+                "control": 0.6,
+                "wind_sensitivity": "very_high"
+              }
+            },
+            "tomahawk": {
+              "throw_name": "Tomahawk",
+              "top_5": {
+                "Discraft Raptor": {
+                  "score": 93.5,
+                  "speed": 9,
+                  "glide": 4,
+                  "turn": 0,
+                  "fade": 3,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 94 - beef"
+                },
+                "Discraft Avenger SS": {
+                  "score": 93.5,
+                  "speed": 10,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 94 - distance"
+                },
+                "Innova Luna Aviar": {
+                  "score": 93.5,
+                  "speed": 3,
+                  "glide": 2,
+                  "turn": 0,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 94 - stable_putter"
+                },
+                "Innova Teebird": {
+                  "score": 93.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 94 - reliable"
+                },
+                "Innova Boss": {
+                  "score": 93.5,
+                  "speed": 11,
+                  "glide": 3,
+                  "turn": 0,
+                  "fade": 4,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 94 - beef_stable"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.5,
+                "accuracy": "very_low",
+                "control": 0.4,
+                "wind_sensitivity": "extreme"
+              }
+            }
+          }
+        },
+        "light": {
+          "name": "Light Wind",
+          "recommendations": {
+            "backhand": {
+              "throw_name": "Backhand",
+              "top_5": {
+                "Discraft Raptor": {
+                  "score": 97.0,
+                  "speed": 9,
+                  "glide": 4,
+                  "turn": 0,
+                  "fade": 3,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 97 - beef"
+                },
+                "Discraft Avenger SS": {
+                  "score": 97.0,
+                  "speed": 10,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 97 - distance"
+                },
+                "Innova Luna Aviar": {
+                  "score": 97.0,
+                  "speed": 3,
+                  "glide": 2,
+                  "turn": 0,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 97 - stable_putter"
+                },
+                "Innova Teebird": {
+                  "score": 97.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 97 - reliable"
+                },
+                "Innova Boss": {
+                  "score": 97.0,
+                  "speed": 11,
+                  "glide": 3,
+                  "turn": 0,
+                  "fade": 4,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 97 - beef_stable"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 1.0,
+                "accuracy": "high",
+                "control": 0.9,
+                "wind_sensitivity": "medium"
+              }
+            },
+            "forehand": {
+              "throw_name": "Forehand",
+              "top_5": {
+                "Discraft Raptor": {
+                  "score": 95.5,
+                  "speed": 9,
+                  "glide": 4,
+                  "turn": 0,
+                  "fade": 3,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 96 - beef"
+                },
+                "Discraft Avenger SS": {
+                  "score": 95.5,
+                  "speed": 10,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 96 - distance"
+                },
+                "Innova Luna Aviar": {
+                  "score": 95.5,
+                  "speed": 3,
+                  "glide": 2,
+                  "turn": 0,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 96 - stable_putter"
+                },
+                "Innova Teebird": {
+                  "score": 95.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 96 - reliable"
+                },
+                "Innova Boss": {
+                  "score": 95.5,
+                  "speed": 11,
+                  "glide": 3,
+                  "turn": 0,
+                  "fade": 4,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 96 - beef_stable"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.85,
+                "accuracy": "medium",
+                "control": 0.7,
+                "wind_sensitivity": "high"
+              }
+            },
+            "sidearm": {
+              "throw_name": "Sidearm",
+              "top_5": {
+                "Discraft Raptor": {
+                  "score": 94.5,
+                  "speed": 9,
+                  "glide": 4,
+                  "turn": 0,
+                  "fade": 3,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 94 - beef"
+                },
+                "Discraft Avenger SS": {
+                  "score": 94.5,
+                  "speed": 10,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 94 - distance"
+                },
+                "Innova Luna Aviar": {
+                  "score": 94.5,
+                  "speed": 3,
+                  "glide": 2,
+                  "turn": 0,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 94 - stable_putter"
+                },
+                "Innova Teebird": {
+                  "score": 94.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 94 - reliable"
+                },
+                "Innova Boss": {
+                  "score": 94.5,
+                  "speed": 11,
+                  "glide": 3,
+                  "turn": 0,
+                  "fade": 4,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 94 - beef_stable"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.75,
+                "accuracy": "low",
+                "control": 0.6,
+                "wind_sensitivity": "very_high"
+              }
+            },
+            "tomahawk": {
+              "throw_name": "Tomahawk",
+              "top_5": {
+                "Discraft Raptor": {
+                  "score": 92.0,
+                  "speed": 9,
+                  "glide": 4,
+                  "turn": 0,
+                  "fade": 3,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 92 - beef"
+                },
+                "Discraft Avenger SS": {
+                  "score": 92.0,
+                  "speed": 10,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 92 - distance"
+                },
+                "Innova Luna Aviar": {
+                  "score": 92.0,
+                  "speed": 3,
+                  "glide": 2,
+                  "turn": 0,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 92 - stable_putter"
+                },
+                "Innova Teebird": {
+                  "score": 92.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 92 - reliable"
+                },
+                "Innova Boss": {
+                  "score": 92.0,
+                  "speed": 11,
+                  "glide": 3,
+                  "turn": 0,
+                  "fade": 4,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 92 - beef_stable"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.5,
+                "accuracy": "very_low",
+                "control": 0.4,
+                "wind_sensitivity": "extreme"
+              }
+            }
+          }
+        },
+        "moderate": {
+          "name": "Moderate Wind",
+          "recommendations": {
+            "backhand": {
+              "throw_name": "Backhand",
+              "top_5": {
+                "Discraft Luna": {
+                  "score": 95.0,
+                  "speed": 3,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "neutral",
+                  "rationale": "Score: 95 - approach_straight"
+                },
+                "Discraft Comet": {
+                  "score": 95.0,
+                  "speed": 5,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 95 - straight_flight"
+                },
+                "Discraft Buzzz": {
+                  "score": 95.0,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 95 - workhorse"
+                },
+                "Discraft Heat": {
+                  "score": 95.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 95 - all_around"
+                },
+                "Discraft Raptor": {
+                  "score": 95.0,
+                  "speed": 9,
+                  "glide": 4,
+                  "turn": 0,
+                  "fade": 3,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 95 - beef"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 1.0,
+                "accuracy": "high",
+                "control": 0.9,
+                "wind_sensitivity": "medium"
+              }
+            },
+            "forehand": {
+              "throw_name": "Forehand",
+              "top_5": {
+                "Discraft Luna": {
+                  "score": 93.5,
+                  "speed": 3,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "neutral",
+                  "rationale": "Score: 94 - approach_straight"
+                },
+                "Discraft Comet": {
+                  "score": 93.5,
+                  "speed": 5,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 94 - straight_flight"
+                },
+                "Discraft Buzzz": {
+                  "score": 93.5,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 94 - workhorse"
+                },
+                "Discraft Heat": {
+                  "score": 93.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 94 - all_around"
+                },
+                "Discraft Raptor": {
+                  "score": 93.5,
+                  "speed": 9,
+                  "glide": 4,
+                  "turn": 0,
+                  "fade": 3,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 94 - beef"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.85,
+                "accuracy": "medium",
+                "control": 0.7,
+                "wind_sensitivity": "high"
+              }
+            },
+            "sidearm": {
+              "throw_name": "Sidearm",
+              "top_5": {
+                "Discraft Luna": {
+                  "score": 92.5,
+                  "speed": 3,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - approach_straight"
+                },
+                "Discraft Comet": {
+                  "score": 92.5,
+                  "speed": 5,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - straight_flight"
+                },
+                "Discraft Buzzz": {
+                  "score": 92.5,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - workhorse"
+                },
+                "Discraft Heat": {
+                  "score": 92.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - all_around"
+                },
+                "Discraft Raptor": {
+                  "score": 92.5,
+                  "speed": 9,
+                  "glide": 4,
+                  "turn": 0,
+                  "fade": 3,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 92 - beef"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.75,
+                "accuracy": "low",
+                "control": 0.6,
+                "wind_sensitivity": "very_high"
+              }
+            },
+            "tomahawk": {
+              "throw_name": "Tomahawk",
+              "top_5": {
+                "Discraft Luna": {
+                  "score": 90.0,
+                  "speed": 3,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - approach_straight"
+                },
+                "Discraft Comet": {
+                  "score": 90.0,
+                  "speed": 5,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - straight_flight"
+                },
+                "Discraft Buzzz": {
+                  "score": 90.0,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - workhorse"
+                },
+                "Discraft Heat": {
+                  "score": 90.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - all_around"
+                },
+                "Discraft Raptor": {
+                  "score": 90.0,
+                  "speed": 9,
+                  "glide": 4,
+                  "turn": 0,
+                  "fade": 3,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 90 - beef"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.5,
+                "accuracy": "very_low",
+                "control": 0.4,
+                "wind_sensitivity": "extreme"
+              }
+            }
+          }
+        },
+        "strong": {
+          "name": "Strong Wind",
+          "recommendations": {
+            "backhand": {
+              "throw_name": "Backhand",
+              "top_5": {
+                "Discraft Luna": {
+                  "score": 97.0,
+                  "speed": 3,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "neutral",
+                  "rationale": "Score: 97 - approach_straight"
+                },
+                "Discraft Comet": {
+                  "score": 97.0,
+                  "speed": 5,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 97 - straight_flight"
+                },
+                "Discraft Buzzz": {
+                  "score": 97.0,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 97 - workhorse"
+                },
+                "Discraft Heat": {
+                  "score": 97.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 97 - all_around"
+                },
+                "Innova Mako3": {
+                  "score": 97.0,
+                  "speed": 5,
+                  "glide": 5,
+                  "turn": 0,
+                  "fade": 0,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 97 - straight"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 1.0,
+                "accuracy": "high",
+                "control": 0.9,
+                "wind_sensitivity": "medium"
+              }
+            },
+            "forehand": {
+              "throw_name": "Forehand",
+              "top_5": {
+                "Discraft Luna": {
+                  "score": 95.5,
+                  "speed": 3,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "neutral",
+                  "rationale": "Score: 96 - approach_straight"
+                },
+                "Discraft Comet": {
+                  "score": 95.5,
+                  "speed": 5,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 96 - straight_flight"
+                },
+                "Discraft Buzzz": {
+                  "score": 95.5,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 96 - workhorse"
+                },
+                "Discraft Heat": {
+                  "score": 95.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 96 - all_around"
+                },
+                "Innova Mako3": {
+                  "score": 95.5,
+                  "speed": 5,
+                  "glide": 5,
+                  "turn": 0,
+                  "fade": 0,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 96 - straight"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.85,
+                "accuracy": "medium",
+                "control": 0.7,
+                "wind_sensitivity": "high"
+              }
+            },
+            "sidearm": {
+              "throw_name": "Sidearm",
+              "top_5": {
+                "Discraft Luna": {
+                  "score": 94.5,
+                  "speed": 3,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "neutral",
+                  "rationale": "Score: 94 - approach_straight"
+                },
+                "Discraft Comet": {
+                  "score": 94.5,
+                  "speed": 5,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 94 - straight_flight"
+                },
+                "Discraft Buzzz": {
+                  "score": 94.5,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 94 - workhorse"
+                },
+                "Discraft Heat": {
+                  "score": 94.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 94 - all_around"
+                },
+                "Innova Mako3": {
+                  "score": 94.5,
+                  "speed": 5,
+                  "glide": 5,
+                  "turn": 0,
+                  "fade": 0,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 94 - straight"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.75,
+                "accuracy": "low",
+                "control": 0.6,
+                "wind_sensitivity": "very_high"
+              }
+            },
+            "tomahawk": {
+              "throw_name": "Tomahawk",
+              "top_5": {
+                "Discraft Luna": {
+                  "score": 92.0,
+                  "speed": 3,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - approach_straight"
+                },
+                "Discraft Comet": {
+                  "score": 92.0,
+                  "speed": 5,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - straight_flight"
+                },
+                "Discraft Buzzz": {
+                  "score": 92.0,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - workhorse"
+                },
+                "Discraft Heat": {
+                  "score": 92.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - all_around"
+                },
+                "Innova Mako3": {
+                  "score": 92.0,
+                  "speed": 5,
+                  "glide": 5,
+                  "turn": 0,
+                  "fade": 0,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 92 - straight"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.5,
+                "accuracy": "very_low",
+                "control": 0.4,
+                "wind_sensitivity": "extreme"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "kensington_samples": {
+    "hole_1": {
+      "hole": 1,
+      "course": "Kensington Black Locust Blue",
+      "basic_info": {
+        "par": 4,
+        "distance_am": 420,
+        "distance_pro": 520,
+        "terrain": "rolling_open",
+        "hazards": [
+          "elevation_change_uphill",
+          "water_right"
+        ],
+        "doglegs": "straight"
+      },
+      "conditions": {
+        "calm": {
+          "name": "Calm",
+          "recommendations": {
+            "backhand": {
+              "throw_name": "Backhand",
+              "top_5": {
+                "Innova Luna Aviar": {
+                  "score": 92.5,
+                  "speed": 3,
+                  "glide": 2,
+                  "turn": 0,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 92 - stable_putter"
+                },
+                "Innova Teebird": {
+                  "score": 92.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 92 - reliable"
+                },
+                "MVP/Axiom Reactor": {
+                  "score": 92.5,
+                  "speed": 6,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "stable",
+                  "rationale": "Score: 92 - straight_midrange"
+                },
+                "MVP/Axiom Resistor": {
+                  "score": 92.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 92 - control"
+                },
+                "Dynamic Discs Warden": {
+                  "score": 92.5,
+                  "speed": 3,
+                  "glide": 3,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 92 - control_putter"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 1.0,
+                "accuracy": "high",
+                "control": 0.9,
+                "wind_sensitivity": "medium"
+              }
+            },
+            "forehand": {
+              "throw_name": "Forehand",
+              "top_5": {
+                "Innova Luna Aviar": {
+                  "score": 91.0,
+                  "speed": 3,
+                  "glide": 2,
+                  "turn": 0,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 91 - stable_putter"
+                },
+                "Innova Teebird": {
+                  "score": 91.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 91 - reliable"
+                },
+                "MVP/Axiom Reactor": {
+                  "score": 91.0,
+                  "speed": 6,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "stable",
+                  "rationale": "Score: 91 - straight_midrange"
+                },
+                "MVP/Axiom Resistor": {
+                  "score": 91.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 91 - control"
+                },
+                "Dynamic Discs Warden": {
+                  "score": 91.0,
+                  "speed": 3,
+                  "glide": 3,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 91 - control_putter"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.85,
+                "accuracy": "medium",
+                "control": 0.7,
+                "wind_sensitivity": "high"
+              }
+            },
+            "sidearm": {
+              "throw_name": "Sidearm",
+              "top_5": {
+                "Innova Luna Aviar": {
+                  "score": 90.0,
+                  "speed": 3,
+                  "glide": 2,
+                  "turn": 0,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 90 - stable_putter"
+                },
+                "Innova Teebird": {
+                  "score": 90.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 90 - reliable"
+                },
+                "MVP/Axiom Reactor": {
+                  "score": 90.0,
+                  "speed": 6,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "stable",
+                  "rationale": "Score: 90 - straight_midrange"
+                },
+                "MVP/Axiom Resistor": {
+                  "score": 90.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 90 - control"
+                },
+                "Dynamic Discs Warden": {
+                  "score": 90.0,
+                  "speed": 3,
+                  "glide": 3,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 90 - control_putter"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.75,
+                "accuracy": "low",
+                "control": 0.6,
+                "wind_sensitivity": "very_high"
+              }
+            },
+            "tomahawk": {
+              "throw_name": "Tomahawk",
+              "top_5": {
+                "Innova Luna Aviar": {
+                  "score": 87.5,
+                  "speed": 3,
+                  "glide": 2,
+                  "turn": 0,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 88 - stable_putter"
+                },
+                "Innova Teebird": {
+                  "score": 87.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 88 - reliable"
+                },
+                "MVP/Axiom Reactor": {
+                  "score": 87.5,
+                  "speed": 6,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "stable",
+                  "rationale": "Score: 88 - straight_midrange"
+                },
+                "MVP/Axiom Resistor": {
+                  "score": 87.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 88 - control"
+                },
+                "Dynamic Discs Warden": {
+                  "score": 87.5,
+                  "speed": 3,
+                  "glide": 3,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 88 - control_putter"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.5,
+                "accuracy": "very_low",
+                "control": 0.4,
+                "wind_sensitivity": "extreme"
+              }
+            }
+          }
+        },
+        "light": {
+          "name": "Light Wind",
+          "recommendations": {
+            "backhand": {
+              "throw_name": "Backhand",
+              "top_5": {
+                "Innova Luna Aviar": {
+                  "score": 91.0,
+                  "speed": 3,
+                  "glide": 2,
+                  "turn": 0,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 91 - stable_putter"
+                },
+                "Innova Teebird": {
+                  "score": 91.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 91 - reliable"
+                },
+                "MVP/Axiom Reactor": {
+                  "score": 91.0,
+                  "speed": 6,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "stable",
+                  "rationale": "Score: 91 - straight_midrange"
+                },
+                "MVP/Axiom Resistor": {
+                  "score": 91.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 91 - control"
+                },
+                "Dynamic Discs Warden": {
+                  "score": 91.0,
+                  "speed": 3,
+                  "glide": 3,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 91 - control_putter"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 1.0,
+                "accuracy": "high",
+                "control": 0.9,
+                "wind_sensitivity": "medium"
+              }
+            },
+            "forehand": {
+              "throw_name": "Forehand",
+              "top_5": {
+                "Innova Luna Aviar": {
+                  "score": 89.5,
+                  "speed": 3,
+                  "glide": 2,
+                  "turn": 0,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 90 - stable_putter"
+                },
+                "Innova Teebird": {
+                  "score": 89.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 90 - reliable"
+                },
+                "MVP/Axiom Reactor": {
+                  "score": 89.5,
+                  "speed": 6,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "stable",
+                  "rationale": "Score: 90 - straight_midrange"
+                },
+                "MVP/Axiom Resistor": {
+                  "score": 89.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 90 - control"
+                },
+                "Dynamic Discs Warden": {
+                  "score": 89.5,
+                  "speed": 3,
+                  "glide": 3,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 90 - control_putter"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.85,
+                "accuracy": "medium",
+                "control": 0.7,
+                "wind_sensitivity": "high"
+              }
+            },
+            "sidearm": {
+              "throw_name": "Sidearm",
+              "top_5": {
+                "Innova Luna Aviar": {
+                  "score": 88.5,
+                  "speed": 3,
+                  "glide": 2,
+                  "turn": 0,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 88 - stable_putter"
+                },
+                "Innova Teebird": {
+                  "score": 88.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 88 - reliable"
+                },
+                "MVP/Axiom Reactor": {
+                  "score": 88.5,
+                  "speed": 6,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "stable",
+                  "rationale": "Score: 88 - straight_midrange"
+                },
+                "MVP/Axiom Resistor": {
+                  "score": 88.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 88 - control"
+                },
+                "Dynamic Discs Warden": {
+                  "score": 88.5,
+                  "speed": 3,
+                  "glide": 3,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 88 - control_putter"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.75,
+                "accuracy": "low",
+                "control": 0.6,
+                "wind_sensitivity": "very_high"
+              }
+            },
+            "tomahawk": {
+              "throw_name": "Tomahawk",
+              "top_5": {
+                "Innova Luna Aviar": {
+                  "score": 86.0,
+                  "speed": 3,
+                  "glide": 2,
+                  "turn": 0,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 86 - stable_putter"
+                },
+                "Innova Teebird": {
+                  "score": 86.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 86 - reliable"
+                },
+                "MVP/Axiom Reactor": {
+                  "score": 86.0,
+                  "speed": 6,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "stable",
+                  "rationale": "Score: 86 - straight_midrange"
+                },
+                "MVP/Axiom Resistor": {
+                  "score": 86.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 86 - control"
+                },
+                "Dynamic Discs Warden": {
+                  "score": 86.0,
+                  "speed": 3,
+                  "glide": 3,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 86 - control_putter"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.5,
+                "accuracy": "very_low",
+                "control": 0.4,
+                "wind_sensitivity": "extreme"
+              }
+            }
+          }
+        },
+        "moderate": {
+          "name": "Moderate Wind",
+          "recommendations": {
+            "backhand": {
+              "throw_name": "Backhand",
+              "top_5": {
+                "Innova Luna Aviar": {
+                  "score": 89.0,
+                  "speed": 3,
+                  "glide": 2,
+                  "turn": 0,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 89 - stable_putter"
+                },
+                "Innova Teebird": {
+                  "score": 89.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 89 - reliable"
+                },
+                "MVP/Axiom Reactor": {
+                  "score": 89.0,
+                  "speed": 6,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "stable",
+                  "rationale": "Score: 89 - straight_midrange"
+                },
+                "MVP/Axiom Resistor": {
+                  "score": 89.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 89 - control"
+                },
+                "Dynamic Discs Warden": {
+                  "score": 89.0,
+                  "speed": 3,
+                  "glide": 3,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 89 - control_putter"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 1.0,
+                "accuracy": "high",
+                "control": 0.9,
+                "wind_sensitivity": "medium"
+              }
+            },
+            "forehand": {
+              "throw_name": "Forehand",
+              "top_5": {
+                "Innova Luna Aviar": {
+                  "score": 87.5,
+                  "speed": 3,
+                  "glide": 2,
+                  "turn": 0,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 88 - stable_putter"
+                },
+                "Innova Teebird": {
+                  "score": 87.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 88 - reliable"
+                },
+                "MVP/Axiom Reactor": {
+                  "score": 87.5,
+                  "speed": 6,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "stable",
+                  "rationale": "Score: 88 - straight_midrange"
+                },
+                "MVP/Axiom Resistor": {
+                  "score": 87.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 88 - control"
+                },
+                "Dynamic Discs Warden": {
+                  "score": 87.5,
+                  "speed": 3,
+                  "glide": 3,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 88 - control_putter"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.85,
+                "accuracy": "medium",
+                "control": 0.7,
+                "wind_sensitivity": "high"
+              }
+            },
+            "sidearm": {
+              "throw_name": "Sidearm",
+              "top_5": {
+                "Innova Luna Aviar": {
+                  "score": 86.5,
+                  "speed": 3,
+                  "glide": 2,
+                  "turn": 0,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 86 - stable_putter"
+                },
+                "Innova Teebird": {
+                  "score": 86.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 86 - reliable"
+                },
+                "MVP/Axiom Reactor": {
+                  "score": 86.5,
+                  "speed": 6,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "stable",
+                  "rationale": "Score: 86 - straight_midrange"
+                },
+                "MVP/Axiom Resistor": {
+                  "score": 86.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 86 - control"
+                },
+                "Dynamic Discs Warden": {
+                  "score": 86.5,
+                  "speed": 3,
+                  "glide": 3,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 86 - control_putter"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.75,
+                "accuracy": "low",
+                "control": 0.6,
+                "wind_sensitivity": "very_high"
+              }
+            },
+            "tomahawk": {
+              "throw_name": "Tomahawk",
+              "top_5": {
+                "Innova Luna Aviar": {
+                  "score": 84.0,
+                  "speed": 3,
+                  "glide": 2,
+                  "turn": 0,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 84 - stable_putter"
+                },
+                "Innova Teebird": {
+                  "score": 84.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 84 - reliable"
+                },
+                "MVP/Axiom Reactor": {
+                  "score": 84.0,
+                  "speed": 6,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "stable",
+                  "rationale": "Score: 84 - straight_midrange"
+                },
+                "MVP/Axiom Resistor": {
+                  "score": 84.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 84 - control"
+                },
+                "Dynamic Discs Warden": {
+                  "score": 84.0,
+                  "speed": 3,
+                  "glide": 3,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 84 - control_putter"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.5,
+                "accuracy": "very_low",
+                "control": 0.4,
+                "wind_sensitivity": "extreme"
+              }
+            }
+          }
+        },
+        "strong": {
+          "name": "Strong Wind",
+          "recommendations": {
+            "backhand": {
+              "throw_name": "Backhand",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 90.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 90.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - distance_fairway"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 90.0,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 90 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 90.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 90 - distance"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 90.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 90 - all_purpose"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 1.0,
+                "accuracy": "high",
+                "control": 0.9,
+                "wind_sensitivity": "medium"
+              }
+            },
+            "forehand": {
+              "throw_name": "Forehand",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 88.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 88 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 88.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 88 - distance_fairway"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 88.5,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 88 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 88.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 88 - distance"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 88.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 88 - all_purpose"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.85,
+                "accuracy": "medium",
+                "control": 0.7,
+                "wind_sensitivity": "high"
+              }
+            },
+            "sidearm": {
+              "throw_name": "Sidearm",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 87.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 88 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 87.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 88 - distance_fairway"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 87.5,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 88 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 87.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 88 - distance"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 87.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 88 - all_purpose"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.75,
+                "accuracy": "low",
+                "control": 0.6,
+                "wind_sensitivity": "very_high"
+              }
+            },
+            "tomahawk": {
+              "throw_name": "Tomahawk",
+              "top_5": {
+                "Innova Leopard3": {
+                  "score": 85.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 85 - control_fairway"
+                },
+                "MVP/Axiom Volt": {
+                  "score": 85.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 85 - distance_fairway"
+                },
+                "Latitude 64 Hellcat": {
+                  "score": 85.0,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "understable",
+                  "rationale": "Score: 85 - turnover"
+                },
+                "Latitude 64 Gold Line Fuse": {
+                  "score": 85.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "understable",
+                  "rationale": "Score: 85 - distance"
+                },
+                "Dynamic Discs Escape": {
+                  "score": 85.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -2,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 85 - all_purpose"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.5,
+                "accuracy": "very_low",
+                "control": 0.4,
+                "wind_sensitivity": "extreme"
+              }
+            }
+          }
+        }
+      }
+    },
+    "hole_13": {
+      "hole": 13,
+      "course": "Kensington Black Locust Blue",
+      "basic_info": {
+        "par": 3,
+        "distance_am": 280,
+        "distance_pro": 334,
+        "terrain": "rolling_mixed",
+        "hazards": [
+          "elevation_change_downhill",
+          "trees_both_sides"
+        ],
+        "doglegs": "right"
+      },
+      "conditions": {
+        "calm": {
+          "name": "Calm",
+          "recommendations": {
+            "backhand": {
+              "throw_name": "Backhand",
+              "top_5": {
+                "Latitude 64 Ruby": {
+                  "score": 89.0,
+                  "speed": 2,
+                  "glide": 2,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "understable",
+                  "rationale": "Score: 89 - touch"
+                },
+                "Discraft Raptor": {
+                  "score": 87.5,
+                  "speed": 9,
+                  "glide": 4,
+                  "turn": 0,
+                  "fade": 3,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 88 - beef"
+                },
+                "Discraft Avenger SS": {
+                  "score": 87.5,
+                  "speed": 10,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 88 - distance"
+                },
+                "Innova Luna Aviar": {
+                  "score": 87.5,
+                  "speed": 3,
+                  "glide": 2,
+                  "turn": 0,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 88 - stable_putter"
+                },
+                "Innova Teebird": {
+                  "score": 87.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 88 - reliable"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 1.0,
+                "accuracy": "high",
+                "control": 0.9,
+                "wind_sensitivity": "medium"
+              }
+            },
+            "forehand": {
+              "throw_name": "Forehand",
+              "top_5": {
+                "Latitude 64 Ruby": {
+                  "score": 87.5,
+                  "speed": 2,
+                  "glide": 2,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "understable",
+                  "rationale": "Score: 88 - touch"
+                },
+                "Discraft Raptor": {
+                  "score": 86.0,
+                  "speed": 9,
+                  "glide": 4,
+                  "turn": 0,
+                  "fade": 3,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 86 - beef"
+                },
+                "Discraft Avenger SS": {
+                  "score": 86.0,
+                  "speed": 10,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 86 - distance"
+                },
+                "Innova Luna Aviar": {
+                  "score": 86.0,
+                  "speed": 3,
+                  "glide": 2,
+                  "turn": 0,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 86 - stable_putter"
+                },
+                "Innova Teebird": {
+                  "score": 86.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 86 - reliable"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.85,
+                "accuracy": "medium",
+                "control": 0.7,
+                "wind_sensitivity": "high"
+              }
+            },
+            "sidearm": {
+              "throw_name": "Sidearm",
+              "top_5": {
+                "Latitude 64 Ruby": {
+                  "score": 86.5,
+                  "speed": 2,
+                  "glide": 2,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "understable",
+                  "rationale": "Score: 86 - touch"
+                },
+                "Discraft Raptor": {
+                  "score": 85.0,
+                  "speed": 9,
+                  "glide": 4,
+                  "turn": 0,
+                  "fade": 3,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 85 - beef"
+                },
+                "Discraft Avenger SS": {
+                  "score": 85.0,
+                  "speed": 10,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 85 - distance"
+                },
+                "Innova Luna Aviar": {
+                  "score": 85.0,
+                  "speed": 3,
+                  "glide": 2,
+                  "turn": 0,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 85 - stable_putter"
+                },
+                "Innova Teebird": {
+                  "score": 85.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 85 - reliable"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.75,
+                "accuracy": "low",
+                "control": 0.6,
+                "wind_sensitivity": "very_high"
+              }
+            },
+            "tomahawk": {
+              "throw_name": "Tomahawk",
+              "top_5": {
+                "Latitude 64 Ruby": {
+                  "score": 84.0,
+                  "speed": 2,
+                  "glide": 2,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "understable",
+                  "rationale": "Score: 84 - touch"
+                },
+                "Discraft Raptor": {
+                  "score": 82.5,
+                  "speed": 9,
+                  "glide": 4,
+                  "turn": 0,
+                  "fade": 3,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 82 - beef"
+                },
+                "Discraft Avenger SS": {
+                  "score": 82.5,
+                  "speed": 10,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 82 - distance"
+                },
+                "Innova Luna Aviar": {
+                  "score": 82.5,
+                  "speed": 3,
+                  "glide": 2,
+                  "turn": 0,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 82 - stable_putter"
+                },
+                "Innova Teebird": {
+                  "score": 82.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 82 - reliable"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.5,
+                "accuracy": "very_low",
+                "control": 0.4,
+                "wind_sensitivity": "extreme"
+              }
+            }
+          }
+        },
+        "light": {
+          "name": "Light Wind",
+          "recommendations": {
+            "backhand": {
+              "throw_name": "Backhand",
+              "top_5": {
+                "Latitude 64 Ruby": {
+                  "score": 87.0,
+                  "speed": 2,
+                  "glide": 2,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "understable",
+                  "rationale": "Score: 87 - touch"
+                },
+                "Discraft Raptor": {
+                  "score": 86.0,
+                  "speed": 9,
+                  "glide": 4,
+                  "turn": 0,
+                  "fade": 3,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 86 - beef"
+                },
+                "Discraft Avenger SS": {
+                  "score": 86.0,
+                  "speed": 10,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 86 - distance"
+                },
+                "Innova Luna Aviar": {
+                  "score": 86.0,
+                  "speed": 3,
+                  "glide": 2,
+                  "turn": 0,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 86 - stable_putter"
+                },
+                "Innova Teebird": {
+                  "score": 86.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 86 - reliable"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 1.0,
+                "accuracy": "high",
+                "control": 0.9,
+                "wind_sensitivity": "medium"
+              }
+            },
+            "forehand": {
+              "throw_name": "Forehand",
+              "top_5": {
+                "Latitude 64 Ruby": {
+                  "score": 85.5,
+                  "speed": 2,
+                  "glide": 2,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "understable",
+                  "rationale": "Score: 86 - touch"
+                },
+                "Discraft Raptor": {
+                  "score": 84.5,
+                  "speed": 9,
+                  "glide": 4,
+                  "turn": 0,
+                  "fade": 3,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 84 - beef"
+                },
+                "Discraft Avenger SS": {
+                  "score": 84.5,
+                  "speed": 10,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 84 - distance"
+                },
+                "Innova Luna Aviar": {
+                  "score": 84.5,
+                  "speed": 3,
+                  "glide": 2,
+                  "turn": 0,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 84 - stable_putter"
+                },
+                "Innova Teebird": {
+                  "score": 84.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 84 - reliable"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.85,
+                "accuracy": "medium",
+                "control": 0.7,
+                "wind_sensitivity": "high"
+              }
+            },
+            "sidearm": {
+              "throw_name": "Sidearm",
+              "top_5": {
+                "Latitude 64 Ruby": {
+                  "score": 84.5,
+                  "speed": 2,
+                  "glide": 2,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "understable",
+                  "rationale": "Score: 84 - touch"
+                },
+                "Discraft Raptor": {
+                  "score": 83.5,
+                  "speed": 9,
+                  "glide": 4,
+                  "turn": 0,
+                  "fade": 3,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 84 - beef"
+                },
+                "Discraft Avenger SS": {
+                  "score": 83.5,
+                  "speed": 10,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 84 - distance"
+                },
+                "Innova Luna Aviar": {
+                  "score": 83.5,
+                  "speed": 3,
+                  "glide": 2,
+                  "turn": 0,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 84 - stable_putter"
+                },
+                "Innova Teebird": {
+                  "score": 83.5,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 84 - reliable"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.75,
+                "accuracy": "low",
+                "control": 0.6,
+                "wind_sensitivity": "very_high"
+              }
+            },
+            "tomahawk": {
+              "throw_name": "Tomahawk",
+              "top_5": {
+                "Latitude 64 Ruby": {
+                  "score": 82.0,
+                  "speed": 2,
+                  "glide": 2,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "understable",
+                  "rationale": "Score: 82 - touch"
+                },
+                "Discraft Raptor": {
+                  "score": 81.0,
+                  "speed": 9,
+                  "glide": 4,
+                  "turn": 0,
+                  "fade": 3,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 81 - beef"
+                },
+                "Discraft Avenger SS": {
+                  "score": 81.0,
+                  "speed": 10,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "driver",
+                  "stability": "stable",
+                  "rationale": "Score: 81 - distance"
+                },
+                "Innova Luna Aviar": {
+                  "score": 81.0,
+                  "speed": 3,
+                  "glide": 2,
+                  "turn": 0,
+                  "fade": 1,
+                  "type": "putter",
+                  "stability": "stable",
+                  "rationale": "Score: 81 - stable_putter"
+                },
+                "Innova Teebird": {
+                  "score": 81.0,
+                  "speed": 8,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "fairway",
+                  "stability": "stable",
+                  "rationale": "Score: 81 - reliable"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.5,
+                "accuracy": "very_low",
+                "control": 0.4,
+                "wind_sensitivity": "extreme"
+              }
+            }
+          }
+        },
+        "moderate": {
+          "name": "Moderate Wind",
+          "recommendations": {
+            "backhand": {
+              "throw_name": "Backhand",
+              "top_5": {
+                "Latitude 64 Ruby": {
+                  "score": 89.0,
+                  "speed": 2,
+                  "glide": 2,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "understable",
+                  "rationale": "Score: 89 - touch"
+                },
+                "Discraft Luna": {
+                  "score": 84.0,
+                  "speed": 3,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "neutral",
+                  "rationale": "Score: 84 - approach_straight"
+                },
+                "Discraft Comet": {
+                  "score": 84.0,
+                  "speed": 5,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 84 - straight_flight"
+                },
+                "Discraft Buzzz": {
+                  "score": 84.0,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 84 - workhorse"
+                },
+                "Discraft Heat": {
+                  "score": 84.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 84 - all_around"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 1.0,
+                "accuracy": "high",
+                "control": 0.9,
+                "wind_sensitivity": "medium"
+              }
+            },
+            "forehand": {
+              "throw_name": "Forehand",
+              "top_5": {
+                "Latitude 64 Ruby": {
+                  "score": 87.5,
+                  "speed": 2,
+                  "glide": 2,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "understable",
+                  "rationale": "Score: 88 - touch"
+                },
+                "Discraft Luna": {
+                  "score": 82.5,
+                  "speed": 3,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "neutral",
+                  "rationale": "Score: 82 - approach_straight"
+                },
+                "Discraft Comet": {
+                  "score": 82.5,
+                  "speed": 5,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 82 - straight_flight"
+                },
+                "Discraft Buzzz": {
+                  "score": 82.5,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 82 - workhorse"
+                },
+                "Discraft Heat": {
+                  "score": 82.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 82 - all_around"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.85,
+                "accuracy": "medium",
+                "control": 0.7,
+                "wind_sensitivity": "high"
+              }
+            },
+            "sidearm": {
+              "throw_name": "Sidearm",
+              "top_5": {
+                "Latitude 64 Ruby": {
+                  "score": 86.5,
+                  "speed": 2,
+                  "glide": 2,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "understable",
+                  "rationale": "Score: 86 - touch"
+                },
+                "Discraft Luna": {
+                  "score": 81.5,
+                  "speed": 3,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "neutral",
+                  "rationale": "Score: 82 - approach_straight"
+                },
+                "Discraft Comet": {
+                  "score": 81.5,
+                  "speed": 5,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 82 - straight_flight"
+                },
+                "Discraft Buzzz": {
+                  "score": 81.5,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 82 - workhorse"
+                },
+                "Discraft Heat": {
+                  "score": 81.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 82 - all_around"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.75,
+                "accuracy": "low",
+                "control": 0.6,
+                "wind_sensitivity": "very_high"
+              }
+            },
+            "tomahawk": {
+              "throw_name": "Tomahawk",
+              "top_5": {
+                "Latitude 64 Ruby": {
+                  "score": 84.0,
+                  "speed": 2,
+                  "glide": 2,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "understable",
+                  "rationale": "Score: 84 - touch"
+                },
+                "Discraft Luna": {
+                  "score": 79.0,
+                  "speed": 3,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "neutral",
+                  "rationale": "Score: 79 - approach_straight"
+                },
+                "Discraft Comet": {
+                  "score": 79.0,
+                  "speed": 5,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 79 - straight_flight"
+                },
+                "Discraft Buzzz": {
+                  "score": 79.0,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 79 - workhorse"
+                },
+                "Discraft Heat": {
+                  "score": 79.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 79 - all_around"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.5,
+                "accuracy": "very_low",
+                "control": 0.4,
+                "wind_sensitivity": "extreme"
+              }
+            }
+          }
+        },
+        "strong": {
+          "name": "Strong Wind",
+          "recommendations": {
+            "backhand": {
+              "throw_name": "Backhand",
+              "top_5": {
+                "Latitude 64 Ruby": {
+                  "score": 91.0,
+                  "speed": 2,
+                  "glide": 2,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "understable",
+                  "rationale": "Score: 91 - touch"
+                },
+                "Discraft Luna": {
+                  "score": 86.0,
+                  "speed": 3,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "neutral",
+                  "rationale": "Score: 86 - approach_straight"
+                },
+                "Discraft Comet": {
+                  "score": 86.0,
+                  "speed": 5,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 86 - straight_flight"
+                },
+                "Discraft Buzzz": {
+                  "score": 86.0,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 86 - workhorse"
+                },
+                "Discraft Heat": {
+                  "score": 86.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 86 - all_around"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 1.0,
+                "accuracy": "high",
+                "control": 0.9,
+                "wind_sensitivity": "medium"
+              }
+            },
+            "forehand": {
+              "throw_name": "Forehand",
+              "top_5": {
+                "Latitude 64 Ruby": {
+                  "score": 89.5,
+                  "speed": 2,
+                  "glide": 2,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "understable",
+                  "rationale": "Score: 90 - touch"
+                },
+                "Discraft Luna": {
+                  "score": 84.5,
+                  "speed": 3,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "neutral",
+                  "rationale": "Score: 84 - approach_straight"
+                },
+                "Discraft Comet": {
+                  "score": 84.5,
+                  "speed": 5,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 84 - straight_flight"
+                },
+                "Discraft Buzzz": {
+                  "score": 84.5,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 84 - workhorse"
+                },
+                "Discraft Heat": {
+                  "score": 84.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 84 - all_around"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.85,
+                "accuracy": "medium",
+                "control": 0.7,
+                "wind_sensitivity": "high"
+              }
+            },
+            "sidearm": {
+              "throw_name": "Sidearm",
+              "top_5": {
+                "Latitude 64 Ruby": {
+                  "score": 88.5,
+                  "speed": 2,
+                  "glide": 2,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "understable",
+                  "rationale": "Score: 88 - touch"
+                },
+                "Discraft Luna": {
+                  "score": 83.5,
+                  "speed": 3,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "neutral",
+                  "rationale": "Score: 84 - approach_straight"
+                },
+                "Discraft Comet": {
+                  "score": 83.5,
+                  "speed": 5,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 84 - straight_flight"
+                },
+                "Discraft Buzzz": {
+                  "score": 83.5,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 84 - workhorse"
+                },
+                "Discraft Heat": {
+                  "score": 83.5,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 84 - all_around"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.75,
+                "accuracy": "low",
+                "control": 0.6,
+                "wind_sensitivity": "very_high"
+              }
+            },
+            "tomahawk": {
+              "throw_name": "Tomahawk",
+              "top_5": {
+                "Latitude 64 Ruby": {
+                  "score": 86.0,
+                  "speed": 2,
+                  "glide": 2,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "understable",
+                  "rationale": "Score: 86 - touch"
+                },
+                "Discraft Luna": {
+                  "score": 81.0,
+                  "speed": 3,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 0,
+                  "type": "putter",
+                  "stability": "neutral",
+                  "rationale": "Score: 81 - approach_straight"
+                },
+                "Discraft Comet": {
+                  "score": 81.0,
+                  "speed": 5,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 81 - straight_flight"
+                },
+                "Discraft Buzzz": {
+                  "score": 81.0,
+                  "speed": 5,
+                  "glide": 4,
+                  "turn": -1,
+                  "fade": 1,
+                  "type": "midrange",
+                  "stability": "neutral",
+                  "rationale": "Score: 81 - workhorse"
+                },
+                "Discraft Heat": {
+                  "score": 81.0,
+                  "speed": 7,
+                  "glide": 5,
+                  "turn": -1,
+                  "fade": 2,
+                  "type": "fairway",
+                  "stability": "neutral",
+                  "rationale": "Score: 81 - all_around"
+                }
+              },
+              "mechanics_info": {
+                "distance_bonus": 0.5,
+                "accuracy": "very_low",
+                "control": 0.4,
+                "wind_sensitivity": "extreme"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
