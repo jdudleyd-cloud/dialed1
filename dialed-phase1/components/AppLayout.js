@@ -52,7 +52,7 @@ export default function AppLayout() {
   const courseLabel = selectedCourse === 'kensington' ? 'KENSINGTON' : 'PALMER PARK'
 
   return (
-    <div className="flex flex-col h-screen bg-broadcast-black">
+    <div className="flex flex-col bg-broadcast-black" style={{ height: '100dvh' }}>
       {/* Name prompt modal */}
       {showNamePrompt && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
