@@ -235,16 +235,22 @@ export default function PlayTab({
   setThrowType,
   windCondition,
   setWindCondition,
+  // Persistent round state — lives in AppLayout, survives tab switches
+  currentRound,
+  setCurrentRound,
+  roundThrows,
+  setRoundThrows,
 }) {
   const [weather, setWeather] = useState(initialWeather)
   const [bag, setBag] = useState([])
   const [selectedDisc, setSelectedDisc] = useState(null)
-  const [currentRound, setCurrentRound] = useState(null)
-  const [throws, setThrows] = useState([])
   const [recommendations, setRecommendations] = useState(null)
   const [recsLoading, setRecsLoading] = useState(false)
   const [logging, setLogging] = useState(false)
   const [hazards, setHazards] = useState([])
+
+  // Use roundThrows from props (persisted), or empty array
+  const throws = roundThrows || []
 
   useEffect(() => { setBag(loadBag()) }, [])
 
@@ -307,7 +313,7 @@ export default function PlayTab({
     const courseName = selectedCourse === 'kensington' ? 'Kensington' : 'Palmer Park'
     const round = saveRound({ course: courseName, holeCount: 18 })
     setCurrentRound(round)
-    setThrows([])
+    setRoundThrows([])
   }
 
   const logThrow = async () => {
@@ -315,7 +321,6 @@ export default function PlayTab({
     setLogging(true)
     const sessionId = currentRound?.id || Date.now()
 
-    // Compute predicted flight for the logged throw
     const flight = calculateFlightPath(selectedDisc, throwType, windCondition, windRelation, null)
 
     const throwData = {
@@ -330,6 +335,7 @@ export default function PlayTab({
       windCondition,
       windRelation,
       course: selectedCourse,
+      roundId: currentRound?.id || null,
       predictedDistance: flight.distance,
       predictedLateral: flight.lateral,
       predictedDescription: flight.description,
@@ -337,13 +343,17 @@ export default function PlayTab({
     const saved = saveThrow(throwData)
     logThrowToFirebase({ ...throwData, sessionId }).catch(() => {})
     logGPSPoint(sessionId, location.lat, location.lon, selectedHole).catch(() => {})
-    setThrows(prev => [...prev, saved])
+    // Update persisted throws (survives tab switches)
+    setRoundThrows(prev => [...(prev || []), saved])
     if (selectedHole < 18) setSelectedHole(selectedHole + 1)
     else endRound()
     setLogging(false)
   }
 
-  const endRound = () => { setCurrentRound(null); setThrows([]) }
+  const endRound = () => {
+    setCurrentRound(null)
+    setRoundThrows([])
+  }
 
   // Sort bag discs to match recommendation order
   const recNames = recommendations?.discs?.map(d => d.name.toLowerCase()) || []
@@ -389,11 +399,6 @@ export default function PlayTab({
               <span className="text-broadcast-cyan">Yellow = basket · Cyan = wind</span>
             </div>
           )}
-          {windCondition !== 'calm' && windRelation && (
-            <div className="mt-1 text-center">
-              <WindPhysicsLabel windCondition={windCondition} windRelation={windRelation} throwType={throwType} />
-            </div>
-          )}
         </div>
       )}
 
@@ -402,11 +407,17 @@ export default function PlayTab({
         {currentRound ? (
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-xs text-broadcast-cyan">ROUND IN PROGRESS</div>
-              <div className="text-lg font-black text-broadcast-yellow font-saira">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse inline-block" />
+                <div className="text-xs text-green-400 font-bold font-saira">ROUND IN PROGRESS</div>
+              </div>
+              <div className="text-lg font-black text-broadcast-yellow font-saira mt-0.5">
                 {selectedCourse === 'kensington' ? 'Kensington' : 'Palmer Park'}
               </div>
-              <div className="text-xs text-gray-400">{throws.length} throws logged</div>
+              <div className="text-xs text-gray-400">
+                {throws.length} throw{throws.length !== 1 ? 's' : ''} logged
+                {throws.length > 0 && ` · last: H${throws[throws.length - 1]?.hole}`}
+              </div>
             </div>
             <div className="text-right">
               <div className="text-xs text-broadcast-cyan">HOLE</div>
@@ -442,26 +453,24 @@ export default function PlayTab({
         </div>
       </div>
 
-      {/* Wind Selector */}
-      <div className="broadcast-card p-3">
-        <div className="text-xs text-broadcast-cyan mb-2">
-          WIND CONDITIONS
-          {weather && <span className="text-gray-500 ml-2">({weather.windSpeed}mph auto)</span>}
+      {/* Wind — auto-detected, no manual buttons needed */}
+      {weather && windCondition !== 'calm' && (
+        <div className="broadcast-card px-3 py-2 flex items-center gap-2">
+          <span className="text-lg">{WIND_ICONS[windCondition]}</span>
+          <div className="flex-1">
+            <span className="text-xs font-black font-saira text-broadcast-cyan uppercase">
+              {windCondition} wind
+            </span>
+            <span className="text-xs text-gray-500 ml-2">
+              {weather.windSpeed}mph {windCardinal}
+              {windRelation ? ` · ${windRelation.replace('_', ' ')}` : ''}
+            </span>
+          </div>
+          {windCondition !== 'calm' && windRelation && (
+            <WindPhysicsLabel windCondition={windCondition} windRelation={windRelation} throwType={throwType} inline />
+          )}
         </div>
-        <div className="grid grid-cols-4 gap-2">
-          {WIND_CONDITIONS.map(w => (
-            <button key={w} onClick={() => setWindCondition(w)}
-              className={`py-2 font-saira font-black text-xs rounded transition-all ${
-                windCondition === w
-                  ? 'bg-broadcast-cyan text-broadcast-black'
-                  : 'bg-broadcast-black border border-broadcast-cyan text-broadcast-cyan'
-              }`}>
-              <div className="text-lg leading-tight">{WIND_ICONS[w]}</div>
-              <div className="text-[10px]">{getWindLabel(w).toUpperCase()}</div>
-            </button>
-          ))}
-        </div>
-      </div>
+      )}
 
       {/* Disc Recommendations — with AI reasons */}
       <div className="broadcast-card p-3">
@@ -610,22 +619,25 @@ export default function PlayTab({
 }
 
 // ─── Wind physics one-liner label ─────────────────────────────────────────────
-function WindPhysicsLabel({ windCondition, windRelation, throwType }) {
+function WindPhysicsLabel({ windCondition, windRelation, throwType, inline }) {
   const isRHFH = throwType === 'forehand' || throwType === 'sidearm'
   const labels = {
     headwind: isRHFH
-      ? `Headwind: overstable discs are more reliable for forehand`
-      : `Headwind: understable discs will turn harder — use overstable`,
-    tailwind: `Tailwind: all discs act more overstable — expect more fade`,
+      ? `Headwind: overstable more reliable for forehand`
+      : `Headwind: understable turns harder — use overstable`,
+    tailwind: `Tailwind: all discs act more overstable`,
     cross_left: isRHFH
-      ? `Cross-left: RHFH fights this wind naturally`
-      : `Cross-left: disc pushed right — aim left or use understable`,
+      ? `Cross-left: RHFH fights this naturally`
+      : `Cross-left: disc pushed right — aim left`,
     cross_right: isRHFH
-      ? `Cross-right: RHFH pushed left — aim right or use overstable`
-      : `Cross-right: disc pushed left — overstable helps hold the line`,
+      ? `Cross-right: RHFH pushed left — aim right`
+      : `Cross-right: disc pushed left — overstable helps`,
   }
   const label = labels[windRelation]
   if (!label) return null
+  if (inline) return (
+    <span className="text-[9px] text-orange-300 font-bold">⚡</span>
+  )
   return (
     <div className="text-[10px] text-orange-300 bg-orange-950/60 rounded px-2 py-1 inline-block">
       ⚡ {label}

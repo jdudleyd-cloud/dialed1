@@ -34,6 +34,10 @@ export default function AppLayout() {
   // Persistent VS game state — survives tab switches
   const [vsGame, setVsGame] = useState(null)
 
+  // Persistent PLAY round state — survives tab switches
+  const [currentRound, setCurrentRound] = useState(null)
+  const [roundThrows, setRoundThrows] = useState([])
+
   // Shared caddy state
   const [selectedCourse, setSelectedCourse] = useState('palmer')
   const [selectedHole, setSelectedHole] = useState(1)
@@ -112,6 +116,9 @@ export default function AppLayout() {
             <span className="text-broadcast-cyan">{courseLabel}</span>
             <span className="text-gray-500">H{selectedHole}</span>
             <span className="text-broadcast-yellow uppercase">{throwType.slice(0,2).toUpperCase()}</span>
+            {currentRound && (
+              <span className="text-green-400 font-black text-[9px] border border-green-600 rounded px-1">LIVE</span>
+            )}
           </div>
         </div>
       </header>
@@ -131,6 +138,8 @@ export default function AppLayout() {
                 setSelectedHole={setSelectedHole} throwType={throwType}
                 setThrowType={setThrowType} windCondition={windCondition}
                 setWindCondition={setWindCondition}
+                currentRound={currentRound} setCurrentRound={setCurrentRound}
+                roundThrows={roundThrows} setRoundThrows={setRoundThrows}
               />
             )}
             {activeTab === 'BAG' && <BagTab />}
@@ -165,6 +174,9 @@ export default function AppLayout() {
             {tab}
             {tab === 'VS' && vsGame && (
               <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-broadcast-red animate-pulse" />
+            )}
+            {tab === 'PLAY' && currentRound && (
+              <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
             )}
           </button>
         ))}
