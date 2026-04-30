@@ -174,6 +174,9 @@ export default function PlayTab({
   const [hazards, setHazards] = useState([])
   const [showCaddy, setShowCaddy] = useState(false)
   const [showBagAll, setShowBagAll] = useState(false)
+  // Wind override — null means use auto-detected values; set when player feels conditions differ from sensor
+  const [showWindOverride, setShowWindOverride] = useState(false)
+  const [windDirOverride, setWindDirOverride] = useState(null)
 
   const throws = roundThrows || []
 
@@ -208,7 +211,9 @@ export default function PlayTab({
   }, [selectedCourse, selectedHole])
 
   const windDeg = weather?.windDirection
-  const windCardinal = windDeg !== undefined ? degToCardinal(windDeg) : ''
+  // Use override direction if player set one, otherwise fall back to sensor value
+  const effectiveWindDeg = windDirOverride ?? windDeg
+  const windCardinal = effectiveWindDeg !== undefined ? degToCardinal(effectiveWindDeg) : ''
 
   const pins = loadCustomPins()
   const pinKey = `${selectedCourse}_${selectedHole}`
@@ -217,7 +222,7 @@ export default function PlayTab({
   const basketPin = holePin.basket
 
   const windRelation = inferWindRelation(
-    windDeg,
+    effectiveWindDeg,
     teePin?.lat, teePin?.lon,
     basketPin?.lat, basketPin?.lon
   )
@@ -301,10 +306,19 @@ export default function PlayTab({
             <CompassWidget windDeg={windDeg} basketBearing={basketBearing} />
             <div className="flex-1 grid grid-cols-2 gap-2 text-center">
               <WeatherStat value={`${weather.temp}°`} label={weather.description} />
-              <WeatherStat value={`${weather.windSpeed}mph`} label={`Wind ${windCardinal}`} />
+              {/* Tappable wind stat — opens manual override when sensor reading feels wrong */}
+              <button onClick={() => setShowWindOverride(true)} className="text-center w-full">
+                <div className="broadcast-stat text-base flex items-center justify-center gap-1">
+                  {weather.windSpeed}mph
+                  {windDirOverride !== null && <span className="text-[9px] text-orange-400">●</span>}
+                </div>
+                <div className="text-[10px] text-broadcast-cyan leading-tight">
+                  Wind {windCardinal} {windCondition !== 'calm' ? `· ${windCondition}` : ''}
+                </div>
+              </button>
               <WeatherStat value={`${weather.humidity}%`} label="Humidity" />
               <WeatherStat
-                value={windRelation ? windRelation.replace('_', ' ').toUpperCase() : `${windDeg || '—'}°`}
+                value={windRelation ? windRelation.replace('_', ' ').toUpperCase() : `${effectiveWindDeg || '—'}°`}
                 label="vs Fairway" />
             </div>
           </div>
@@ -368,25 +382,6 @@ export default function PlayTab({
           ))}
         </div>
       </div>
-
-      {/* Wind — auto-detected status strip */}
-      {weather && windCondition !== 'calm' && (
-        <div className="broadcast-card px-3 py-2 flex items-center gap-2">
-          <span className="text-lg">{WIND_ICONS[windCondition]}</span>
-          <div className="flex-1">
-            <span className="text-xs font-black font-saira text-broadcast-cyan uppercase">
-              {windCondition} wind
-            </span>
-            <span className="text-xs text-gray-500 ml-2">
-              {weather.windSpeed}mph {windCardinal}
-              {windRelation ? ` · ${windRelation.replace('_', ' ')}` : ''}
-            </span>
-          </div>
-          {windCondition !== 'calm' && windRelation && (
-            <WindPhysicsLabel windCondition={windCondition} windRelation={windRelation} throwType={throwType} inline />
-          )}
-        </div>
-      )}
 
       {/* Bag + Caddy — ordered by AI rank */}
       <div className="broadcast-card p-3">
@@ -532,6 +527,66 @@ export default function PlayTab({
       )}
       {currentRound && !selectedDisc && (
         <div className="text-center text-xs text-broadcast-cyan py-2">Select a disc to log throw</div>
+      )}
+
+      {/* Wind override modal — opened when player feels sensor reading is wrong */}
+      {showWindOverride && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/70" onClick={() => setShowWindOverride(false)}>
+          <div className="bg-gray-900 border-t-2 border-broadcast-yellow w-full rounded-t-xl p-4 pb-8" onClick={e => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-1">
+              <div className="text-sm font-black text-broadcast-yellow font-saira">WIND OVERRIDE</div>
+              <button onClick={() => setShowWindOverride(false)} className="text-gray-400 text-xl leading-none">✕</button>
+            </div>
+            <div className="text-[10px] text-gray-500 mb-3">
+              Auto-detected: {weather?.windSpeed}mph {windDeg !== undefined ? degToCardinal(windDeg) : '—'} · {windDirOverride !== null ? <span className="text-orange-400">overridden</span> : 'using sensor'}
+            </div>
+
+            <div className="text-xs text-broadcast-cyan mb-1">CONDITION</div>
+            <div className="grid grid-cols-4 gap-1.5 mb-4">
+              {['calm', 'light', 'moderate', 'strong'].map(c => (
+                <button key={c} onClick={() => setWindCondition(c)}
+                  className={`py-1.5 font-saira font-bold text-[10px] rounded border transition-colors ${
+                    windCondition === c
+                      ? 'bg-broadcast-cyan text-broadcast-black border-broadcast-cyan'
+                      : 'bg-broadcast-black text-broadcast-cyan border-broadcast-cyan'
+                  }`}>
+                  {c.toUpperCase()}
+                </button>
+              ))}
+            </div>
+
+            <div className="text-xs text-broadcast-cyan mb-1">DIRECTION</div>
+            <div className="grid grid-cols-4 gap-1.5 mb-4">
+              {['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'].map((dir, i) => {
+                const deg = i * 45
+                const active = windDirOverride === deg || (windDirOverride === null && windDeg !== undefined && Math.round(windDeg / 45) % 8 === i)
+                return (
+                  <button key={dir} onClick={() => setWindDirOverride(deg)}
+                    className={`py-1.5 font-saira font-bold text-[10px] rounded border transition-colors ${
+                      active
+                        ? 'bg-broadcast-yellow text-broadcast-black border-broadcast-yellow'
+                        : 'bg-broadcast-black text-broadcast-yellow border-broadcast-yellow'
+                    }`}>
+                    {dir}
+                  </button>
+                )
+              })}
+            </div>
+
+            <div className="flex gap-2">
+              <button
+                onClick={() => { setWindDirOverride(null); if (weather?.windSpeed) { const mph = weather.windSpeed; setWindCondition(mph <= 5 ? 'calm' : mph <= 12 ? 'light' : mph <= 20 ? 'moderate' : 'strong') } setShowWindOverride(false) }}
+                className="flex-1 py-2 font-saira font-bold text-xs rounded bg-broadcast-black border border-gray-600 text-gray-400"
+              >
+                RESET TO AUTO
+              </button>
+              <button onClick={() => setShowWindOverride(false)}
+                className="flex-1 py-2 font-saira font-bold text-xs rounded bg-broadcast-yellow text-broadcast-black">
+                APPLY
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Full bag selector modal */}
