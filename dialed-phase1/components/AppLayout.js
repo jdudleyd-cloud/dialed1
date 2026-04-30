@@ -8,6 +8,9 @@ import VsTab from './tabs/VsTab'
 
 const TABS = ['PLAY', 'BAG', 'COURSE', 'VS', 'LOG']
 
+// VS game initial state helper
+function emptyVsGame() { return null }
+
 function loadPlayerName() {
   if (typeof window === 'undefined') return null
   return localStorage.getItem('dialed_player_name') || null
@@ -27,6 +30,9 @@ export default function AppLayout() {
   const [nameInput, setNameInput] = useState('')
   const [showNamePrompt, setShowNamePrompt] = useState(false)
   const [devMode, setDevMode] = useState(false)
+
+  // Persistent VS game state — survives tab switches
+  const [vsGame, setVsGame] = useState(null)
 
   // Shared caddy state
   const [selectedCourse, setSelectedCourse] = useState('palmer')
@@ -138,7 +144,8 @@ export default function AppLayout() {
             {activeTab === 'VS' && (
               <VsTab
                 selectedCourse={selectedCourse} selectedHole={selectedHole}
-                setSelectedHole={setSelectedHole}
+                setSelectedHole={setSelectedHole} location={location}
+                vsGame={vsGame} setVsGame={setVsGame}
               />
             )}
             {activeTab === 'LOG' && <HistoryTab />}
@@ -150,12 +157,15 @@ export default function AppLayout() {
       <nav className="fixed bottom-0 left-0 right-0 z-40 bg-broadcast-black border-t-2 border-broadcast-yellow flex" style={{ height: 56 }}>
         {TABS.map(tab => (
           <button key={tab} onClick={() => setActiveTab(tab)}
-            className={`flex-1 font-saira font-bold text-[11px] tracking-wide transition-colors ${
+            className={`flex-1 font-saira font-bold text-[11px] tracking-wide transition-colors relative ${
               activeTab === tab
                 ? 'bg-broadcast-yellow text-broadcast-black'
                 : 'bg-broadcast-black text-broadcast-yellow'
             }`}>
             {tab}
+            {tab === 'VS' && vsGame && (
+              <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-broadcast-red animate-pulse" />
+            )}
           </button>
         ))}
       </nav>
