@@ -12,6 +12,7 @@ import {
   THROW_TYPES,
 } from '../../utils/recommendations'
 import { loadHazards, scoreDiscRisk, inferWindRelation } from '../../utils/hazards'
+import { calculateFlightPath, getDiscReason } from '../../utils/flightPhysics'
 
 const WIND_ICONS = { calm: '🌀', light: '💨', moderate: '🌬', strong: '⛈' }
 const THROW_ICONS = { backhand: 'BH', forehand: 'FH', sidearm: 'SA', tomahawk: 'TH' }
@@ -62,7 +63,6 @@ function CompassWidget({ windDeg, basketBearing }) {
             textAnchor="middle" fontSize="8" fill="#555" fontFamily="sans-serif">{d}</text>
         )
       })}
-      {/* Wind arrow — blue/cyan */}
       {windRad !== null && (() => {
         const s = arrowStart(windRad, 32)
         const e = arrowEnd(windRad, 32)
@@ -75,7 +75,6 @@ function CompassWidget({ windDeg, basketBearing }) {
           </g>
         )
       })()}
-      {/* Basket arrow — yellow */}
       {basketRad !== null && (() => {
         const s = arrowStart(basketRad, 28)
         const e = arrowEnd(basketRad, 28)
@@ -92,46 +91,136 @@ function CompassWidget({ windDeg, basketBearing }) {
 }
 
 // ─── DiscRecommendationRow ─────────────────────────────────────────────────────
-function DiscRecommendationRow({ disc, rank, selected, onSelect, hazardResult }) {
-  const scoreColor = disc.score >= 90 ? '#ffeb3b' : disc.score >= 80 ? '#00d4ff' : '#aaa'
+function DiscRecommendationRow({ disc, rank, selected, onSelect, hazardResult, reasons }) {
+  const [expanded, setExpanded] = useState(false)
   const effectiveScore = disc.score - (hazardResult?.penalty || 0)
   const warnings = hazardResult?.warnings || []
+  const hasReasons = reasons && reasons.length > 0
 
   return (
-    <button
-      onClick={onSelect}
-      className={`w-full text-left p-2 rounded border transition-all ${
-        selected
-          ? 'border-broadcast-yellow bg-yellow-950'
-          : 'border-gray-700 bg-broadcast-black hover:border-broadcast-yellow'
-      }`}
-    >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-gray-500 w-4 font-black">{rank}.</span>
-          <div>
-            <div className="font-black text-white font-saira text-sm leading-tight">{disc.name}</div>
-            <div className="text-[10px] text-gray-400 capitalize">{disc.type} · {disc.stability}</div>
+    <div className={`rounded border transition-all ${
+      selected
+        ? 'border-broadcast-yellow bg-yellow-950'
+        : 'border-gray-700 bg-broadcast-black'
+    }`}>
+      <button
+        onClick={onSelect}
+        className="w-full text-left p-2"
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-500 w-4 font-black">{rank}.</span>
+            <div>
+              <div className="font-black text-white font-saira text-sm leading-tight">{disc.name}</div>
+              <div className="text-[10px] text-gray-400 capitalize">{disc.type} · {disc.stability}</div>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="text-[10px] text-gray-500 text-right">
+              <div>{disc.speed}/{disc.glide}/{disc.turn}/{disc.fade}</div>
+            </div>
+            {hazardResult?.penalty > 0 && (
+              <div className="text-xs font-bold text-orange-400 font-saira">
+                -{hazardResult.penalty}
+              </div>
+            )}
+            <div className="font-black text-sm font-saira" style={{ color: effectiveScore >= 90 ? '#ffeb3b' : effectiveScore >= 80 ? '#00d4ff' : '#aaa' }}>
+              {effectiveScore.toFixed(0)}
+            </div>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="text-[10px] text-gray-500 text-right">
-            <div>{disc.speed}/{disc.glide}/{disc.turn}/{disc.fade}</div>
-          </div>
-          {hazardResult?.penalty > 0 && (
-            <div className="text-xs font-bold text-orange-400 font-saira">
-              -{hazardResult.penalty}
+        {warnings.map((w, i) => (
+          <div key={i} className="mt-1 text-[10px] text-orange-300 bg-orange-950 rounded px-1.5 py-0.5">{w}</div>
+        ))}
+      </button>
+
+      {/* Why this disc — expandable reasons */}
+      {hasReasons && (
+        <div className="px-2 pb-2">
+          <button
+            onClick={() => setExpanded(e => !e)}
+            className="text-[10px] text-broadcast-cyan flex items-center gap-1 hover:text-white transition-colors"
+          >
+            <span>{expanded ? '▲' : '▼'}</span>
+            <span>WHY THIS DISC?</span>
+          </button>
+          {expanded && (
+            <div className="mt-1.5 space-y-1">
+              {reasons.map((r, i) => (
+                <div key={i} className={`text-[10px] rounded px-2 py-1 leading-snug ${
+                  r.startsWith('⚠') ? 'bg-orange-950 text-orange-300' : 'bg-gray-900 text-gray-300'
+                }`}>
+                  {r}
+                </div>
+              ))}
             </div>
           )}
-          <div className="font-black text-sm font-saira" style={{ color: effectiveScore >= 90 ? '#ffeb3b' : effectiveScore >= 80 ? '#00d4ff' : '#aaa' }}>
-            {effectiveScore.toFixed(0)}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ─── Flight Prediction Panel ──────────────────────────────────────────────────
+function FlightPrediction({ disc, throwType, windCondition, windRelation }) {
+  if (!disc) return null
+  const flight = calculateFlightPath(disc, throwType, windCondition, windRelation, null)
+  const lateralDir = flight.lateral > 0 ? 'right' : flight.lateral < 0 ? 'left' : ''
+  const lateralAbs = Math.abs(flight.lateral)
+
+  return (
+    <div className="mt-3 p-2 rounded border border-gray-700 bg-gray-900/60 space-y-1">
+      <div className="text-[10px] text-broadcast-cyan font-bold">PREDICTED FLIGHT</div>
+      <div className="flex gap-3">
+        <div className="text-center">
+          <div className="text-lg font-black text-broadcast-yellow font-saira leading-tight">
+            {flight.distance}
           </div>
+          <div className="text-[9px] text-gray-500">FEET</div>
+        </div>
+        <div className="text-center">
+          <div className="text-lg font-black font-saira leading-tight" style={{
+            color: lateralAbs > 30 ? '#ff6600' : lateralAbs > 15 ? '#ffeb3b' : '#00d4ff'
+          }}>
+            {lateralAbs > 5 ? `${lateralAbs}ft ${lateralDir}` : 'CENTER'}
+          </div>
+          <div className="text-[9px] text-gray-500">LATERAL</div>
+        </div>
+        {windCondition !== 'calm' && windRelation && (
+          <div className="text-center">
+            <div className="text-sm font-black font-saira leading-tight text-broadcast-cyan capitalize">
+              {windRelation.replace('_', ' ')}
+            </div>
+            <div className="text-[9px] text-gray-500">WIND</div>
+          </div>
+        )}
+      </div>
+      {/* Visual flight bar */}
+      <div className="relative h-5 bg-gray-800 rounded-full overflow-hidden mt-1">
+        <div className="absolute inset-y-0 left-1/2 w-px bg-gray-600" />
+        {/* Landing zone marker */}
+        {(() => {
+          const maxLateral = 80
+          const pct = 50 + (flight.lateral / maxLateral) * 45
+          const clampedPct = Math.max(5, Math.min(95, pct))
+          return (
+            <div
+              className="absolute top-1 bottom-1 w-2 rounded-full"
+              style={{
+                left: `${clampedPct}%`,
+                backgroundColor: '#ff6600',
+                transform: 'translateX(-50%)',
+                boxShadow: '0 0 6px #ff6600',
+              }}
+            />
+          )
+        })()}
+        <div className="absolute inset-0 flex items-center justify-center text-[9px] text-gray-500 pointer-events-none">
+          ← Left · Center · Right →
         </div>
       </div>
-      {warnings.map((w, i) => (
-        <div key={i} className="mt-1 text-[10px] text-orange-300 bg-orange-950 rounded px-1.5 py-0.5">{w}</div>
-      ))}
-    </button>
+      <div className="text-[9px] text-gray-600 leading-snug">{flight.description}</div>
+    </div>
   )
 }
 
@@ -188,7 +277,7 @@ export default function PlayTab({
     setHazards(loadHazards(courseKey, selectedHole))
   }, [selectedCourse, selectedHole])
 
-  // Compute compass values
+  // Compass / wind relation
   const windDeg = weather?.windDirection
   const windCardinal = windDeg !== undefined ? degToCardinal(windDeg) : ''
 
@@ -225,6 +314,10 @@ export default function PlayTab({
     if (!location || !selectedDisc) return
     setLogging(true)
     const sessionId = currentRound?.id || Date.now()
+
+    // Compute predicted flight for the logged throw
+    const flight = calculateFlightPath(selectedDisc, throwType, windCondition, windRelation, null)
+
     const throwData = {
       discId: selectedDisc.id,
       discName: selectedDisc.name,
@@ -235,10 +328,13 @@ export default function PlayTab({
       date: new Date().toISOString(),
       throwType,
       windCondition,
+      windRelation,
       course: selectedCourse,
+      predictedDistance: flight.distance,
+      predictedLateral: flight.lateral,
+      predictedDescription: flight.description,
     }
     const saved = saveThrow(throwData)
-    // Fire-and-forget — don't block UI on Firebase
     logThrowToFirebase({ ...throwData, sessionId }).catch(() => {})
     logGPSPoint(sessionId, location.lat, location.lon, selectedHole).catch(() => {})
     setThrows(prev => [...prev, saved])
@@ -249,7 +345,7 @@ export default function PlayTab({
 
   const endRound = () => { setCurrentRound(null); setThrows([]) }
 
-  // Sort bag discs in recommendations: match by name against rec list, fallback to all
+  // Sort bag discs to match recommendation order
   const recNames = recommendations?.discs?.map(d => d.name.toLowerCase()) || []
   const bagSorted = [...bag].sort((a, b) => {
     const ai = recNames.indexOf(a.name.toLowerCase())
@@ -258,6 +354,16 @@ export default function PlayTab({
     if (ai === -1) return 1
     if (bi === -1) return -1
     return ai - bi
+  })
+
+  // Build recommendation list from bag only, with AI reasons
+  const bagNames = bag.map(d => d.name.toLowerCase())
+  const bagRecs = recommendations?.discs?.filter(d => bagNames.includes(d.name.toLowerCase())) || []
+  const recDiscsWithReasons = bagRecs.slice(0, 5).map(recDisc => {
+    const bagDisc = bag.find(d => d.name.toLowerCase() === recDisc.name.toLowerCase())
+    const fullDisc = bagDisc || recDisc
+    const reasons = getDiscReason(fullDisc, throwType, windCondition, windRelation, hazards, null)
+    return { recDisc, bagDisc, reasons }
   })
 
   return (
@@ -278,9 +384,14 @@ export default function PlayTab({
           </div>
           {basketBearing !== undefined && (
             <div className="mt-2 text-xs text-gray-500 text-center">
-              Basket bearing: <span className="text-broadcast-yellow">{Math.round(basketBearing)}° ({degToCardinal(basketBearing)})</span>
+              Basket: <span className="text-broadcast-yellow">{Math.round(basketBearing)}° ({degToCardinal(basketBearing)})</span>
               {' · '}
               <span className="text-broadcast-cyan">Yellow = basket · Cyan = wind</span>
+            </div>
+          )}
+          {windCondition !== 'calm' && windRelation && (
+            <div className="mt-1 text-center">
+              <WindPhysicsLabel windCondition={windCondition} windRelation={windRelation} throwType={throwType} />
             </div>
           )}
         </div>
@@ -352,11 +463,11 @@ export default function PlayTab({
         </div>
       </div>
 
-      {/* Disc Recommendations — filtered to bag discs */}
+      {/* Disc Recommendations — with AI reasons */}
       <div className="broadcast-card p-3">
         <div className="flex justify-between items-center mb-2">
           <div className="text-xs text-broadcast-cyan">
-            RECOMMENDATIONS — HOLE {selectedHole}
+            AI CADDY — HOLE {selectedHole}
           </div>
           {recommendations && (
             <div className="text-xs text-gray-500">
@@ -365,25 +476,16 @@ export default function PlayTab({
           )}
         </div>
 
-        {recsLoading && <div className="text-xs text-gray-500 py-2">Loading...</div>}
+        {recsLoading && <div className="text-xs text-gray-500 py-2">Analyzing conditions...</div>}
 
-        {!recsLoading && (() => {
-          // Filter recommendations to only discs in bag
-          const bagNames = bag.map(d => d.name.toLowerCase())
-          const bagRecs = recommendations?.discs?.filter(d => bagNames.includes(d.name.toLowerCase())) || []
-
-          if (bagRecs.length === 0) {
-            return (
-              <div className="text-xs text-gray-500 py-2">
-                No recommendations matched your bag for this hole. Pick a disc below.
-              </div>
-            )
-          }
-
-          return (
-            <div className="space-y-1.5">
-              {bagRecs.slice(0, 5).map((recDisc, i) => {
-                const bagDisc = bag.find(d => d.name.toLowerCase() === recDisc.name.toLowerCase())
+        {!recsLoading && (
+          recDiscsWithReasons.length === 0 ? (
+            <div className="text-xs text-gray-500 py-2">
+              No recommendations matched your bag. Pick a disc below.
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {recDiscsWithReasons.map(({ recDisc, bagDisc, reasons }, i) => {
                 const hr = bagDisc ? hazardScore(bagDisc) : null
                 return (
                   <DiscRecommendationRow
@@ -393,12 +495,13 @@ export default function PlayTab({
                     selected={selectedDisc?.name === recDisc.name}
                     onSelect={() => setSelectedDisc(bagDisc || recDisc)}
                     hazardResult={hr}
+                    reasons={reasons}
                   />
                 )
               })}
             </div>
           )
-        })()}
+        )}
       </div>
 
       {/* Bag Disc Grid */}
@@ -457,6 +560,33 @@ export default function PlayTab({
               {hr?.warnings?.map((w, i) => (
                 <div key={i} className="mt-1 text-[10px] text-orange-300 bg-orange-950 rounded px-2 py-0.5">{w}</div>
               ))}
+
+              {/* Flight prediction for selected disc */}
+              <FlightPrediction
+                disc={selectedDisc}
+                throwType={throwType}
+                windCondition={windCondition}
+                windRelation={windRelation}
+              />
+
+              {/* AI reasons for selected disc */}
+              {(() => {
+                const reasons = getDiscReason(selectedDisc, throwType, windCondition, windRelation, hazards, null)
+                return reasons.length > 0 ? (
+                  <div className="mt-2">
+                    <div className="text-[10px] text-broadcast-cyan font-bold mb-1">AI CADDY SAYS</div>
+                    <div className="space-y-1">
+                      {reasons.map((r, i) => (
+                        <div key={i} className={`text-[10px] rounded px-2 py-1 leading-snug ${
+                          r.startsWith('⚠') ? 'bg-orange-950 text-orange-300' : 'bg-gray-900 text-gray-300'
+                        }`}>
+                          {r}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : null
+              })()}
             </div>
           )
         })()}
@@ -475,6 +605,30 @@ export default function PlayTab({
       {currentRound && !selectedDisc && (
         <div className="text-center text-xs text-broadcast-cyan py-2">Select a disc to log throw</div>
       )}
+    </div>
+  )
+}
+
+// ─── Wind physics one-liner label ─────────────────────────────────────────────
+function WindPhysicsLabel({ windCondition, windRelation, throwType }) {
+  const isRHFH = throwType === 'forehand' || throwType === 'sidearm'
+  const labels = {
+    headwind: isRHFH
+      ? `Headwind: overstable discs are more reliable for forehand`
+      : `Headwind: understable discs will turn harder — use overstable`,
+    tailwind: `Tailwind: all discs act more overstable — expect more fade`,
+    cross_left: isRHFH
+      ? `Cross-left: RHFH fights this wind naturally`
+      : `Cross-left: disc pushed right — aim left or use understable`,
+    cross_right: isRHFH
+      ? `Cross-right: RHFH pushed left — aim right or use overstable`
+      : `Cross-right: disc pushed left — overstable helps hold the line`,
+  }
+  const label = labels[windRelation]
+  if (!label) return null
+  return (
+    <div className="text-[10px] text-orange-300 bg-orange-950/60 rounded px-2 py-1 inline-block">
+      ⚡ {label}
     </div>
   )
 }

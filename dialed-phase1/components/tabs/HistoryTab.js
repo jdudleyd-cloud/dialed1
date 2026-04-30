@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState, useRef } from 'react'
-import { getThrows, getRounds } from '../../utils/storage'
+import { getThrows, getRounds, deleteThrow, deleteRound } from '../../utils/storage'
 
 function loadGoogleMapsScript(apiKey) {
   return new Promise((resolve, reject) => {
@@ -42,7 +42,6 @@ function ThrowMapModal({ throwData, onClose }) {
         zoomControl: true,
       })
 
-      // Tee marker (where throw was logged)
       new gmaps.Marker({
         position: pos,
         map,
@@ -59,7 +58,6 @@ function ThrowMapModal({ throwData, onClose }) {
         label: { text: `${throwData.hole}`, color: '#000', fontSize: '10px', fontWeight: '900' },
       })
 
-      // Accuracy ring — shows approximate throw zone
       new gmaps.Circle({
         map,
         center: pos,
@@ -83,7 +81,6 @@ function ThrowMapModal({ throwData, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-broadcast-black">
-      {/* Header */}
       <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-800 flex-shrink-0">
         <button onClick={onClose} className="text-broadcast-cyan font-bold text-sm">← Back</button>
         <div className="flex-1">
@@ -92,15 +89,14 @@ function ThrowMapModal({ throwData, onClose }) {
             {throwData.course ? throwData.course.toUpperCase() : '—'} · Hole {throwData.hole}
           </div>
         </div>
-        {throwData.distance && (
+        {throwData.predictedDistance && (
           <div className="text-right">
-            <div className="text-xl font-black text-broadcast-yellow font-saira">{throwData.distance} ft</div>
-            <div className="text-xs text-broadcast-cyan">Distance</div>
+            <div className="text-xl font-black text-broadcast-yellow font-saira">{throwData.predictedDistance} ft</div>
+            <div className="text-xs text-broadcast-cyan">Predicted</div>
           </div>
         )}
       </div>
 
-      {/* Map */}
       <div className="flex-1 relative">
         {mapError ? (
           <div className="flex items-center justify-center h-full text-center p-4">
@@ -116,7 +112,6 @@ function ThrowMapModal({ throwData, onClose }) {
         )}
       </div>
 
-      {/* Throw details strip */}
       <div className="flex-shrink-0 border-t border-gray-800 p-3 grid grid-cols-3 gap-3 text-center">
         <div>
           <div className="text-xs text-broadcast-cyan">THROW TYPE</div>
@@ -132,8 +127,37 @@ function ThrowMapModal({ throwData, onClose }) {
             {throwData.lat?.toFixed(4)}, {throwData.lon?.toFixed(4)}
           </div>
         </div>
+        {throwData.predictedDescription && (
+          <div className="col-span-3 text-xs text-gray-500">{throwData.predictedDescription}</div>
+        )}
         <div className="col-span-3">
           <div className="text-xs text-gray-500">{date}</div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── Confirm Delete Modal ──────────────────────────────────────────────────────
+function ConfirmDelete({ message, onConfirm, onCancel }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
+      <div className="broadcast-card p-5 mx-6 space-y-4 max-w-xs w-full">
+        <div className="font-black text-broadcast-red font-saira text-lg">DELETE?</div>
+        <div className="text-sm text-gray-300">{message}</div>
+        <div className="flex gap-3">
+          <button
+            onClick={onCancel}
+            className="flex-1 py-2 font-saira font-black text-sm rounded border border-gray-600 text-gray-400"
+          >
+            CANCEL
+          </button>
+          <button
+            onClick={onConfirm}
+            className="flex-1 py-2 font-saira font-black text-sm rounded bg-broadcast-red text-white"
+          >
+            DELETE
+          </button>
         </div>
       </div>
     </div>
@@ -146,12 +170,39 @@ export default function HistoryTab() {
   const [rounds, setRounds] = useState([])
   const [view, setView] = useState('throws')
   const [selectedThrow, setSelectedThrow] = useState(null)
+  const [confirmDelete, setConfirmDelete] = useState(null) // { type: 'throw'|'round', id, message }
 
-  useEffect(() => {
+  const refreshData = () => {
     const t = getThrows()
     setThrows([...t].reverse())
     setRounds([...getRounds()].reverse())
-  }, [])
+  }
+
+  useEffect(() => { refreshData() }, [])
+
+  const handleDeleteThrow = (id, discName, hole) => {
+    setConfirmDelete({
+      type: 'throw',
+      id,
+      message: `Delete throw: ${discName} on Hole ${hole}? This cannot be undone.`
+    })
+  }
+
+  const handleDeleteRound = (id, course, date) => {
+    setConfirmDelete({
+      type: 'round',
+      id,
+      message: `Delete round at ${course} on ${date}? This cannot be undone.`
+    })
+  }
+
+  const confirmDoDelete = () => {
+    if (!confirmDelete) return
+    if (confirmDelete.type === 'throw') deleteThrow(confirmDelete.id)
+    else deleteRound(confirmDelete.id)
+    setConfirmDelete(null)
+    refreshData()
+  }
 
   if (selectedThrow) {
     return <ThrowMapModal throwData={selectedThrow} onClose={() => setSelectedThrow(null)} />
@@ -159,6 +210,14 @@ export default function HistoryTab() {
 
   return (
     <div className="p-4 space-y-4 overflow-y-auto pb-6">
+      {confirmDelete && (
+        <ConfirmDelete
+          message={confirmDelete.message}
+          onConfirm={confirmDoDelete}
+          onCancel={() => setConfirmDelete(null)}
+        />
+      )}
+
       {/* View Toggle */}
       <div className="flex gap-2">
         <button onClick={() => setView('rounds')}
@@ -187,24 +246,36 @@ export default function HistoryTab() {
               No rounds yet. Start a round in the PLAY tab.
             </div>
           ) : (
-            rounds.map((round) => (
-              <div key={round.id} className="broadcast-card p-4">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <div className="font-black text-broadcast-yellow font-saira">{round.course}</div>
-                    <div className="text-xs text-broadcast-cyan">
-                      {round.startTime ? new Date(round.startTime).toLocaleDateString() : ''}
+            rounds.map((round) => {
+              const dateStr = round.startTime
+                ? new Date(round.startTime).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
+                : '—'
+              return (
+                <div key={round.id} className="broadcast-card p-4">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <div className="font-black text-broadcast-yellow font-saira">{round.course}</div>
+                      <div className="text-xs text-broadcast-cyan">{dateStr}</div>
                     </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-xl font-black text-broadcast-yellow font-saira">
-                      {round.throws?.length || 0}
+                    <div className="flex items-start gap-3">
+                      <div className="text-right">
+                        <div className="text-xl font-black text-broadcast-yellow font-saira">
+                          {round.throws?.length || 0}
+                        </div>
+                        <div className="text-xs text-broadcast-cyan">Throws</div>
+                      </div>
+                      <button
+                        onClick={() => handleDeleteRound(round.id, round.course, dateStr)}
+                        className="mt-0.5 w-7 h-7 flex items-center justify-center rounded border border-broadcast-red text-broadcast-red text-xs font-black hover:bg-broadcast-red hover:text-white transition-colors"
+                        title="Delete round"
+                      >
+                        ✕
+                      </button>
                     </div>
-                    <div className="text-xs text-broadcast-cyan">Throws</div>
                   </div>
                 </div>
-              </div>
-            ))
+              )
+            })
           )}
         </div>
       )}
@@ -218,30 +289,49 @@ export default function HistoryTab() {
             </div>
           ) : (
             throws.map((t, i) => (
-              <button
+              <div
                 key={t.id || i}
-                onClick={() => setSelectedThrow(t)}
-                className="w-full broadcast-card p-3 text-left hover:border-broadcast-cyan transition-colors border border-gray-700"
+                className="broadcast-card border border-gray-700"
               >
-                <div className="flex justify-between items-center">
-                  <div>
-                    <div className="font-black text-broadcast-yellow font-saira">{t.discName}</div>
-                    <div className="text-xs text-broadcast-cyan">
-                      {t.course ? t.course.toUpperCase() : '—'} · Hole {t.hole}
-                      {t.throwType && <span className="text-gray-500 ml-2 capitalize">{t.throwType}</span>}
+                <button
+                  onClick={() => setSelectedThrow(t)}
+                  className="w-full p-3 text-left hover:border-broadcast-cyan transition-colors"
+                >
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <div className="font-black text-broadcast-yellow font-saira">{t.discName}</div>
+                      <div className="text-xs text-broadcast-cyan">
+                        {t.course ? t.course.toUpperCase() : '—'} · Hole {t.hole}
+                        {t.throwType && <span className="text-gray-500 ml-2 capitalize">{t.throwType}</span>}
+                        {t.windCondition && t.windCondition !== 'calm' && (
+                          <span className="text-orange-400 ml-2 capitalize">{t.windCondition} wind</span>
+                        )}
+                      </div>
+                      {t.predictedDescription && (
+                        <div className="text-[10px] text-gray-500 mt-0.5 leading-snug">{t.predictedDescription}</div>
+                      )}
+                      <div className="text-xs text-gray-600 mt-0.5">
+                        {t.timestamp ? new Date(t.timestamp).toLocaleString() : ''}
+                      </div>
                     </div>
-                    <div className="text-xs text-gray-500">
-                      {t.timestamp ? new Date(t.timestamp).toLocaleString() : ''}
+                    <div className="text-right flex-shrink-0 ml-3">
+                      {t.predictedDistance && (
+                        <div className="text-lg font-black text-broadcast-yellow font-saira">{t.predictedDistance}ft</div>
+                      )}
+                      <div className="text-xs text-broadcast-cyan mt-0.5">TAP FOR MAP →</div>
                     </div>
                   </div>
-                  <div className="text-right flex-shrink-0 ml-3">
-                    {t.distance && (
-                      <div className="text-lg font-black text-broadcast-yellow font-saira">{t.distance} ft</div>
-                    )}
-                    <div className="text-xs text-broadcast-cyan mt-0.5">TAP FOR MAP →</div>
-                  </div>
+                </button>
+                {/* Delete button at bottom of card */}
+                <div className="px-3 pb-2 flex justify-end">
+                  <button
+                    onClick={() => handleDeleteThrow(t.id, t.discName, t.hole)}
+                    className="text-[10px] text-broadcast-red border border-broadcast-red rounded px-2 py-0.5 font-bold hover:bg-broadcast-red hover:text-white transition-colors"
+                  >
+                    DELETE
+                  </button>
                 </div>
-              </button>
+              </div>
             ))
           )}
         </div>
