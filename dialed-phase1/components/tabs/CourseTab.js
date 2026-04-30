@@ -1,5 +1,14 @@
 'use client'
 import { useState, useEffect, useRef, useCallback } from 'react'
+
+function haversineMeters(lat1, lon1, lat2, lon2) {
+  const R = 6371000
+  const φ1 = lat1 * Math.PI / 180, φ2 = lat2 * Math.PI / 180
+  const dφ = (lat2 - lat1) * Math.PI / 180
+  const dλ = (lon2 - lon1) * Math.PI / 180
+  const a = Math.sin(dφ / 2) ** 2 + Math.cos(φ1) * Math.cos(φ2) * Math.sin(dλ / 2) ** 2
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+}
 import { getTerrainData, getHoleData, getElevationProfiles, normalizeProfiles } from '../../utils/terrainData'
 import { HAZARD_TYPES, loadHazards, saveHazards } from '../../utils/hazards'
 import { loadBag } from '../../utils/discData'
@@ -188,6 +197,21 @@ export default function CourseTab({
   const hazardsRef = useRef(hazards)
   useEffect(() => { hazardsRef.current = hazards }, [hazards])
 
+  // Elevation tracking refs (values accessed from interval/watch callbacks)
+  const playerGPSRef = useRef(null)
+  const gpsAltRef = useRef(null)
+  const devModeRef = useRef(devMode)
+  const courseHoleRef = useRef({ course: selectedCourse, hole: selectedHole })
+  const lastElevPointRef = useRef(null)
+  const elevIntervalRef = useRef(null)
+  const [elevTrackCount, setElevTrackCount] = useState(() => {
+    if (typeof window === 'undefined') return 0
+    try { return JSON.parse(localStorage.getItem('dialed_elevation_track') || '[]').length } catch { return 0 }
+  })
+
+  useEffect(() => { devModeRef.current = devMode }, [devMode])
+  useEffect(() => { courseHoleRef.current = { course: selectedCourse, hole: selectedHole } }, [selectedCourse, selectedHole])
+
   // Load data
   useEffect(() => { getTerrainData().then(setTerrainData).catch(() => {}) }, [])
   useEffect(() => { setBag(loadBag()) }, [])
@@ -206,19 +230,79 @@ export default function CourseTab({
     setHazards(loadHazards(ckFromCourse(selectedCourse), selectedHole))
   }, [selectedCourse, selectedHole])
 
-  // Live GPS tracking (pink dot + altitude for dev mode)
+  const appendElevPoint = useCallback((lat, lon, elevation, course, hole) => {
+    try {
+      const arr = JSON.parse(localStorage.getItem('dialed_elevation_track') || '[]')
+      arr.push({ lat, lon, elevation, timestamp: new Date().toISOString(), course, hole })
+      localStorage.setItem('dialed_elevation_track', JSON.stringify(arr))
+      setElevTrackCount(arr.length)
+    } catch {}
+    lastElevPointRef.current = { lat, lon }
+  }, [])
+
+  const exportElevTrack = useCallback(() => {
+    try {
+      const data = localStorage.getItem('dialed_elevation_track') || '[]'
+      const blob = new Blob([data], { type: 'application/json' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `dialed_elevation_${Date.now()}.json`
+      a.click()
+      URL.revokeObjectURL(url)
+    } catch {}
+  }, [])
+
+  const clearElevTrack = useCallback(() => {
+    if (!confirm('Clear all elevation track data?')) return
+    localStorage.removeItem('dialed_elevation_track')
+    setElevTrackCount(0)
+    lastElevPointRef.current = null
+  }, [])
+
+  // Live GPS tracking — updates refs and checks 3m movement for elevation logging
   useEffect(() => {
     if (!navigator.geolocation) return
     watchIdRef.current = navigator.geolocation.watchPosition(
       pos => {
-        setPlayerGPS({ lat: pos.coords.latitude, lng: pos.coords.longitude })
-        if (pos.coords.altitude != null) setGpsAlt(pos.coords.altitude)
+        const lat = pos.coords.latitude
+        const lng = pos.coords.longitude
+        const alt = pos.coords.altitude
+        playerGPSRef.current = { lat, lng }
+        setPlayerGPS({ lat, lng })
+        if (alt != null) {
+          gpsAltRef.current = alt
+          setGpsAlt(alt)
+          if (devModeRef.current) {
+            const last = lastElevPointRef.current
+            const { course, hole } = courseHoleRef.current
+            if (!last || haversineMeters(last.lat, last.lon, lat, lng) >= 3) {
+              appendElevPoint(lat, lng, alt, course, hole)
+            }
+          }
+        }
       },
       () => {},
       { enableHighAccuracy: true, maximumAge: 3000, timeout: 10000 }
     )
     return () => { if (watchIdRef.current) navigator.geolocation.clearWatch(watchIdRef.current) }
-  }, [])
+  }, [appendElevPoint])
+
+  // 5s interval elevation capture when devMode is on
+  useEffect(() => {
+    if (!devMode) {
+      if (elevIntervalRef.current) { clearInterval(elevIntervalRef.current); elevIntervalRef.current = null }
+      return
+    }
+    elevIntervalRef.current = setInterval(() => {
+      const gps = playerGPSRef.current
+      const alt = gpsAltRef.current
+      if (!gps || alt == null) return
+      const { course, hole } = courseHoleRef.current
+      appendElevPoint(gps.lat, gps.lng, alt, course, hole)
+    }, 5000)
+    return () => { if (elevIntervalRef.current) { clearInterval(elevIntervalRef.current); elevIntervalRef.current = null } }
+  }, [devMode, appendElevPoint])
 
   // Update pink player dot when GPS changes
   useEffect(() => {
@@ -581,18 +665,34 @@ export default function CourseTab({
         </div>
       </div>
 
-      {/* Dev mode elevation readout */}
+      {/* Dev mode panel */}
       {devMode && (
         <div className="px-4 pt-3">
           <div className="broadcast-card p-3 border-broadcast-red">
             <div className="text-xs text-broadcast-red font-bold mb-2">⚙ DEV MODE</div>
-            <div className="grid grid-cols-2 gap-2 text-xs">
-              <div><span className="text-gray-500">GPS Lat: </span><span className="text-white font-mono">{playerGPS?.lat?.toFixed(6) || '—'}</span></div>
-              <div><span className="text-gray-500">GPS Lng: </span><span className="text-white font-mono">{playerGPS?.lng?.toFixed(6) || '—'}</span></div>
+            <div className="grid grid-cols-2 gap-2 text-xs mb-2">
+              <div><span className="text-gray-500">Lat: </span><span className="text-white font-mono">{playerGPS?.lat?.toFixed(6) || '—'}</span></div>
+              <div><span className="text-gray-500">Lng: </span><span className="text-white font-mono">{playerGPS?.lng?.toFixed(6) || '—'}</span></div>
               <div><span className="text-gray-500">Altitude: </span><span className="text-broadcast-yellow font-mono">{gpsAlt != null ? `${gpsAlt.toFixed(1)}m` : '—'}</span></div>
-              <div><span className="text-gray-500">Accuracy: </span><span className="text-white font-mono">~10m GPS</span></div>
+              <div><span className="text-gray-500">Track pts: </span><span className="text-broadcast-cyan font-mono">{elevTrackCount}</span></div>
             </div>
-            <div className="text-[10px] text-gray-600 mt-2">SET TEE / BASKET pins lock permanently for all rounds</div>
+            <div className="flex gap-2">
+              <button
+                onClick={exportElevTrack}
+                disabled={elevTrackCount === 0}
+                className="flex-1 py-1.5 font-saira font-bold text-[10px] rounded bg-broadcast-black border border-broadcast-cyan text-broadcast-cyan disabled:opacity-40"
+              >
+                EXPORT TRACK
+              </button>
+              <button
+                onClick={clearElevTrack}
+                disabled={elevTrackCount === 0}
+                className="flex-1 py-1.5 font-saira font-bold text-[10px] rounded bg-broadcast-black border border-broadcast-red text-broadcast-red disabled:opacity-40"
+              >
+                CLR TRACK
+              </button>
+            </div>
+            <div className="text-[10px] text-gray-600 mt-2">Logs GPS+elevation every 5s or on 3m movement · TEE/BASKET pins lock permanently</div>
           </div>
         </div>
       )}
