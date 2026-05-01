@@ -236,8 +236,10 @@ export default function PlayTab({
     return scoreDiscRisk(disc, windCondition, windRelation, hazards)
   }
 
+  const COURSE_NAMES = { palmer: 'Palmer Park', kensington: 'Kensington', thorn: 'The Thorn', grizzly: 'Grizzly Oaks', cass_benton: 'Cass Benton' }
+
   const startRound = () => {
-    const courseName = selectedCourse === 'kensington' ? 'Kensington' : 'Palmer Park'
+    const courseName = COURSE_NAMES[selectedCourse] || 'Palmer Park'
     const round = saveRound({ course: courseName, holeCount: 18 })
     setCurrentRound(round)
     setRoundThrows([])
@@ -342,7 +344,7 @@ export default function PlayTab({
                 <div className="text-xs text-green-400 font-bold font-saira">ROUND IN PROGRESS</div>
               </div>
               <div className="text-lg font-black text-broadcast-yellow font-saira mt-0.5">
-                {selectedCourse === 'kensington' ? 'Kensington' : 'Palmer Park'}
+                {COURSE_NAMES[selectedCourse] || 'Palmer Park'}
               </div>
               <div className="text-xs text-gray-400">
                 {throws.length} throw{throws.length !== 1 ? 's' : ''} logged
