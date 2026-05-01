@@ -6,9 +6,14 @@ import { saveThrow, saveRound } from '../../utils/storage'
 
 // ─── Course par tables ────────────────────────────────────────────────────────
 const PARS = {
-  palmer:     [3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
-  kensington: [3,4,3,3,4,3,3,3,4,3,3,3,3,4,3,3,3,3],
+  palmer:      [3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
+  kensington:  [3,4,3,3,4,3,3,3,4,3,3,3,3,4,3,3,3,3],
+  thorn:       [3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
+  grizzly:     [3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
+  cass_benton: [3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
 }
+
+const COURSE_NAMES = { palmer: 'Palmer Park', kensington: 'Kensington', thorn: 'The Thorn', grizzly: 'Grizzly Oaks', cass_benton: 'Cass Benton' }
 
 function getCoursePars(course) {
   return PARS[course] || PARS.palmer
@@ -224,7 +229,7 @@ function SetupScreen({ onStart, selectedCourse }) {
     })
   }
 
-  const courseName = selectedCourse === 'kensington' ? 'Kensington' : 'Palmer Park'
+  const courseName = COURSE_NAMES[selectedCourse] || 'Palmer Park'
 
   return (
     <div className="p-4 space-y-4 pb-6">
@@ -363,7 +368,7 @@ export default function VsTab({
   // ── Start a new game ────────────────────────────────────────────────────────
   const startGame = ({ mode, opponents }) => {
     // Create a round in storage so LOG tab shows the game
-    const courseName = selectedCourse === 'kensington' ? 'Kensington' : 'Palmer Park'
+    const courseName = COURSE_NAMES[selectedCourse] || 'Palmer Park'
     const round = saveRound({
       course: courseName,
       vsMode: true,
@@ -621,7 +626,7 @@ export default function VsTab({
         {/* Course + GPS status */}
         <div className="mt-2 pt-2 border-t border-gray-800 flex justify-between text-[10px]">
           <span className="text-broadcast-cyan">
-            {selectedCourse === 'kensington' ? 'KENSINGTON' : 'PALMER PARK'}
+            {(COURSE_NAMES[selectedCourse] || 'Palmer Park').toUpperCase()}
           </span>
           <span className={location ? 'text-green-500' : 'text-gray-600'}>
             {location ? `📍 GPS ${location.lat.toFixed(4)}, ${location.lon.toFixed(4)}` : '📍 No GPS'}

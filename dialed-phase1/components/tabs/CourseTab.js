@@ -17,10 +17,16 @@ import { calculateFlightPath, calculateLandingCoords } from '../../utils/flightP
 const COURSES = [
   { key: 'palmer', label: 'Palmer Park', holes: 18 },
   { key: 'kensington', label: 'Kensington', holes: 18 },
+  { key: 'thorn', label: 'The Thorn', holes: 18 },
+  { key: 'grizzly', label: 'Grizzly Oaks', holes: 18 },
+  { key: 'cass_benton', label: 'Cass Benton', holes: 18 },
 ]
 const COURSE_CENTERS = {
   palmer: { lat: 42.4224, lng: -83.1176 },
   kensington: { lat: 42.5275, lng: -83.634 },
+  thorn: { lat: 42.662, lng: -83.463 },
+  grizzly: { lat: 42.643, lng: -83.497 },
+  cass_benton: { lat: 42.432, lng: -83.502 },
 }
 
 // ─── Google Maps loader ───────────────────────────────────────────────────────
@@ -42,7 +48,9 @@ function loadGoogleMapsScript(apiKey) {
 }
 
 function ckFromCourse(selectedCourse) {
-  return selectedCourse === 'kensington' ? 'kensington' : 'palmer_park'
+  if (selectedCourse === 'kensington') return 'kensington'
+  if (selectedCourse === 'palmer') return 'palmer_park'
+  return selectedCourse
 }
 
 // ─── Bezier curve helpers ─────────────────────────────────────────────────────
@@ -218,9 +226,10 @@ export default function CourseTab({
 
   useEffect(() => {
     if (!terrainData) return
-    const fullName = terrainData.courses.find(c =>
-      c.course.toLowerCase().includes(selectedCourse === 'palmer' ? 'palmer' : 'kensington')
-    )?.course
+    const searchTerm = selectedCourse === 'palmer' ? 'palmer' : selectedCourse === 'kensington' ? 'kensington' : null
+    const fullName = searchTerm
+      ? terrainData.courses.find(c => c.course.toLowerCase().includes(searchTerm))?.course
+      : null
     const hole = getHoleData(terrainData, fullName, selectedHole)
     setHoleData(hole)
     setProfiles(hole ? normalizeProfiles(getElevationProfiles(hole)) : null)
@@ -576,10 +585,10 @@ export default function CourseTab({
   return (
     <div className="flex flex-col overflow-auto pb-4">
       {/* Course selector */}
-      <div className="px-4 pt-4 flex gap-2">
+      <div className="px-4 pt-4 grid grid-cols-3 gap-2">
         {COURSES.map(c => (
           <button key={c.key} onClick={() => { setSelectedCourse(c.key); setSelectedHole(1) }}
-            className={`flex-1 py-2 font-saira font-black text-sm rounded transition-colors ${
+            className={`py-2 font-saira font-black text-xs rounded transition-colors ${
               selectedCourse === c.key ? 'bg-broadcast-yellow text-broadcast-black' : 'bg-broadcast-black border-2 border-broadcast-yellow text-broadcast-yellow'
             }`}>{c.label.toUpperCase()}</button>
         ))}
