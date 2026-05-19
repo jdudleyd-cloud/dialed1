@@ -11,6 +11,7 @@ import {
 } from '../../utils/recommendations'
 import { loadHazards, scoreDiscRisk, inferWindRelation } from '../../utils/hazards'
 import { calculateFlightPath, getDiscReason } from '../../utils/flightPhysics'
+import { getHoleDistance, getHolePar } from '../../utils/courseData'
 
 const WIND_ICONS = { calm: '🌀', light: '💨', moderate: '🌬', strong: '⛈' }
 const THROW_ICONS = { backhand: 'BH', forehand: 'FH', sidearm: 'SA', tomahawk: 'TH' }
@@ -354,16 +355,35 @@ export default function PlayTab({
             <div className="text-right">
               <div className="text-xs text-broadcast-cyan">HOLE</div>
               <div className="text-3xl font-black text-broadcast-yellow font-saira">{selectedHole}</div>
+              {(() => {
+                const dist = getHoleDistance(selectedCourse, selectedHole)
+                const par = getHolePar(selectedCourse, selectedHole)
+                return dist
+                  ? <div className="text-[10px] text-gray-400">{dist}ft · Par {par}</div>
+                  : <div className="text-[10px] text-gray-600">Par {par}</div>
+              })()}
               <button onClick={endRound}
-                className="mt-1 px-3 py-1 bg-broadcast-red text-white font-black font-saira text-xs rounded">
+                className="mt-0.5 px-3 py-1 bg-broadcast-red text-white font-black font-saira text-xs rounded">
                 END ROUND
               </button>
             </div>
           </div>
         ) : (
-          <button onClick={startRound} className="w-full broadcast-btn font-saira py-3">
-            START ROUND
-          </button>
+          <div className="space-y-2">
+            {(() => {
+              const dist = getHoleDistance(selectedCourse, selectedHole)
+              const par = getHolePar(selectedCourse, selectedHole)
+              return (
+                <div className="flex justify-between text-xs text-gray-500 px-1">
+                  <span className="font-saira">H{selectedHole} · {COURSE_NAMES[selectedCourse] || 'Palmer Park'}</span>
+                  <span>{dist ? `${dist}ft · ` : ''}Par {par}</span>
+                </div>
+              )
+            })()}
+            <button onClick={startRound} className="w-full broadcast-btn font-saira py-3">
+              START ROUND
+            </button>
+          </div>
         )}
       </div>
 

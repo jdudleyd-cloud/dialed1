@@ -5,12 +5,16 @@ import { attemptBanter, updateDramaState, initialDramaState, getRivalryLabel, ge
 import { saveThrow, saveRound } from '../../utils/storage'
 
 // ─── Course par tables ────────────────────────────────────────────────────────
+// Pars sourced from UDisc (Short Tees) and course directories
 const PARS = {
   palmer:      [3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
   kensington:  [3,4,3,3,4,3,3,3,4,3,3,3,3,4,3,3,3,3],
-  thorn:       [3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
-  grizzly:     [3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
-  cass_benton: [3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
+  // The Short Thorne — Pontiac Oaks County Park: holes 8, 11, 17 are par 4 (par 57 total)
+  thorn:       [3,3,3,3,3,3,3,4,3,3,4,3,3,3,3,3,4,3],
+  // Grizzly Oaks — Oakland University: hole 18 is par 4 (522 ft), all others par 3 (par 55 total)
+  grizzly:     [3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,4],
+  // Cass Benton Hills — Northville: hole 18 is par 4 (527 ft), all others par 3 (par 55 total)
+  cass_benton: [3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,4],
 }
 
 const COURSE_NAMES = { palmer: 'Palmer Park', kensington: 'Kensington', thorn: 'The Thorn', grizzly: 'Grizzly Oaks', cass_benton: 'Cass Benton' }
