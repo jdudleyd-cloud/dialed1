@@ -401,6 +401,14 @@ export default function CourseTab({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mapRef.current])
 
+  // Re-center map when course changes — initial load uses first selectedCourse only
+  useEffect(() => {
+    if (!mapLoaded || !mapInstanceRef.current) return
+    const center = COURSE_CENTERS[selectedCourse] || COURSE_CENTERS.palmer
+    mapInstanceRef.current.setCenter(center)
+    mapInstanceRef.current.setZoom(17)
+  }, [mapLoaded, selectedCourse])
+
   // Hazard drawing listeners
   useEffect(() => {
     if (!mapLoaded || !drawingManagerRef.current) return
