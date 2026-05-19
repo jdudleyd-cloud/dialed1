@@ -24,9 +24,12 @@ const COURSES = [
 const COURSE_CENTERS = {
   palmer: { lat: 42.4224, lng: -83.1176 },
   kensington: { lat: 42.5275, lng: -83.634 },
-  thorn: { lat: 42.662, lng: -83.463 },
-  grizzly: { lat: 42.643, lng: -83.497 },
-  cass_benton: { lat: 42.432, lng: -83.502 },
+  // Pontiac Oaks County Park — 1400 Telegraph Rd, Pontiac MI 48340
+  thorn: { lat: 42.6730, lng: -83.3205 },
+  // Oakland University campus center — Rochester Hills MI (Grizzly Oaks is east of RAOC near Lot P11)
+  grizzly: { lat: 42.6727, lng: -83.2158 },
+  // Cass Benton Recreation Area — Northville MI (GPS from UDisc)
+  cass_benton: { lat: 42.4154, lng: -83.4763 },
 }
 
 // ─── Google Maps loader ───────────────────────────────────────────────────────
@@ -397,6 +400,14 @@ export default function CourseTab({
     }).catch(() => setMapError(true))
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mapRef.current])
+
+  // Re-center map when course changes — initial load uses first selectedCourse only
+  useEffect(() => {
+    if (!mapLoaded || !mapInstanceRef.current) return
+    const center = COURSE_CENTERS[selectedCourse] || COURSE_CENTERS.palmer
+    mapInstanceRef.current.setCenter(center)
+    mapInstanceRef.current.setZoom(17)
+  }, [mapLoaded, selectedCourse])
 
   // Hazard drawing listeners
   useEffect(() => {
