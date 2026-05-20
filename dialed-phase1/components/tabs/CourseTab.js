@@ -24,12 +24,12 @@ const COURSES = [
 const COURSE_CENTERS = {
   palmer: { lat: 42.4224, lng: -83.1176 },
   kensington: { lat: 42.5275, lng: -83.634 },
-  // Pontiac Oaks County Park — 1400 Telegraph Rd, Pontiac MI 48340
-  thorn: { lat: 42.6730, lng: -83.3205 },
-  // Oakland University campus center — Rochester Hills MI (Grizzly Oaks is east of RAOC near Lot P11)
-  grizzly: { lat: 42.6727, lng: -83.2158 },
-  // Cass Benton Recreation Area — Northville MI (GPS from UDisc)
-  cass_benton: { lat: 42.4154, lng: -83.4763 },
+  // Pontiac Oaks County Park — exact UDisc coordinate
+  thorn: { lat: 42.67393, lng: -83.32283 },
+  // Grizzly Oaks at Oakland University — exact UDisc coordinate (near RAOC, Lot P11)
+  grizzly: { lat: 42.67653, lng: -83.20900 },
+  // Cass Benton Recreation Area — exact UDisc coordinate
+  cass_benton: { lat: 42.41539, lng: -83.47630 },
 }
 
 // ─── Google Maps loader ───────────────────────────────────────────────────────

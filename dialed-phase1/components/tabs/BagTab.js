@@ -5,6 +5,9 @@ import {
   EMPTY_DISC, DISC_TYPES
 } from '../../utils/discData'
 import { getThrows } from '../../utils/storage'
+import {
+  DISC_BRANDS, BRAND_PLASTICS, DISC_DATABASE,
+} from '../../utils/discDatabase'
 
 const TYPE_FILTERS = ['All', 'Distance Driver', 'Fairway Driver', 'Midrange', 'Putter']
 
@@ -71,9 +74,26 @@ function ThrowHistory({ disc, onBack }) {
 }
 
 // ─── DiscEditor ───────────────────────────────────────────────────────────────
+const SELECT_CLS = 'w-full bg-gray-800 border border-gray-600 rounded p-2 text-white text-sm appearance-none'
+const INPUT_CLS  = 'w-full bg-gray-800 border border-gray-600 rounded p-2 text-white text-sm'
+
 function DiscEditor({ disc: initial, bag, onSave, onDelete, onCancel, isNew }) {
+  // Determine if the initial brand is in our database
+  const initBrand = DISC_BRANDS.includes(initial.manufacturer) ? initial.manufacturer : 'Other'
+
+  // Determine if the initial disc name is in the database for that brand
+  const initDiscInDb = (() => {
+    if (initBrand === 'Other') return false
+    const brandData = DISC_DATABASE[initBrand]
+    if (!brandData) return false
+    return Object.values(brandData).some(arr => arr.some(d => d.name === initial.name))
+  })()
+
   const [disc, setDisc] = useState({ ...initial })
-  const fileRef = useRef()
+  const [brand, setBrand]             = useState(initBrand)
+  const [manualName, setManualName]   = useState(!initDiscInDb)
+  const [manualPlastic, setManualPlastic] = useState(false)
+  const fileRef   = useRef()
   const cameraRef = useRef()
 
   const set = (field, val) => {
@@ -84,6 +104,55 @@ function DiscEditor({ disc: initial, bag, onSave, onDelete, onCancel, isNew }) {
     )
     setDisc(updated)
   }
+
+  // Brand dropdown changed
+  const handleBrandChange = (newBrand) => {
+    setBrand(newBrand)
+    setManualName(newBrand === 'Other' || !DISC_DATABASE[newBrand])
+    setManualPlastic(false)
+    set('manufacturer', newBrand === 'Other' ? '' : newBrand)
+  }
+
+  // Disc selected from dropdown — value is "TypeKey::DiscName"
+  const handleDiscSelect = (value) => {
+    if (value === '' || value === '__manual__') {
+      setManualName(true)
+      return
+    }
+    const sep = value.indexOf('::')
+    const type = value.slice(0, sep)
+    const name = value.slice(sep + 2)
+    const entry = DISC_DATABASE[brand]?.[type]?.find(d => d.name === name)
+    if (!entry) return
+    const stability = deriveStability(entry.turn, entry.fade)
+    setDisc(prev => ({
+      ...prev,
+      name,
+      type,
+      speed: entry.speed,
+      glide: entry.glide,
+      turn:  entry.turn,
+      fade:  entry.fade,
+      stability,
+    }))
+    setManualName(false)
+  }
+
+  // Build optgroups for the disc dropdown
+  const brandData = DISC_DATABASE[brand] || {}
+  // Current dropdown value
+  const currentDiscVal = (() => {
+    if (manualName || !disc.name) return '__manual__'
+    const typeData = brandData[disc.type]
+    if (typeData && typeData.some(d => d.name === disc.name)) return `${disc.type}::${disc.name}`
+    // Try to find in any type
+    for (const [t, arr] of Object.entries(brandData)) {
+      if (arr.some(d => d.name === disc.name)) return `${t}::${disc.name}`
+    }
+    return '__manual__'
+  })()
+
+  const plastics = BRAND_PLASTICS[brand] || []
 
   const handlePhoto = (e) => {
     const file = e.target.files?.[0]
@@ -114,23 +183,21 @@ function DiscEditor({ disc: initial, bag, onSave, onDelete, onCancel, isNew }) {
         <button onClick={onCancel} className="text-gray-400 text-sm">Cancel</button>
       </div>
 
-      {/* Name + label */}
-      <div className="space-y-2">
-        <input placeholder="Disc Name (e.g. Buzzz)" value={disc.name}
-          onChange={e => set('name', e.target.value)}
-          className="w-full bg-gray-800 border border-gray-600 rounded p-2 text-white text-sm" />
-        <input placeholder="Custom Label (e.g. My Hyzer Buzzz)" value={disc.customLabel || ''}
-          onChange={e => set('customLabel', e.target.value)}
-          className="w-full bg-gray-800 border border-gray-600 rounded p-2 text-white text-sm" />
-        <input placeholder="Manufacturer" value={disc.manufacturer || ''}
-          onChange={e => set('manufacturer', e.target.value)}
-          className="w-full bg-gray-800 border border-gray-600 rounded p-2 text-white text-sm" />
-        <input placeholder="Plastic (e.g. Champion, Z, ESP)" value={disc.plastic || ''}
-          onChange={e => set('plastic', e.target.value)}
-          className="w-full bg-gray-800 border border-gray-600 rounded p-2 text-white text-sm" />
+      {/* ── Brand ── */}
+      <div>
+        <label className="text-xs text-broadcast-cyan block mb-1">BRAND</label>
+        <select value={brand} onChange={e => handleBrandChange(e.target.value)} className={SELECT_CLS}>
+          <option value="">— Select brand —</option>
+          {DISC_BRANDS.map(b => <option key={b} value={b}>{b}</option>)}
+        </select>
+        {brand === 'Other' && (
+          <input placeholder="Brand / Manufacturer" value={disc.manufacturer || ''}
+            onChange={e => set('manufacturer', e.target.value)}
+            className={`${INPUT_CLS} mt-2`} />
+        )}
       </div>
 
-      {/* Type */}
+      {/* ── Disc Type ── */}
       <div>
         <label className="text-xs text-broadcast-cyan block mb-1">DISC TYPE</label>
         <div className="flex flex-wrap gap-2">
@@ -143,14 +210,92 @@ function DiscEditor({ disc: initial, bag, onSave, onDelete, onCancel, isNew }) {
         </div>
       </div>
 
-      {/* Flight numbers */}
+      {/* ── Disc Name ── */}
+      <div>
+        <label className="text-xs text-broadcast-cyan block mb-1">DISC NAME</label>
+        {brand !== 'Other' && Object.keys(brandData).length > 0 && !manualName ? (
+          <>
+            <select value={currentDiscVal} onChange={e => handleDiscSelect(e.target.value)} className={SELECT_CLS}>
+              <option value="">— Select disc —</option>
+              {Object.entries(brandData).map(([type, discs]) => (
+                <optgroup key={type} label={type}>
+                  {[...discs].sort((a, b) => a.name.localeCompare(b.name)).map(d => (
+                    <option key={d.name} value={`${type}::${d.name}`}>
+                      {d.name} ({d.speed}/{d.glide}/{d.turn}/{d.fade})
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
+              <option value="__manual__">✏ Enter manually</option>
+            </select>
+            <button onClick={() => setManualName(true)}
+              className="text-xs text-broadcast-cyan mt-1 underline">
+              Not listed? Enter manually
+            </button>
+          </>
+        ) : (
+          <>
+            <input placeholder="Disc Name (e.g. Buzzz)" value={disc.name}
+              onChange={e => set('name', e.target.value)}
+              className={INPUT_CLS} />
+            {brand !== 'Other' && Object.keys(brandData).length > 0 && (
+              <button onClick={() => setManualName(false)}
+                className="text-xs text-broadcast-cyan mt-1 underline">
+                ← Back to dropdown
+              </button>
+            )}
+          </>
+        )}
+      </div>
+
+      {/* ── Custom Label ── */}
+      <div>
+        <label className="text-xs text-broadcast-cyan block mb-1">CUSTOM LABEL <span className="text-gray-500">(optional)</span></label>
+        <input placeholder="e.g. My Hyzer Buzzz" value={disc.customLabel || ''}
+          onChange={e => set('customLabel', e.target.value)}
+          className={INPUT_CLS} />
+      </div>
+
+      {/* ── Plastic ── */}
+      <div>
+        <label className="text-xs text-broadcast-cyan block mb-1">PLASTIC</label>
+        {plastics.length > 0 && !manualPlastic ? (
+          <>
+            <select
+              value={plastics.includes(disc.plastic) ? disc.plastic : '__other__'}
+              onChange={e => {
+                if (e.target.value === '__other__') { setManualPlastic(true); set('plastic', '') }
+                else set('plastic', e.target.value)
+              }}
+              className={SELECT_CLS}>
+              <option value="">— Select plastic —</option>
+              {plastics.map(p => <option key={p} value={p}>{p}</option>)}
+              <option value="__other__">Other / Custom</option>
+            </select>
+          </>
+        ) : (
+          <>
+            <input placeholder="Plastic (e.g. Champion, Z, ESP)" value={disc.plastic || ''}
+              onChange={e => set('plastic', e.target.value)}
+              className={INPUT_CLS} />
+            {plastics.length > 0 && (
+              <button onClick={() => setManualPlastic(false)}
+                className="text-xs text-broadcast-cyan mt-1 underline">
+                ← Back to dropdown
+              </button>
+            )}
+          </>
+        )}
+      </div>
+
+      {/* ── Flight Numbers ── */}
       <div>
         <label className="text-xs text-broadcast-cyan block mb-2">FLIGHT NUMBERS</label>
         <div className="flex gap-3 justify-between">
           {numField('Speed', 'speed', 1, 15)}
           {numField('Glide', 'glide', 1, 7)}
-          {numField('Turn', 'turn', -5, 1)}
-          {numField('Fade', 'fade', 0, 5)}
+          {numField('Turn',  'turn',  -5, 1)}
+          {numField('Fade',  'fade',  0,  5)}
         </div>
         <div className="mt-2 text-xs text-center">
           <span className="text-gray-400">Stability: </span>
@@ -160,23 +305,23 @@ function DiscEditor({ disc: initial, bag, onSave, onDelete, onCancel, isNew }) {
         </div>
       </div>
 
-      {/* Weight + purchase date */}
+      {/* ── Weight + Purchase Date ── */}
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className="text-xs text-broadcast-cyan block mb-1">WEIGHT (g)</label>
           <input type="number" min={100} max={200} value={disc.weight || ''}
             onChange={e => set('weight', Number(e.target.value))}
-            className="w-full bg-gray-800 border border-gray-600 rounded p-2 text-white text-sm" />
+            className={INPUT_CLS} />
         </div>
         <div>
           <label className="text-xs text-broadcast-cyan block mb-1">PURCHASE DATE</label>
           <input type="date" value={disc.purchaseDate || ''}
             onChange={e => set('purchaseDate', e.target.value)}
-            className="w-full bg-gray-800 border border-gray-600 rounded p-2 text-white text-sm" />
+            className={INPUT_CLS} />
         </div>
       </div>
 
-      {/* Color */}
+      {/* ── Color ── */}
       <div>
         <label className="text-xs text-broadcast-cyan block mb-1">DISC COLOR</label>
         <div className="flex items-center gap-3">
@@ -187,7 +332,7 @@ function DiscEditor({ disc: initial, bag, onSave, onDelete, onCancel, isNew }) {
         </div>
       </div>
 
-      {/* Photos */}
+      {/* ── Photos ── */}
       <div>
         <label className="text-xs text-broadcast-cyan block mb-2">PHOTOS</label>
         <div className="flex gap-2 flex-wrap mb-2">
@@ -213,7 +358,7 @@ function DiscEditor({ disc: initial, bag, onSave, onDelete, onCancel, isNew }) {
         </div>
       </div>
 
-      {/* Gap suggestions */}
+      {/* ── Gap Suggestions ── */}
       {!isNew && (() => {
         const gaps = analyzeGap(bag, disc)
         return gaps.length > 0 ? (
@@ -224,7 +369,7 @@ function DiscEditor({ disc: initial, bag, onSave, onDelete, onCancel, isNew }) {
         ) : null
       })()}
 
-      {/* Actions */}
+      {/* ── Actions ── */}
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-broadcast-black border-t border-gray-700 flex gap-3 z-50">
         {!isNew && (
           <button onClick={() => onDelete(disc.id)}
