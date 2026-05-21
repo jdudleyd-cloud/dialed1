@@ -10,6 +10,7 @@ function haversineMeters(lat1, lon1, lat2, lon2) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
 }
 import { getTerrainData, getHoleData, getElevationProfiles, normalizeProfiles } from '../../utils/terrainData'
+import { COURSE_HOLE_COORDS } from '../../utils/courseData'
 import { HAZARD_TYPES, loadHazards, saveHazards } from '../../utils/hazards'
 import { loadBag } from '../../utils/discData'
 import { calculateFlightPath, calculateLandingCoords } from '../../utils/flightPhysics'
@@ -233,9 +234,20 @@ export default function CourseTab({
     const fullName = searchTerm
       ? terrainData.courses.find(c => c.course.toLowerCase().includes(searchTerm))?.course
       : null
-    const hole = getHoleData(terrainData, fullName, selectedHole)
+    let hole = getHoleData(terrainData, fullName, selectedHole)
+    if (!hole && COURSE_HOLE_COORDS[selectedCourse]) {
+      const coords = COURSE_HOLE_COORDS[selectedCourse][selectedHole - 1]
+      if (coords) {
+        hole = {
+          hole: selectedHole,
+          tee:    { lat: coords.tee[0],    lon: coords.tee[1]    },
+          basket: { lat: coords.basket[0], lon: coords.basket[1] },
+          distance_am: null,
+        }
+      }
+    }
     setHoleData(hole)
-    setProfiles(hole ? normalizeProfiles(getElevationProfiles(hole)) : null)
+    setProfiles(hole?.terrain ? normalizeProfiles(getElevationProfiles(hole)) : null)
   }, [terrainData, selectedCourse, selectedHole])
 
   useEffect(() => {
@@ -506,10 +518,11 @@ export default function CourseTab({
 
   // Pan + update hole markers
   useEffect(() => {
-    if (!mapLoaded || !mapInstanceRef.current || !holeData) return
+    if (!mapLoaded || !mapInstanceRef.current) return
     const gmaps = window.google.maps
     markersRef.current.forEach(m => m.setMap(null)); markersRef.current = []
     if (holeLineRef.current) { holeLineRef.current.setMap(null); holeLineRef.current = null }
+    if (!holeData) return
 
     const saved = customPins[`${selectedCourse}_${selectedHole}`] || {}
     const tee = saved.tee || holeData.tee
