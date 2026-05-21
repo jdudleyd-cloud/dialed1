@@ -15,21 +15,25 @@ import { loadBag } from '../../utils/discData'
 import { calculateFlightPath, calculateLandingCoords } from '../../utils/flightPhysics'
 
 const COURSES = [
-  { key: 'palmer', label: 'Palmer Park', holes: 18 },
-  { key: 'kensington', label: 'Kensington', holes: 18 },
-  { key: 'thorn', label: 'The Thorn', holes: 18 },
-  { key: 'grizzly', label: 'Grizzly Oaks', holes: 18 },
-  { key: 'cass_benton', label: 'Cass Benton', holes: 18 },
+  { key: 'palmer',      label: 'Palmer Park',  holes: 18 },
+  { key: 'kensington',  label: 'Black Locust',  holes: 18 },
+  { key: 'thorn',       label: 'The Thorne',    holes: 18 },
+  { key: 'grizzly',     label: 'Grizzly Oaks',  holes: 18 },
+  { key: 'cass_benton', label: 'Cass Benton',   holes: 18 },
 ]
 const COURSE_CENTERS = {
-  palmer: { lat: 42.4224, lng: -83.1176 },
-  kensington: { lat: 42.5275, lng: -83.634 },
-  // Pontiac Oaks County Park — exact UDisc coordinate
-  thorn: { lat: 42.67393, lng: -83.32283 },
-  // Grizzly Oaks at Oakland University — exact UDisc coordinate (near RAOC, Lot P11)
-  grizzly: { lat: 42.67653, lng: -83.20900 },
-  // Cass Benton Recreation Area — exact UDisc coordinate
-  cass_benton: { lat: 42.41539, lng: -83.47630 },
+  palmer:      { lat: 42.4260,   lng: -83.1197  },
+  kensington:  { lat: 42.5268,   lng: -83.6328  },
+  thorn:       { lat: 42.67393,  lng: -83.32283 },
+  grizzly:     { lat: 42.67653,  lng: -83.20900 },
+  cass_benton: { lat: 42.41539,  lng: -83.47630 },
+}
+const COURSE_JSON_NAME = {
+  palmer:      'Palmer Park Detroit DGC',
+  kensington:  'Kensington Black Locust Blue',
+  grizzly:     'Grizzly Oaks',
+  thorn:       'The Thorne at Pontiac Oaks',
+  cass_benton: 'Cass Benton Hills',
 }
 
 // ─── Google Maps loader ───────────────────────────────────────────────────────
@@ -229,10 +233,14 @@ export default function CourseTab({
 
   useEffect(() => {
     if (!terrainData) return
+<<<<<<< HEAD
     const searchTerm = selectedCourse === 'palmer' ? 'palmer' : selectedCourse === 'kensington' ? 'kensington' : null
     const fullName = searchTerm
       ? terrainData.courses.find(c => c.course.toLowerCase().includes(searchTerm))?.course
       : null
+=======
+    const fullName = COURSE_JSON_NAME[selectedCourse]
+>>>>>>> ef9fde0 (Add real UDisc coordinates for all 5 courses, expand course selector)
     const hole = getHoleData(terrainData, fullName, selectedHole)
     setHoleData(hole)
     setProfiles(hole ? normalizeProfiles(getElevationProfiles(hole)) : null)

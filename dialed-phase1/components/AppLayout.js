@@ -75,8 +75,8 @@ export default function AppLayout() {
     localStorage.setItem('dialed_dev_mode', String(next))
   }
 
-  const COURSE_LABELS = { palmer: 'PALMER PARK', kensington: 'KENSINGTON', thorn: 'THE THORN', grizzly: 'GRIZZLY OAKS', cass_benton: 'CASS BENTON' }
-  const courseLabel = COURSE_LABELS[selectedCourse] || 'PALMER PARK'
+  const COURSE_LABELS = { palmer: 'PALMER PARK', kensington: 'BLACK LOCUST', thorn: 'THE THORNE', grizzly: 'GRIZZLY OAKS', cass_benton: 'CASS BENTON' }
+  const courseLabel = COURSE_LABELS[selectedCourse] || selectedCourse.toUpperCase()
 
   return (
     <div className="bg-broadcast-black" style={{ position: 'fixed', inset: 0 }}>
