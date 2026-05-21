@@ -120,8 +120,8 @@ export const COURSE_HOLE_COORDS = {
     // hole 18
     { tee: [42.4168653,              -83.4751669             ], basket: [42.415902236960996,     -83.47632303594624    ] },
   ],
-  black_locust_north: [
-    // Black Locust - North Blue, Milford Charter Twp MI
+  kensington: [
+    // Black Locust - North Blue at Kensington Metropark, Milford Charter Twp MI
     // UDisc: udisc.com/courses/black-locust-north-blue-8t6u — Short Tees layout, extracted 2025-05-21
     // hole 1
     { tee: [42.5268313,              -83.6328328             ], basket: [42.5266536,             -83.6316818           ] },
