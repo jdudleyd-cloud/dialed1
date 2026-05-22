@@ -233,14 +233,7 @@ export default function CourseTab({
 
   useEffect(() => {
     if (!terrainData) return
-<<<<<<< HEAD
-    const searchTerm = selectedCourse === 'palmer' ? 'palmer' : selectedCourse === 'kensington' ? 'kensington' : null
-    const fullName = searchTerm
-      ? terrainData.courses.find(c => c.course.toLowerCase().includes(searchTerm))?.course
-      : null
-=======
     const fullName = COURSE_JSON_NAME[selectedCourse]
->>>>>>> ef9fde0 (Add real UDisc coordinates for all 5 courses, expand course selector)
     const hole = getHoleData(terrainData, fullName, selectedHole)
     setHoleData(hole)
     setProfiles(hole ? normalizeProfiles(getElevationProfiles(hole)) : null)
