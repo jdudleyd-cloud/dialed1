@@ -1,5 +1,9 @@
 'use client'
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { getTerrainData, getHoleData, getElevationProfiles, normalizeProfiles } from '../../utils/terrainData'
+import { HAZARD_TYPES, loadHazards, saveHazards } from '../../utils/hazards'
+import { loadBag } from '../../utils/discData'
+import { calculateFlightPath, calculateLandingCoords } from '../../utils/flightPhysics'
 
 function haversineMeters(lat1, lon1, lat2, lon2) {
   const R = 6371000
@@ -9,10 +13,6 @@ function haversineMeters(lat1, lon1, lat2, lon2) {
   const a = Math.sin(dφ / 2) ** 2 + Math.cos(φ1) * Math.cos(φ2) * Math.sin(dλ / 2) ** 2
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
 }
-import { getTerrainData, getHoleData, getElevationProfiles, normalizeProfiles } from '../../utils/terrainData'
-import { HAZARD_TYPES, loadHazards, saveHazards } from '../../utils/hazards'
-import { loadBag } from '../../utils/discData'
-import { calculateFlightPath, calculateLandingCoords } from '../../utils/flightPhysics'
 
 const COURSES = [
   { key: 'palmer',      label: 'Palmer Park',  holes: 18 },
