@@ -276,9 +276,9 @@ export const COURSE_HOLES = {
     pars: [3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
   },
   ghesquiere: {
-    // Ahee DGC @ Ghesquiere Park — 9 holes, short tee distances in feet
-    distances: [176, 205, 225, 240, 206, 230, 231, 224, 283],
-    pars: [3, 3, 3, 3, 3, 3, 3, 3, 3],
+    // Ahee DGC @ Ghesquiere Park — 18-hole format: holes 1-9 short tees, 10-18 long tees, 9 shared baskets
+    distances: [176, 205, 225, 240, 206, 230, 231, 224, 283, 214, 239, 310, 294, 232, 286, 216, 323, 339],
+    pars: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
   },
   kensington: {
     distances: [280, 410, 270, 315, 455, 285, 265, 305, 425, 270, 315, 285, 265, 435, 295, 325, 275, 300],
@@ -326,12 +326,16 @@ export function courseHasMultiTee(courseKey) {
 
 // Returns { tee: {lat, lon}, basket: {lat, lon} } for a given hole and tee type.
 // teeType: 'short' | 'long'  (defaults to 'short')
+// For loop-format courses (18 holes, 9 baskets): holes 1-9 → shortTee, holes 10-18 → longTee (auto)
 export function getHoleCoords(courseKey, holeNumber, teeType = 'short') {
   const holes = COURSE_HOLE_COORDS[courseKey]
   if (!holes) return null
-  const h = holes[holeNumber - 1]
+  const isLoop = courseHasMultiTee(courseKey) && holeNumber > holes.length
+  const idx        = isLoop ? (holeNumber - 1) % holes.length : holeNumber - 1
+  const effectiveTee = isLoop ? 'long' : teeType
+  const h = holes[idx]
   if (!h) return null
-  const teeArr = (teeType === 'long' && h.longTee) ? h.longTee : (h.shortTee || h.tee)
+  const teeArr = (effectiveTee === 'long' && h.longTee) ? h.longTee : (h.shortTee || h.tee)
   const basketArr = h.basket
   if (!teeArr || !basketArr) return null
   return {

@@ -10,10 +10,12 @@ function buildFallbackHoleData(courseKey, holeNumber, teeType = 'short') {
   const coords = COURSE_HOLE_COORDS[courseKey]
   const meta   = COURSE_HOLES[courseKey]
   if (!coords || !meta) return null
-  const idx = holeNumber - 1
+  const isLoop       = coords[0]?.shortTee && holeNumber > coords.length
+  const idx          = isLoop ? (holeNumber - 1) % coords.length : holeNumber - 1
+  const effectiveTee = isLoop ? 'long' : teeType
   const h   = coords[idx]
   if (!h) return null
-  const teeArr    = (teeType === 'long' && h.longTee) ? h.longTee : (h.shortTee || h.tee)
+  const teeArr    = (effectiveTee === 'long' && h.longTee) ? h.longTee : (h.shortTee || h.tee)
   const basketArr = h.basket
   if (!teeArr || !basketArr) return null
   return {
@@ -45,7 +47,7 @@ const COURSES = [
   { key: 'grizzly',     label: 'Grizzly Oaks',  holes: 18 },
   { key: 'cass_benton', label: 'Cass Benton',   holes: 18 },
   { key: 'stony_creek', label: 'Stony Creek',   holes: 18 },
-  { key: 'ghesquiere',  label: 'Ghesquiere',    holes: 9  },
+  { key: 'ghesquiere',  label: 'Ghesquiere',    holes: 18 },
 ]
 const COURSE_CENTERS = {
   palmer:      { lat: 42.4260,   lng: -83.1197  },
