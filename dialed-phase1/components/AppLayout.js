@@ -75,7 +75,7 @@ export default function AppLayout() {
     localStorage.setItem('dialed_dev_mode', String(next))
   }
 
-  const COURSE_LABELS = { palmer: 'PALMER PARK', kensington: 'BLACK LOCUST', thorn: 'THE THORNE', grizzly: 'GRIZZLY OAKS', cass_benton: 'CASS BENTON' }
+  const COURSE_LABELS = { palmer: 'PALMER PARK', kensington: 'BLACK LOCUST', thorn: 'THE THORNE', grizzly: 'GRIZZLY OAKS', cass_benton: 'CASS BENTON', stony_creek: 'STONY CREEK', ghesquiere: 'GHESQUIERE' }
   const courseLabel = COURSE_LABELS[selectedCourse] || selectedCourse.toUpperCase()
 
   return (

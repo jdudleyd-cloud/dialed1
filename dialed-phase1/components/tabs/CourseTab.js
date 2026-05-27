@@ -15,11 +15,13 @@ function haversineMeters(lat1, lon1, lat2, lon2) {
 }
 
 const COURSES = [
-  { key: 'palmer',      label: 'Palmer Park',  holes: 18 },
+  { key: 'palmer',      label: 'Palmer Park',   holes: 18 },
   { key: 'kensington',  label: 'Black Locust',  holes: 18 },
   { key: 'thorn',       label: 'The Thorne',    holes: 18 },
   { key: 'grizzly',     label: 'Grizzly Oaks',  holes: 18 },
   { key: 'cass_benton', label: 'Cass Benton',   holes: 18 },
+  { key: 'stony_creek', label: 'Stony Creek',   holes: 18 },
+  { key: 'ghesquiere',  label: 'Ghesquiere',    holes: 9  },
 ]
 const COURSE_CENTERS = {
   palmer:      { lat: 42.4260,   lng: -83.1197  },
@@ -27,6 +29,8 @@ const COURSE_CENTERS = {
   thorn:       { lat: 42.67393,  lng: -83.32283 },
   grizzly:     { lat: 42.67653,  lng: -83.20900 },
   cass_benton: { lat: 42.41539,  lng: -83.47630 },
+  stony_creek: { lat: 42.7345,   lng: -83.0600  },
+  ghesquiere:  { lat: 42.4334,   lng: -82.9138  },
 }
 const COURSE_JSON_NAME = {
   palmer:      'Palmer Park Detroit DGC',
@@ -34,6 +38,8 @@ const COURSE_JSON_NAME = {
   grizzly:     'Grizzly Oaks',
   thorn:       'The Thorne at Pontiac Oaks',
   cass_benton: 'Cass Benton Hills',
+  stony_creek: 'Stony Creek Buckhorn North Blue',
+  ghesquiere:  'Ahee Disc Golf Course Ghesquiere Park',
 }
 
 // ─── Google Maps loader ───────────────────────────────────────────────────────
