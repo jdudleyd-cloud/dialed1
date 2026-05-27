@@ -4,6 +4,30 @@ import { getTerrainData, getHoleData, getElevationProfiles, normalizeProfiles } 
 import { HAZARD_TYPES, loadHazards, saveHazards } from '../../utils/hazards'
 import { loadBag } from '../../utils/discData'
 import { calculateFlightPath, calculateLandingCoords } from '../../utils/flightPhysics'
+import { COURSE_HOLE_COORDS, COURSE_HOLES } from '../../utils/courseData'
+
+function buildFallbackHoleData(courseKey, holeNumber) {
+  const coords = COURSE_HOLE_COORDS[courseKey]
+  const meta   = COURSE_HOLES[courseKey]
+  if (!coords || !meta) return null
+  const idx = holeNumber - 1
+  const h   = coords[idx]
+  if (!h) return null
+  const teeArr    = h.shortTee || h.tee
+  const basketArr = h.basket
+  if (!teeArr || !basketArr) return null
+  return {
+    hole:        holeNumber,
+    par:         meta.pars?.[idx]  ?? 3,
+    distance_am: meta.distances?.[idx] ?? 0,
+    distance_pro: h.longTee
+      ? Math.round(haversineMeters(h.longTee[0], h.longTee[1], basketArr[0], basketArr[1]) * 3.28084)
+      : meta.distances?.[idx] ?? 0,
+    tee:    { lat: teeArr[0],    lon: teeArr[1]    },
+    basket: { lat: basketArr[0], lon: basketArr[1] },
+    terrain: null,
+  }
+}
 
 function haversineMeters(lat1, lon1, lat2, lon2) {
   const R = 6371000
@@ -238,10 +262,10 @@ export default function CourseTab({
   useEffect(() => { setBag(loadBag()) }, [])
 
   useEffect(() => {
-    if (!terrainData) return
     const fullName = COURSE_JSON_NAME[selectedCourse]
-    const hole = getHoleData(terrainData, fullName, selectedHole)
-    setHoleData(hole)
+    const hole = terrainData ? getHoleData(terrainData, fullName, selectedHole) : null
+    const resolved = hole ?? buildFallbackHoleData(selectedCourse, selectedHole)
+    setHoleData(resolved)
     setProfiles(hole ? normalizeProfiles(getElevationProfiles(hole)) : null)
   }, [terrainData, selectedCourse, selectedHole])
 
