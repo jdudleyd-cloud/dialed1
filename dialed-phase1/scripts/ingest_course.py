@@ -1,15 +1,26 @@
 #!/usr/bin/env python3
 """
-ingest_course.py — parse a saved UDisc caddie-book HTML page, extract GPS
+ingest_course.py — parse saved UDisc caddie-book HTML page(s), extract GPS
 coordinates, update all 5 app registration files, then git commit + push.
 
 USAGE
 -----
-  python scripts/ingest_course.py <saved.html> \
-      --key   <course_key>      e.g.  stony_creek
-      --label <display_label>   e.g.  "Stony Creek"
-      --holes <number>          18 or 9
-      [--dry-run]               print what would change without writing
+  Single-tee course (one layout):
+    python scripts/ingest_course.py \
+        --short <saved.html> \
+        --key   <course_key>      e.g.  stony_creek \
+        --label <display_label>   e.g.  "Stony Creek" \
+        --holes <number>          18 or 9 \
+        [--dry-run]
+
+  Multi-tee course (two layouts saved separately):
+    python scripts/ingest_course.py \
+        --short <short_tees.html> \
+        --long  <long_tees.html> \
+        --key   <course_key>      e.g.  grizzly \
+        --label <display_label>   e.g.  "Grizzly Oaks" \
+        --holes <number>          18 or 9 \
+        [--dry-run]
 
 HOW TO SAVE THE HTML
 --------------------
@@ -18,12 +29,29 @@ HOW TO SAVE THE HTML
   3. Browser menu → Save Page As → "Webpage, HTML Only"  (.html file)
   4. Run this script on that file.
 
+IDENTIFYING SHORT vs LONG LAYOUTS ON UDISC
+-------------------------------------------
+  UDisc uses different names for tee layouts — look at the layout tab label:
+
+    SHORT / Am tees  →  use as --short
+      Labels you'll see:  "Am", "Amateur", "Short Tees", "White Tees",
+                          "Rec", "Short", or any non-Pro/Blue label
+
+    LONG / Pro tees  →  use as --long
+      Labels you'll see:  "Pro", "Professional", "Long Tees", "Blue Tees",
+                          "Gold", "Long", or the furthest-distance layout
+
+  When in doubt: the layout with LONGER average distances is --long.
+
 MULTI-TEE COURSES (e.g. Ghesquiere Park)
 -----------------------------------------
-  Run twice — once per layout — using different --key values:
-    --key ghesquiere_short   (navigate to the short-tees layout, save, run)
-    --key ghesquiere_long    (navigate to the long-tees layout, save, run)
-  Then manually merge the two entries in courseData.js if desired.
+  Navigate to each layout separately on UDisc, save each page, then run
+  with both --short and --long.  The script merges them into one course
+  entry using { shortTee, longTee, basket } format.
+
+  For loop-format courses (9 baskets × 2 tees = 18 holes):
+    Use --holes 18.  Holes 1–9 will use shortTee, holes 10–18 use longTee
+    wrapping to basket index (holeNum-1) % 9.
 """
 
 import re, json, sys, math, subprocess, argparse
@@ -131,6 +159,28 @@ def _try_gps_regex(html: str) -> list:
             holes.append({'tee': list(coords[i]), 'basket': list(coords[i + 1])})
             i += 2
     return holes
+
+
+# ── Merge short + long into multi-tee format ─────────────────────────────────
+def merge_tee_layouts(short_holes: list, long_holes: list) -> list:
+    """
+    Zip two single-tee extractions into multi-tee hole entries.
+    short_holes[i].tee  → shortTee
+    long_holes[i].tee   → longTee
+    short_holes[i].basket is used (baskets are the same physical object).
+    """
+    if len(short_holes) != len(long_holes):
+        print(f'  WARNING: short layout has {len(short_holes)} holes, '
+              f'long layout has {len(long_holes)} — using minimum')
+    count = min(len(short_holes), len(long_holes))
+    merged = []
+    for i in range(count):
+        merged.append({
+            'shortTee': short_holes[i]['tee'],
+            'longTee':  long_holes[i]['tee'],
+            'basket':   short_holes[i]['basket'],
+        })
+    return merged
 
 
 # ── courseData.js patching ────────────────────────────────────────────────────
@@ -269,38 +319,92 @@ def git(args):
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 def main():
-    ap = argparse.ArgumentParser(description='Ingest a UDisc caddie-book HTML into the app.')
-    ap.add_argument('html_file',          help='Path to saved caddie-book HTML')
+    ap = argparse.ArgumentParser(
+        description='Ingest a UDisc caddie-book HTML into the app.',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Layout identification:
+  --short  →  Am / Short Tees / White Tees / Rec layout
+  --long   →  Pro / Long Tees / Blue Tees / Gold layout
+
+  When in doubt: the layout with longer average distances is --long.
+        """
+    )
+    ap.add_argument('--short', required=True, metavar='HTML',
+                    help='Path to saved caddie-book HTML for short/Am tees')
+    ap.add_argument('--long',  metavar='HTML', default=None,
+                    help='Path to saved caddie-book HTML for long/Pro tees '
+                         '(omit for single-tee courses)')
     ap.add_argument('--key',   required=True, help='JS identifier  e.g. stony_creek')
     ap.add_argument('--label', required=True, help='Display name   e.g. "Stony Creek"')
     ap.add_argument('--holes', required=True, type=int, help='Number of holes: 9 or 18')
     ap.add_argument('--dry-run', action='store_true', help='Print without writing')
     args = ap.parse_args()
 
-    html = Path(args.html_file).read_text(encoding='utf-8', errors='replace')
-    print(f'\n→ Parsing {args.html_file}')
+    # ── Parse short layout ────────────────────────────────────────────────────
+    print(f'\n→ Parsing short layout: {args.short}')
+    short_html  = Path(args.short).read_text(encoding='utf-8', errors='replace')
+    short_holes = extract_holes(short_html, args.holes)
 
-    holes = extract_holes(html, args.holes)
-    if len(holes) != args.holes:
-        print(f'  WARNING: expected {args.holes} holes, got {len(holes)} — truncating/padding')
-    holes = holes[:args.holes]
-    if len(holes) < args.holes:
-        sys.exit(f'ERROR: only {len(holes)} holes found, cannot continue')
+    # ── Parse long layout (optional) ─────────────────────────────────────────
+    long_holes = None
+    if args.long:
+        print(f'→ Parsing long layout:  {args.long}')
+        long_html  = Path(args.long).read_text(encoding='utf-8', errors='replace')
+        long_holes = extract_holes(long_html, args.holes)
 
-    # Distances and default par-3s
-    distances = [haversine_ft(h['tee'][0], h['tee'][1], h['basket'][0], h['basket'][1])
+    # ── Validate counts ───────────────────────────────────────────────────────
+    physical_holes = args.holes if not long_holes else min(len(short_holes), len(long_holes))
+
+    if long_holes:
+        # Multi-tee: physical basket count = holes / 2 for loop courses,
+        # or holes directly if each physical hole has 2 tee pads
+        # Use short_holes length as the physical count
+        base_count = len(short_holes)
+        if base_count != args.holes and base_count * 2 != args.holes:
+            print(f'  WARNING: expected {args.holes} holes (or {args.holes//2} for loop), '
+                  f'got {base_count} — check your HTML files')
+        holes = merge_tee_layouts(short_holes[:base_count], long_holes[:base_count])
+    else:
+        # Single-tee
+        if len(short_holes) != args.holes:
+            print(f'  WARNING: expected {args.holes} holes, got {len(short_holes)} — truncating/padding')
+        short_holes = short_holes[:args.holes]
+        if len(short_holes) < args.holes:
+            sys.exit(f'ERROR: only {len(short_holes)} holes found, cannot continue')
+        holes = short_holes
+
+    # ── Distances (from short tee to basket) ─────────────────────────────────
+    def tee_coords(h):
+        return h.get('shortTee') or h.get('tee')
+
+    distances = [haversine_ft(tee_coords(h)[0], tee_coords(h)[1],
+                               h['basket'][0],    h['basket'][1])
                  for h in holes]
-    pars = [3] * len(holes)
 
-    # Course center (average tee positions)
-    lats = [h['tee'][0] for h in holes]
-    lngs = [h['tee'][1] for h in holes]
+    # For loop-format multi-tee courses, expand distances to full hole count
+    if long_holes and args.holes > len(holes):
+        from math import ceil
+        long_distances = [
+            haversine_ft(h['longTee'][0], h['longTee'][1],
+                         h['basket'][0],  h['basket'][1])
+            for h in holes
+        ]
+        distances = distances + long_distances  # short holes first, then long holes
+
+    pars = [3] * args.holes
+
+    # ── Course center (average tee positions) ─────────────────────────────────
+    lats = [tee_coords(h)[0] for h in holes]
+    lngs = [tee_coords(h)[1] for h in holes]
     center = (sum(lats) / len(lats), sum(lngs) / len(lngs))
 
-    print(f'\n  Course:  {args.label}  ({args.holes} holes)')
-    print(f'  Key:     {args.key}')
-    print(f'  Center:  {center[0]:.5f}, {center[1]:.5f}')
-    print(f'  Distances (ft): {distances}')
+    # ── Summary ───────────────────────────────────────────────────────────────
+    tee_type = 'multi-tee (shortTee + longTee)' if long_holes else 'single-tee'
+    print(f'\n  Course:    {args.label}  ({args.holes} holes, {tee_type})')
+    print(f'  Key:       {args.key}')
+    print(f'  Center:    {center[0]:.5f}, {center[1]:.5f}')
+    print(f'  Distances: {distances}')
 
     if args.dry_run:
         print('\n[dry-run] No files written.\n')
