@@ -1,60 +1,55 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+import sys, io
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 """
-ingest_course.py — parse saved UDisc caddie-book HTML page(s), extract GPS
-coordinates, update all 5 app registration files, then git commit + push.
+ingest_course.py  —  Add a course to the Dialed app, fully automated.
 
 USAGE
 -----
-  Single-tee course (one layout):
-    python scripts/ingest_course.py \
-        --short <saved.html> \
-        --key   <course_key>      e.g.  stony_creek \
-        --label <display_label>   e.g.  "Stony Creek" \
-        --holes <number>          18 or 9 \
-        [--dry-run]
+  Single-tee course:
+    python scripts/ingest_course.py
+        --short "https://udisc.com/courses/SLUG/layouts/ID/caddie-book"
+        --key   course_key
+        --label "Course Name"
+        --holes 18
 
-  Multi-tee course (two layouts saved separately):
-    python scripts/ingest_course.py \
-        --short <short_tees.html> \
-        --long  <long_tees.html> \
-        --key   <course_key>      e.g.  grizzly \
-        --label <display_label>   e.g.  "Grizzly Oaks" \
-        --holes <number>          18 or 9 \
-        [--dry-run]
+  Multi-tee course (Am + Pro tees):
+    python scripts/ingest_course.py
+        --short "https://udisc.com/courses/SLUG/layouts/SHORT_ID/caddie-book"
+        --long  "https://udisc.com/courses/SLUG/layouts/LONG_ID/caddie-book"
+        --key   course_key
+        --label "Course Name"
+        --holes 18
 
-HOW TO SAVE THE HTML
---------------------
-  1. Open:  https://udisc.com/courses/<slug>/layouts/<id>/caddie-book
-  2. Wait for the map to fully load.
-  3. Browser menu → Save Page As → "Webpage, HTML Only"  (.html file)
-  4. Run this script on that file.
+  Updating an existing course (e.g. adding short tees to Palmer):
+    same as above but add  --update
 
-IDENTIFYING SHORT vs LONG LAYOUTS ON UDISC
--------------------------------------------
-  UDisc uses different names for tee layouts — look at the layout tab label:
+  Preview without writing anything:
+    add  --dry-run
 
-    SHORT / Am tees  →  use as --short
-      Labels you'll see:  "Am", "Amateur", "Short Tees", "White Tees",
-                          "Rec", "Short", or any non-Pro/Blue label
+HOW TO FIND THE URL
+-------------------
+  1. Go to udisc.com -> search the course -> click Layouts
+  2. Pick the Am/Short layout -> click Caddie Book
+  3. Copy the URL from your browser.  It looks like:
+       https://udisc.com/courses/detroit-palmer-park-dgc-AkPa/layouts/73810/caddie-book
+  4. Paste it as --short.  For Pro/Long tees, find that layout and paste as --long.
 
-    LONG / Pro tees  →  use as --long
-      Labels you'll see:  "Pro", "Professional", "Long Tees", "Blue Tees",
-                          "Gold", "Long", or the furthest-distance layout
+NAMING
+------
+  --key    lowercase, underscores only:  oak_park  river_bends
+  --label  quoted display name:          "Oak Park"  "River Bends"
+  --holes  9 or 18
 
-  When in doubt: the layout with LONGER average distances is --long.
-
-MULTI-TEE COURSES (e.g. Ghesquiere Park)
------------------------------------------
-  Navigate to each layout separately on UDisc, save each page, then run
-  with both --short and --long.  The script merges them into one course
-  entry using { shortTee, longTee, basket } format.
-
-  For loop-format courses (9 baskets × 2 tees = 18 holes):
-    Use --holes 18.  Holes 1–9 will use shortTee, holes 10–18 use longTee
-    wrapping to basket index (holeNum-1) % 9.
+SHORT vs LONG
+-------------
+  Am / Short Tees / White / Rec  ->  --short
+  Pro / Long Tees / Blue / Gold  ->  --long
 """
 
-import re, json, sys, math, subprocess, argparse
+import re, json, math, subprocess, argparse, time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -67,9 +62,10 @@ FILES = {
     'vsTab':      ROOT / 'components' / 'tabs' / 'VsTab.js',
 }
 
+
 # ── Haversine distance (feet) ─────────────────────────────────────────────────
 def haversine_ft(lat1, lng1, lat2, lng2):
-    R = 20902231  # Earth radius in feet
+    R = 20902231
     dlat = math.radians(lat2 - lat1)
     dlng = math.radians(lng2 - lng1)
     a = (math.sin(dlat / 2) ** 2 +
@@ -78,115 +74,91 @@ def haversine_ft(lat1, lng1, lat2, lng2):
     return round(2 * R * math.asin(math.sqrt(a)))
 
 
-# ── HTML extraction ───────────────────────────────────────────────────────────
-def extract_holes(html: str, expected: int) -> list:
+# ── Browser scraper ───────────────────────────────────────────────────────────
+def scrape_udisc(url: str) -> list:
     """
-    Returns list of hole dicts: { 'tee': [lat, lng], 'basket': [lat, lng] }
-    Tries React Router loaderData first, falls back to GPS regex.
+    Launch a headless browser, load the UDisc caddie-book page,
+    wait for React Router to populate the hole data, extract GPS coords.
     """
-    holes = _try_loaderdata(html)
-    if holes:
-        print(f'  [extracted via React Router loaderData — {len(holes)} holes]')
-        return holes
-
-    holes = _try_gps_regex(html)
-    if holes:
-        print(f'  [extracted via GPS regex — {len(holes)} holes]')
-        return holes
-
-    raise ValueError(
-        'Could not extract coordinates.\n'
-        'Make sure you saved the CADDIE-BOOK page (not the main course page).\n'
-        'URL pattern: udisc.com/courses/<slug>/layouts/<id>/caddie-book'
-    )
-
-
-def _try_loaderdata(html: str) -> list:
-    # React Router v7 serializes context into a <script> tag
-    m = re.search(
-        r'window\.__reactRouterContext\s*=\s*(\{.+?)\s*;?\s*</script>',
-        html, re.DOTALL
-    )
-    if not m:
-        return []
     try:
-        ctx    = json.loads(m.group(1))
-        loader = ctx['state']['loaderData']
-        cb_key = next((k for k in loader if 'caddie-book' in k), None)
-        if not cb_key:
-            return []
-        payload = loader[cb_key]
-        raw     = payload.get('selectedLayout', {}).get('holes', [])
-        if not raw:
-            return []
-        out = []
-        for h in sorted(raw, key=lambda x: x.get('holeNumber', 0)):
-            t = h['teePosition']
-            b = h['targetPosition']
-            out.append({
-                'tee':    [t['latitude'],  t['longitude']],
-                'basket': [b['latitude'],  b['longitude']],
-            })
-        return out
-    except Exception:
-        return []
+        from playwright.sync_api import sync_playwright
+    except ImportError:
+        sys.exit(
+            'ERROR: Playwright not installed.\n'
+            'Run:  pip install playwright && python -m playwright install chromium'
+        )
 
+    print(f'   Opening browser -> {url}')
 
-def _try_gps_regex(html: str) -> list:
-    # Extract all lat,lng pairs with 5+ decimal places (avoids UI floats)
-    GPS = re.compile(r'(-?\d{1,3}\.\d{5,}),\s*(-?\d{1,3}\.\d{5,})')
-    raw = [(float(a), float(b)) for a, b in GPS.findall(html)
-           if -90 <= float(a) <= 90 and -180 <= float(b) <= 180]
-    if len(raw) < 2:
-        return []
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page()
 
-    # Deduplicate consecutive duplicates
-    coords = [raw[0]]
-    for c in raw[1:]:
-        if abs(c[0] - coords[-1][0]) > 1e-7 or abs(c[1] - coords[-1][1]) > 1e-7:
-            coords.append(c)
+        # Block images/fonts to speed up load
+        page.route('**/*.{png,jpg,jpeg,gif,svg,woff,woff2,ttf}',
+                   lambda r: r.abort())
 
-    # Stream-order rule (from AI_RULES.md):
-    #   index 0 = shortTee, index 1 = longTee, index 2 = basket, 3+ = ignore
-    # Group every 3 (or 2 if only tee+basket)
-    holes = []
-    i = 0
-    while i + 1 < len(coords):
-        if i + 2 < len(coords):
-            holes.append({'tee': list(coords[i]), 'basket': list(coords[i + 2])})
-            i += 3
-        else:
-            holes.append({'tee': list(coords[i]), 'basket': list(coords[i + 1])})
-            i += 2
-    return holes
+        page.goto(url, wait_until='domcontentloaded', timeout=60000)
+
+        # Wait until React Router has loaded the hole data
+        try:
+            page.wait_for_function(
+                """() => {
+                    const ctx = window.__reactRouterContext?.state?.loaderData;
+                    if (!ctx) return false;
+                    return Object.values(ctx).some(
+                        v => v?.selectedLayout?.holes?.length > 0
+                    );
+                }""",
+                timeout=30000
+            )
+        except Exception:
+            # Fallback: give it a few more seconds
+            time.sleep(5)
+
+        holes_raw = page.evaluate("""() => {
+            const ctx = window.__reactRouterContext?.state?.loaderData;
+            if (!ctx) return null;
+            const entry = Object.values(ctx).find(v => v?.selectedLayout?.holes?.length > 0);
+            if (!entry) return null;
+            return entry.selectedLayout.holes
+                .sort((a, b) => a.holeNumber - b.holeNumber)
+                .map(h => ({
+                    hole:   h.holeNumber,
+                    tee:    [h.teePosition.latitude,    h.teePosition.longitude],
+                    basket: [h.targetPosition.latitude, h.targetPosition.longitude]
+                }));
+        }""")
+
+        browser.close()
+
+    if not holes_raw:
+        sys.exit(
+            f'ERROR: Could not extract hole data from:\n  {url}\n'
+            'Make sure the URL ends with /caddie-book and the course exists on UDisc.'
+        )
+
+    return [{'tee': h['tee'], 'basket': h['basket']} for h in holes_raw]
 
 
 # ── Merge short + long into multi-tee format ─────────────────────────────────
 def merge_tee_layouts(short_holes: list, long_holes: list) -> list:
-    """
-    Zip two single-tee extractions into multi-tee hole entries.
-    short_holes[i].tee  → shortTee
-    long_holes[i].tee   → longTee
-    short_holes[i].basket is used (baskets are the same physical object).
-    """
-    if len(short_holes) != len(long_holes):
-        print(f'  WARNING: short layout has {len(short_holes)} holes, '
-              f'long layout has {len(long_holes)} — using minimum')
     count = min(len(short_holes), len(long_holes))
-    merged = []
-    for i in range(count):
-        merged.append({
+    if len(short_holes) != len(long_holes):
+        print(f'   WARNING: short={len(short_holes)} holes, long={len(long_holes)} -> using {count}')
+    return [
+        {
             'shortTee': short_holes[i]['tee'],
             'longTee':  long_holes[i]['tee'],
             'basket':   short_holes[i]['basket'],
-        })
-    return merged
+        }
+        for i in range(count)
+    ]
 
 
 # ── courseData.js patching ────────────────────────────────────────────────────
 def _fmt(coord):
     return f'[{coord[0]}, {coord[1]}]'
-
 
 def _coord_entry(h):
     if 'shortTee' in h:
@@ -196,15 +168,25 @@ def _coord_entry(h):
     return f'    {{ tee: {_fmt(h["tee"])}, basket: {_fmt(h["basket"])} }},'
 
 
-def update_course_data(key, label, holes, distances, pars, dry_run):
+def update_course_data(key, label, holes, distances, pars, dry_run, update=False):
     path = FILES['courseData']
     src  = path.read_text(encoding='utf-8')
+    already = f'  {key}:' in src
 
-    if f'  {key}:' in src:
-        print(f'  SKIP courseData.js — {key} already present')
+    if already and not update:
+        print(f'   SKIP courseData.js — {key} already exists (use --update to overwrite)')
         return
 
-    # ── COURSE_HOLE_COORDS entry ──────────────────────────────────────────────
+    if already:
+        # Strip old coord block
+        s = src.index(f'  {key}: [')
+        e = src.index('  ],', s) + 4
+        src = src[:s] + src[e:].lstrip('\n')
+        # Strip old COURSE_HOLES entry
+        s2 = src.index(f'  {key}: {{')
+        e2 = src.index('  },\n', s2) + 4
+        src = src[:s2] + src[e2:].lstrip('\n')
+
     lines = [f'  {key}: [', f'    // {label}']
     for i, h in enumerate(holes):
         lines.append(f'    // hole {i + 1}')
@@ -212,27 +194,19 @@ def update_course_data(key, label, holes, distances, pars, dry_run):
     lines.append('  ],')
     coord_block = '\n'.join(lines) + '\n'
 
-    # Insert immediately before "export const COURSE_HOLES"
     anchor = '\nexport const COURSE_HOLES'
     if anchor not in src:
-        raise ValueError('Could not find "export const COURSE_HOLES" in courseData.js')
+        raise ValueError('Cannot find "export const COURSE_HOLES" in courseData.js')
     idx = src.index(anchor)
     src = src[:idx] + coord_block + src[idx:]
 
-    # ── COURSE_HOLES entry ────────────────────────────────────────────────────
     dist_str = ', '.join(str(d) for d in distances)
     pars_str = ', '.join(str(p) for p in pars)
-    holes_block = (
-        f'  {key}: {{\n'
-        f'    distances: [{dist_str}],\n'
-        f'    pars: [{pars_str}],\n'
-        f'  }},\n'
-    )
+    holes_block = f'  {key}: {{\n    distances: [{dist_str}],\n    pars: [{pars_str}],\n  }},\n'
 
-    # Insert before the closing "}" + "// Returns" comment
     anchor2 = '\n}\n\n// Returns'
     if anchor2 not in src:
-        raise ValueError('Could not find COURSE_HOLES closing anchor in courseData.js')
+        raise ValueError('Cannot find COURSE_HOLES closing anchor in courseData.js')
     idx2 = src.index(anchor2)
     src = src[:idx2] + '\n' + holes_block + src[idx2:]
 
@@ -240,71 +214,46 @@ def update_course_data(key, label, holes, distances, pars, dry_run):
         path.write_text(src, encoding='utf-8')
 
 
-# ── CourseTab.js patching ─────────────────────────────────────────────────────
-def update_course_tab(key, label, holes_count, center, dry_run):
+def update_course_tab(key, label, holes_count, center, dry_run, update=False):
     path = FILES['courseTab']
     src  = path.read_text(encoding='utf-8')
 
     if f"key: '{key}'" in src:
-        print(f'  SKIP CourseTab.js — {key} already present')
+        print(f'   SKIP CourseTab.js — {key} already registered')
         return
 
     new = src
-
-    # COURSES array — insert before "]\nconst COURSE_CENTERS"
-    courses_anchor = ']\nconst COURSE_CENTERS'
-    new = new.replace(
-        courses_anchor,
-        f"  {{ key: '{key}', label: '{label}', holes: {holes_count} }},\n{courses_anchor}"
-    )
-
-    # COURSE_CENTERS — insert before "}\nconst COURSE_JSON_NAME"
-    centers_anchor = '}\nconst COURSE_JSON_NAME'
-    new = new.replace(
-        centers_anchor,
-        f"  {key}: {{ lat: {center[0]:.5f}, lng: {center[1]:.5f} }},\n{centers_anchor}"
-    )
-
-    # COURSE_JSON_NAME — insert before "}\n\n// ─── Google Maps"
-    json_anchor = '}\n\n// ─── Google Maps loader'
-    new = new.replace(
-        json_anchor,
-        f"  {key}: '{label}',\n{json_anchor}"
-    )
+    new = new.replace(']\nconst COURSE_CENTERS',
+                      f"  {{ key: '{key}', label: '{label}', holes: {holes_count} }},\n]\nconst COURSE_CENTERS")
+    new = new.replace('}\nconst COURSE_JSON_NAME',
+                      f"  {key}: {{ lat: {center[0]:.5f}, lng: {center[1]:.5f} }},\n}}\nconst COURSE_JSON_NAME")
+    new = new.replace('}\n\n// ─── Google Maps loader',
+                      f"  {key}: '{label}',\n}}\n\n// ─── Google Maps loader")
 
     if new == src:
-        print('  WARNING: CourseTab.js — no anchors matched, check file manually')
+        print('   WARNING: CourseTab.js anchors not matched — check manually')
     elif not dry_run:
         path.write_text(new, encoding='utf-8')
 
 
-# ── Inline-object patching (AppLayout, PlayTab, VsTab) ───────────────────────
-def add_to_inline_object(src, pattern, key, value):
-    """
-    Finds an inline JS object matching `pattern` and appends key: 'value' to it.
-    pattern should match the whole { ... } line.
-    """
-    def replacer(m):
-        inner = m.group(0).rstrip()
-        # Strip closing brace, add new entry, close
-        if inner.endswith('}'):
-            inner = inner[:-1].rstrip().rstrip(',')
-            return f"{inner}, {key}: '{value}'" + ' }'
-        return m.group(0)  # fallback: no change
-    return re.sub(pattern, replacer, src)
-
-
-def update_inline_file(filepath_key, var_pattern, key, value, dry_run):
-    path = FILES[filepath_key]
+def update_inline_file(fkey, pattern, key, value, dry_run, update=False):
+    path = FILES[fkey]
     src  = path.read_text(encoding='utf-8')
 
     if f"'{key}'" in src or f'"{key}"' in src:
-        print(f'  SKIP {path.name} — {key} already present')
+        print(f'   SKIP {path.name} — {key} already present')
         return
 
-    new = add_to_inline_object(src, var_pattern, key, value)
+    def replacer(m):
+        inner = m.group(0).rstrip()
+        if inner.endswith('}'):
+            inner = inner[:-1].rstrip().rstrip(',')
+            return f"{inner}, {key}: '{value}'" + ' }'
+        return m.group(0)
+
+    new = re.sub(pattern, replacer, src)
     if new == src:
-        print(f'  WARNING: {path.name} — pattern not matched, check manually')
+        print(f'   WARNING: {path.name} pattern not matched — check manually')
     elif not dry_run:
         path.write_text(new, encoding='utf-8')
 
@@ -319,144 +268,96 @@ def git(args):
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 def main():
-    ap = argparse.ArgumentParser(
-        description='Ingest a UDisc caddie-book HTML into the app.',
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-Layout identification:
-  --short  →  Am / Short Tees / White Tees / Rec layout
-  --long   →  Pro / Long Tees / Blue Tees / Gold layout
-
-  When in doubt: the layout with longer average distances is --long.
-        """
-    )
-    ap.add_argument('--short', required=True, metavar='HTML',
-                    help='Path to saved caddie-book HTML for short/Am tees')
-    ap.add_argument('--long',  metavar='HTML', default=None,
-                    help='Path to saved caddie-book HTML for long/Pro tees '
-                         '(omit for single-tee courses)')
-    ap.add_argument('--key',   required=True, help='JS identifier  e.g. stony_creek')
-    ap.add_argument('--label', required=True, help='Display name   e.g. "Stony Creek"')
-    ap.add_argument('--holes', required=True, type=int, help='Number of holes: 9 or 18')
-    ap.add_argument('--dry-run', action='store_true', help='Print without writing')
+    ap = argparse.ArgumentParser(description='Add a UDisc course to the Dialed app.')
+    ap.add_argument('--short', required=True,
+                    help='Caddie-book URL for short/Am tees')
+    ap.add_argument('--long',  default=None,
+                    help='Caddie-book URL for long/Pro tees (omit for single-tee)')
+    ap.add_argument('--key',   required=True, help='JS key e.g. oak_park')
+    ap.add_argument('--label', required=True, help='Display name e.g. "Oak Park"')
+    ap.add_argument('--holes', required=True, type=int, help='9 or 18')
+    ap.add_argument('--update',   action='store_true', help='Overwrite existing course')
+    ap.add_argument('--dry-run',  action='store_true', help='Preview without writing')
     args = ap.parse_args()
 
-    # ── Parse short layout ────────────────────────────────────────────────────
-    print(f'\n→ Parsing short layout: {args.short}')
-    short_html  = Path(args.short).read_text(encoding='utf-8', errors='replace')
-    short_holes = extract_holes(short_html, args.holes)
+    print(f'\n=== Dialed Course Ingest: {args.label} ===\n')
 
-    # ── Parse long layout (optional) ─────────────────────────────────────────
+    # Scrape short tees
+    print(f'[1/5] Scraping short tees...')
+    short_holes = scrape_udisc(args.short)
+    print(f'   {len(short_holes)} holes extracted')
+
+    # Scrape long tees (optional)
     long_holes = None
     if args.long:
-        print(f'→ Parsing long layout:  {args.long}')
-        long_html  = Path(args.long).read_text(encoding='utf-8', errors='replace')
-        long_holes = extract_holes(long_html, args.holes)
-
-    # ── Validate counts ───────────────────────────────────────────────────────
-    physical_holes = args.holes if not long_holes else min(len(short_holes), len(long_holes))
-
-    if long_holes:
-        # Multi-tee: physical basket count = holes / 2 for loop courses,
-        # or holes directly if each physical hole has 2 tee pads
-        # Use short_holes length as the physical count
-        base_count = len(short_holes)
-        if base_count != args.holes and base_count * 2 != args.holes:
-            print(f'  WARNING: expected {args.holes} holes (or {args.holes//2} for loop), '
-                  f'got {base_count} — check your HTML files')
-        holes = merge_tee_layouts(short_holes[:base_count], long_holes[:base_count])
+        print(f'[2/5] Scraping long tees...')
+        long_holes = scrape_udisc(args.long)
+        print(f'   {len(long_holes)} holes extracted')
     else:
-        # Single-tee
-        if len(short_holes) != args.holes:
-            print(f'  WARNING: expected {args.holes} holes, got {len(short_holes)} — truncating/padding')
-        short_holes = short_holes[:args.holes]
-        if len(short_holes) < args.holes:
-            sys.exit(f'ERROR: only {len(short_holes)} holes found, cannot continue')
-        holes = short_holes
+        print(f'[2/5] No long tees URL provided — single-tee course')
 
-    # ── Distances (from short tee to basket) ─────────────────────────────────
-    def tee_coords(h):
+    # Build merged hole list
+    if long_holes:
+        base = len(short_holes)
+        holes = merge_tee_layouts(short_holes[:base], long_holes[:base])
+    else:
+        holes = short_holes[:args.holes]
+
+    # Distances
+    def tee_pt(h):
         return h.get('shortTee') or h.get('tee')
 
-    distances = [haversine_ft(tee_coords(h)[0], tee_coords(h)[1],
-                               h['basket'][0],    h['basket'][1])
-                 for h in holes]
+    short_dist = [haversine_ft(tee_pt(h)[0], tee_pt(h)[1], h['basket'][0], h['basket'][1])
+                  for h in holes]
 
-    # For loop-format multi-tee courses, expand distances to full hole count
     if long_holes and args.holes > len(holes):
-        from math import ceil
-        long_distances = [
-            haversine_ft(h['longTee'][0], h['longTee'][1],
-                         h['basket'][0],  h['basket'][1])
-            for h in holes
-        ]
-        distances = distances + long_distances  # short holes first, then long holes
+        long_dist = [haversine_ft(h['longTee'][0], h['longTee'][1], h['basket'][0], h['basket'][1])
+                     for h in holes]
+        distances = short_dist + long_dist
+    else:
+        distances = short_dist
 
     pars = [3] * args.holes
 
-    # ── Course center (average tee positions) ─────────────────────────────────
-    lats = [tee_coords(h)[0] for h in holes]
-    lngs = [tee_coords(h)[1] for h in holes]
+    lats = [tee_pt(h)[0] for h in holes]
+    lngs = [tee_pt(h)[1] for h in holes]
     center = (sum(lats) / len(lats), sum(lngs) / len(lngs))
 
-    # ── Summary ───────────────────────────────────────────────────────────────
-    tee_type = 'multi-tee (shortTee + longTee)' if long_holes else 'single-tee'
-    print(f'\n  Course:    {args.label}  ({args.holes} holes, {tee_type})')
-    print(f'  Key:       {args.key}')
-    print(f'  Center:    {center[0]:.5f}, {center[1]:.5f}')
-    print(f'  Distances: {distances}')
+    tee_type = 'multi-tee' if long_holes else 'single-tee'
+    print(f'\n   Course:    {args.label}  ({args.holes} holes, {tee_type})')
+    print(f'   Center:    {center[0]:.5f}, {center[1]:.5f}')
+    print(f'   Distances: {distances}')
 
     if args.dry_run:
         print('\n[dry-run] No files written.\n')
         return
 
-    print('\n→ Updating files...')
+    print(f'\n[3/5] Updating source files...')
+    update_course_data(args.key, args.label, holes, distances, pars, args.dry_run, args.update)
+    print('   OK courseData.js')
+    update_course_tab(args.key, args.label, args.holes, center, args.dry_run, args.update)
+    print('   OK CourseTab.js')
+    update_inline_file('appLayout', r"const COURSE_LABELS\s*=\s*\{[^\}]+\}",
+                       args.key, args.label.upper(), args.dry_run, args.update)
+    print('   OK AppLayout.js')
+    update_inline_file('playTab', r"const COURSE_NAMES\s*=\s*\{[^\}]+\}",
+                       args.key, args.label, args.dry_run, args.update)
+    print('   OK PlayTab.js')
+    update_inline_file('vsTab', r"const COURSE_NAMES\s*=\s*\{[^\}]+\}",
+                       args.key, args.label, args.dry_run, args.update)
+    print('   OK VsTab.js')
 
-    # 1. courseData.js
-    update_course_data(args.key, args.label, holes, distances, pars, args.dry_run)
-    print('  ✓ utils/courseData.js')
-
-    # 2. CourseTab.js
-    update_course_tab(args.key, args.label, args.holes, center, args.dry_run)
-    print('  ✓ components/tabs/CourseTab.js')
-
-    # 3. AppLayout.js  — COURSE_LABELS
-    update_inline_file(
-        'appLayout',
-        r"const COURSE_LABELS\s*=\s*\{[^\}]+\}",
-        args.key, args.label.upper(), args.dry_run
-    )
-    print('  ✓ components/AppLayout.js')
-
-    # 4. PlayTab.js  — COURSE_NAMES (inside function, so match the specific line)
-    update_inline_file(
-        'playTab',
-        r"const COURSE_NAMES\s*=\s*\{[^\}]+\}",
-        args.key, args.label, args.dry_run
-    )
-    print('  ✓ components/tabs/PlayTab.js')
-
-    # 5. VsTab.js  — COURSE_NAMES (module-level)
-    update_inline_file(
-        'vsTab',
-        r"const COURSE_NAMES\s*=\s*\{[^\}]+\}",
-        args.key, args.label, args.dry_run
-    )
-    print('  ✓ components/tabs/VsTab.js')
-
-    # Git
-    print('\n→ Committing and pushing...')
+    print(f'\n[4/5] Committing...')
     git(['add',
-         'utils/courseData.js',
-         'components/tabs/CourseTab.js',
-         'components/AppLayout.js',
-         'components/tabs/PlayTab.js',
+         'utils/courseData.js', 'components/tabs/CourseTab.js',
+         'components/AppLayout.js', 'components/tabs/PlayTab.js',
          'components/tabs/VsTab.js'])
-    git(['commit', '-m',
-         f'feat(course): add {args.label} — GPS coords + UI registration'])
+    git(['commit', '-m', f'feat(course): add {args.label} — GPS coords + UI registration'])
+
+    print(f'[5/5] Pushing to GitHub...')
     git(['push'])
 
-    print(f'\n✓ Done. Vercel will auto-deploy {args.label}.\n')
+    print(f'\n=== Done. {args.label} will be live on Vercel in ~2 minutes. ===\n')
 
 
 if __name__ == '__main__':
