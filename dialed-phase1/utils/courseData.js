@@ -318,3 +318,29 @@ export function getHolePar(courseKey, holeNumber) {
 export function getCoursePar(courseKey) {
   return (COURSE_HOLES[courseKey]?.pars || []).reduce((s, p) => s + p, 0)
 }
+
+// Returns true if the course has separate short + long tee positions
+export function courseHasMultiTee(courseKey) {
+  return !!(COURSE_HOLE_COORDS[courseKey]?.[0]?.shortTee)
+}
+
+// Returns { tee: {lat, lon}, basket: {lat, lon} } for a given hole and tee type.
+// teeType: 'short' | 'long'  (defaults to 'short')
+export function getHoleCoords(courseKey, holeNumber, teeType = 'short') {
+  const holes = COURSE_HOLE_COORDS[courseKey]
+  if (!holes) return null
+  const h = holes[holeNumber - 1]
+  if (!h) return null
+  const teeArr = (teeType === 'long' && h.longTee) ? h.longTee : (h.shortTee || h.tee)
+  const basketArr = h.basket
+  if (!teeArr || !basketArr) return null
+  return {
+    tee:    { lat: teeArr[0],    lon: teeArr[1]    },
+    basket: { lat: basketArr[0], lon: basketArr[1] },
+  }
+}
+
+// Returns hole count for a course
+export function getCourseHoleCount(courseKey) {
+  return COURSE_HOLES[courseKey]?.distances?.length ?? 18
+}

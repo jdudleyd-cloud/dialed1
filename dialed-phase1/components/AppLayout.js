@@ -41,6 +41,7 @@ export default function AppLayout() {
   // Shared caddy state
   const [selectedCourse, setSelectedCourse] = useState('palmer')
   const [selectedHole, setSelectedHole] = useState(1)
+  const [selectedTee, setSelectedTee] = useState('short')
   const [throwType, setThrowType] = useState('backhand')
   const [windCondition, setWindCondition] = useState('calm')
 
@@ -141,6 +142,7 @@ export default function AppLayout() {
                 setWindCondition={setWindCondition}
                 currentRound={currentRound} setCurrentRound={setCurrentRound}
                 roundThrows={roundThrows} setRoundThrows={setRoundThrows}
+                selectedTee={selectedTee} setSelectedTee={setSelectedTee}
               />
             )}
             {activeTab === 'BAG' && <BagTab />}
@@ -149,6 +151,7 @@ export default function AppLayout() {
                 location={location} selectedCourse={selectedCourse}
                 setSelectedCourse={setSelectedCourse} selectedHole={selectedHole}
                 setSelectedHole={setSelectedHole} devMode={devMode}
+                selectedTee={selectedTee}
               />
             )}
             {activeTab === 'VS' && (

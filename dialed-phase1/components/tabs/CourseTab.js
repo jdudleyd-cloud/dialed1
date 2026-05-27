@@ -6,14 +6,14 @@ import { loadBag } from '../../utils/discData'
 import { calculateFlightPath, calculateLandingCoords } from '../../utils/flightPhysics'
 import { COURSE_HOLE_COORDS, COURSE_HOLES } from '../../utils/courseData'
 
-function buildFallbackHoleData(courseKey, holeNumber) {
+function buildFallbackHoleData(courseKey, holeNumber, teeType = 'short') {
   const coords = COURSE_HOLE_COORDS[courseKey]
   const meta   = COURSE_HOLES[courseKey]
   if (!coords || !meta) return null
   const idx = holeNumber - 1
   const h   = coords[idx]
   if (!h) return null
-  const teeArr    = h.shortTee || h.tee
+  const teeArr    = (teeType === 'long' && h.longTee) ? h.longTee : (h.shortTee || h.tee)
   const basketArr = h.basket
   if (!teeArr || !basketArr) return null
   return {
@@ -203,7 +203,7 @@ function ElevationChart({ profiles }) {
 
 // ─── Main CourseTab ───────────────────────────────────────────────────────────
 export default function CourseTab({
-  location, selectedCourse, setSelectedCourse, selectedHole, setSelectedHole, devMode,
+  location, selectedCourse, setSelectedCourse, selectedHole, setSelectedHole, devMode, selectedTee,
 }) {
   const mapRef = useRef(null)
   const mapInstanceRef = useRef(null)
@@ -264,7 +264,7 @@ export default function CourseTab({
   useEffect(() => {
     const fullName = COURSE_JSON_NAME[selectedCourse]
     const hole = terrainData ? getHoleData(terrainData, fullName, selectedHole) : null
-    const resolved = hole ?? buildFallbackHoleData(selectedCourse, selectedHole)
+    const resolved = hole ?? buildFallbackHoleData(selectedCourse, selectedHole, selectedTee || 'short')
     setHoleData(resolved)
     setProfiles(hole ? normalizeProfiles(getElevationProfiles(hole)) : null)
   }, [terrainData, selectedCourse, selectedHole])
