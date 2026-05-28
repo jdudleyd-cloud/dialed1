@@ -50,6 +50,7 @@ const COURSES = [
   { key: 'ghesquiere',  label: 'Ghesquiere',    holes: 18 },
   { key: 'spindler', label: 'Spindler Park', holes: 24 },
   { key: 'acorn_knoll', label: 'Acorn Knoll', holes: 18 },
+  { key: 'hudson_mills_monster', label: 'Hudson Mills Monster', holes: 18 },
 ]
 const COURSE_CENTERS = {
   palmer:      { lat: 42.4260,   lng: -83.1197  },
@@ -61,6 +62,7 @@ const COURSE_CENTERS = {
   ghesquiere:  { lat: 42.4334,   lng: -82.9138  },
   spindler: { lat: 42.47111, lng: -82.92012 },
   acorn_knoll: { lat: 42.12102, lng: -83.37626 },
+  hudson_mills_monster: { lat: 42.37425, lng: -83.90618 },
 }
 const COURSE_JSON_NAME = {
   palmer:      'Palmer Park Detroit DGC',
@@ -72,6 +74,7 @@ const COURSE_JSON_NAME = {
   ghesquiere:  'Ahee Disc Golf Course Ghesquiere Park',
   spindler: 'Spindler Park',
   acorn_knoll: 'Acorn Knoll',
+  hudson_mills_monster: 'Hudson Mills Monster',
 }
 
 // ─── Google Maps loader ───────────────────────────────────────────────────────
