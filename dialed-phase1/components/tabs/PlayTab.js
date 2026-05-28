@@ -148,7 +148,7 @@ function HoleCorridorMap({ location, teePin, basketPin, throws }) {
   const basketLocal = localPoint(basketPin.lat, basketPin.lon, origin)
   const playerLocal = location ? localPoint(location.lat, location.lon, origin) : null
 
-  const corridorWidth = 70
+  const corridorWidth = 60
   const axisX = endLocal.x - startLocal.x
   const axisY = endLocal.y - startLocal.y
   const axisLen = Math.hypot(axisX, axisY) || 1
@@ -394,22 +394,11 @@ export default function PlayTab({
         const basket = new gmaps.LatLng(basketPin.lat, basketPin.lon)
         const heading = bearing(teePin.lat, teePin.lon, basketPin.lat, basketPin.lon)
         const corridorLength = gmaps.geometry.spherical.computeDistanceBetween(tee, basket) + 200
-        const corridorWidth = 80
-        const start = gmaps.geometry.spherical.computeOffset(tee, 100, heading + 180)
-        const end = gmaps.geometry.spherical.computeOffset(basket, 100, heading)
         const mid = gmaps.geometry.spherical.computeOffset(tee, corridorLength / 2, heading)
-        const left = gmaps.geometry.spherical.computeOffset(mid, corridorWidth / 2, heading + 90)
-        const right = gmaps.geometry.spherical.computeOffset(mid, corridorWidth / 2, heading - 90)
 
-        const bounds = new gmaps.LatLngBounds()
-        bounds.extend(start)
-        bounds.extend(end)
-        bounds.extend(left)
-        bounds.extend(right)
-
-        map.setOptions({ heading, tilt: 0 })
-        map.fitBounds(bounds, 18)
-        map.setCenter(bounds.getCenter())
+        map.setOptions({ heading, tilt: 0, mapTypeId: 'satellite' })
+        map.setCenter(mid)
+        map.setZoom(17)
       } else {
         map.setCenter(center)
         map.setZoom(18)
