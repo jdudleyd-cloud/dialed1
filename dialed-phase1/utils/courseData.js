@@ -328,7 +328,6 @@ export const COURSE_HOLE_COORDS = {
     // hole 18
     { tee: [42.12286651840744, -83.37472889083084], basket: [42.1227512, -83.3769881] },
   ],
-}
   hudson_mills_monster: [
     // Hudson Mills Monster
     // hole 1
@@ -458,6 +457,7 @@ export const COURSE_HOLE_COORDS = {
     // hole 24
     { shortTee: [42.37508482209619, -83.91056986836414], longTee: [42.37502488024391, -83.91080666254918], basket: [42.375798571222, -83.909649476409] },
   ],
+}
 
 export const COURSE_HOLES = {
   stony_creek: {
