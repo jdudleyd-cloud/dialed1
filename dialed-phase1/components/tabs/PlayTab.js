@@ -528,6 +528,7 @@ export default function PlayTab({
     const sessionId = currentRound?.id || Date.now()
 
     const flight = calculateFlightPath(selectedDisc, throwType, windCondition, windRelation, null)
+    const playerName = typeof window !== 'undefined' ? (localStorage.getItem('dialed_player_name') || 'Anonymous') : 'Anonymous'
 
     const throwData = {
       discId: selectedDisc.id,
@@ -547,6 +548,7 @@ export default function PlayTab({
       predictedDistance: flight.distance,
       predictedLateral: flight.lateral,
       predictedDescription: flight.description,
+      playerName,
     }
     const saved = saveThrow(throwData)
     logThrowToFirebase({ ...throwData, sessionId }).catch(() => {})

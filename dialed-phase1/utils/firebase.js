@@ -1,5 +1,5 @@
 import { initializeApp, getApps } from 'firebase/app'
-import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore'
+import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, serverTimestamp } from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -29,6 +29,29 @@ export async function logThrowToFirebase(throwData) {
   } catch (e) {
     console.error('Firebase log error:', e)
     return null
+  }
+}
+
+export async function fetchSharedThrows(limitCount = 100) {
+  if (!process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID) return []
+  try {
+    const db = getFirestore(getApp())
+    const q = query(collection(db, 'throws'), orderBy('createdAt', 'desc'), limit(limitCount))
+    const snapshot = await getDocs(q)
+
+    return snapshot.docs.map((doc) => {
+      const data = doc.data() || {}
+      const createdAt = data.createdAt?.toDate?.() || data.timestamp?.toDate?.() || null
+      return {
+        id: doc.id,
+        ...data,
+        timestamp: createdAt ? createdAt.toISOString() : data.timestamp || null,
+        createdAt: createdAt ? createdAt.toISOString() : null,
+      }
+    })
+  } catch (e) {
+    console.error('Firebase fetch error:', e)
+    return []
   }
 }
 

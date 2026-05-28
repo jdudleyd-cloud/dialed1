@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState, useRef } from 'react'
 import { getThrows, getRounds, deleteThrow, deleteRound } from '../../utils/storage'
+import { fetchSharedThrows } from '../../utils/firebase'
 
 function loadGoogleMapsScript(apiKey) {
   return new Promise((resolve, reject) => {
@@ -207,15 +208,19 @@ function ConfirmDelete({ message, onConfirm, onCancel }) {
 export default function HistoryTab() {
   const [throws, setThrows] = useState([])
   const [rounds, setRounds] = useState([])
+  const [sharedThrows, setSharedThrows] = useState([])
   const [view, setView] = useState('rounds')
   const [selectedThrow, setSelectedThrow] = useState(null)
   const [selectedRound, setSelectedRound] = useState(null)
   const [confirmDelete, setConfirmDelete] = useState(null)
 
-  const refreshData = () => {
+  const refreshData = async () => {
     const t = getThrows()
     setThrows([...t].reverse())
     setRounds([...getRounds()].reverse())
+
+    const shared = await fetchSharedThrows(100)
+    setSharedThrows(shared)
   }
 
   useEffect(() => { refreshData() }, [])
@@ -322,46 +327,75 @@ export default function HistoryTab() {
       {/* Throws View — flat list of all throws */}
       {view === 'throws' && (
         <div className="space-y-2">
-          {throws.length === 0 ? (
-            <div className="broadcast-card p-6 text-center text-gray-400 text-sm">No throws yet. Log throws during a round.</div>
-          ) : (
-            throws.map((t, i) => (
-              <div key={t.id || i} className="broadcast-card border border-gray-700">
-                <button onClick={() => setSelectedThrow(t)} className="w-full p-3 text-left">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <div className="font-black text-broadcast-yellow font-saira">{t.discName}</div>
-                      <div className="text-xs text-broadcast-cyan">
-                        {t.course ? t.course.toUpperCase() : '—'} · Hole {t.hole}
-                        {t.throwType && <span className="text-gray-500 ml-2 capitalize">{t.throwType}</span>}
-                        {t.windCondition && t.windCondition !== 'calm' && (
-                          <span className="text-orange-400 ml-2 capitalize">{t.windCondition} wind</span>
-                        )}
-                      </div>
-                      {t.predictedDescription && (
-                        <div className="text-[10px] text-gray-500 mt-0.5 leading-snug">{t.predictedDescription}</div>
-                      )}
-                      <div className="text-xs text-gray-600 mt-0.5">
-                        {t.timestamp ? new Date(t.timestamp).toLocaleString() : ''}
-                      </div>
-                    </div>
-                    <div className="text-right flex-shrink-0 ml-3">
-                      {t.predictedDistance && (
-                        <div className="text-lg font-black text-broadcast-yellow font-saira">{t.predictedDistance}ft</div>
-                      )}
-                      <div className="text-xs text-broadcast-cyan mt-0.5">TAP FOR MAP →</div>
+          {(() => {
+            const currentName = (typeof window !== 'undefined' ? localStorage.getItem('dialed_player_name') : '') || 'Anonymous'
+            const otherPlayersThrows = sharedThrows.filter(t => (t.playerName || '').toLowerCase() !== currentName.toLowerCase())
+
+            return (
+              <>
+                {otherPlayersThrows.length > 0 && (
+                  <div className="broadcast-card p-3 border border-broadcast-yellow/30">
+                    <div className="text-[10px] uppercase tracking-[0.25em] text-broadcast-yellow font-black mb-2">FRIENDS' SHARED THROWS</div>
+                    <div className="space-y-2">
+                      {otherPlayersThrows.slice(0, 20).map((t, i) => (
+                        <div key={t.id || i} className="rounded border border-gray-700 bg-gray-950/70 p-3">
+                          <div className="flex justify-between items-start gap-3">
+                            <div>
+                              <div className="font-black text-broadcast-yellow font-saira text-sm">{t.discName || 'Throw'}</div>
+                              <div className="text-[10px] text-broadcast-cyan">{t.playerName || 'Player'} · {t.course || '—'} · Hole {t.hole || '—'}</div>
+                              <div className="text-[10px] text-gray-500 mt-1">{t.timestamp ? new Date(t.timestamp).toLocaleString() : '—'}</div>
+                            </div>
+                            {t.predictedDistance && <div className="text-sm font-black text-broadcast-yellow font-saira">{t.predictedDistance}ft</div>}
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
-                </button>
-                <div className="px-3 pb-2 flex justify-end">
-                  <button
-                    onClick={() => handleDeleteThrow(t.id, t.discName, t.hole)}
-                    className="text-[10px] text-broadcast-red border border-broadcast-red rounded px-2 py-0.5 font-bold"
-                  >DELETE</button>
-                </div>
-              </div>
-            ))
-          )}
+                )}
+
+                {throws.length === 0 ? (
+                  <div className="broadcast-card p-6 text-center text-gray-400 text-sm">No throws yet. Log throws during a round.</div>
+                ) : (
+                  throws.map((t, i) => (
+                    <div key={t.id || i} className="broadcast-card border border-gray-700">
+                      <button onClick={() => setSelectedThrow(t)} className="w-full p-3 text-left">
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <div className="font-black text-broadcast-yellow font-saira">{t.discName}</div>
+                            <div className="text-xs text-broadcast-cyan">
+                              {t.course ? t.course.toUpperCase() : '—'} · Hole {t.hole}
+                              {t.throwType && <span className="text-gray-500 ml-2 capitalize">{t.throwType}</span>}
+                              {t.windCondition && t.windCondition !== 'calm' && (
+                                <span className="text-orange-400 ml-2 capitalize">{t.windCondition} wind</span>
+                              )}
+                            </div>
+                            {t.predictedDescription && (
+                              <div className="text-[10px] text-gray-500 mt-0.5 leading-snug">{t.predictedDescription}</div>
+                            )}
+                            <div className="text-xs text-gray-600 mt-0.5">
+                              {t.timestamp ? new Date(t.timestamp).toLocaleString() : ''}
+                            </div>
+                          </div>
+                          <div className="text-right flex-shrink-0 ml-3">
+                            {t.predictedDistance && (
+                              <div className="text-lg font-black text-broadcast-yellow font-saira">{t.predictedDistance}ft</div>
+                            )}
+                            <div className="text-xs text-broadcast-cyan mt-0.5">TAP FOR MAP →</div>
+                          </div>
+                        </div>
+                      </button>
+                      <div className="px-3 pb-2 flex justify-end">
+                        <button
+                          onClick={() => handleDeleteThrow(t.id, t.discName, t.hole)}
+                          className="text-[10px] text-broadcast-red border border-broadcast-red rounded px-2 py-0.5 font-bold"
+                        >DELETE</button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </>
+            )
+          })()}
         </div>
       )}
     </div>
