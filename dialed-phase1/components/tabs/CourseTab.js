@@ -49,6 +49,7 @@ const COURSES = [
   { key: 'stony_creek', label: 'Stony Creek',   holes: 18 },
   { key: 'ghesquiere',  label: 'Ghesquiere',    holes: 18 },
   { key: 'spindler', label: 'Spindler Park', holes: 24 },
+  { key: 'acorn_knoll', label: 'Acorn Knoll', holes: 18 },
 ]
 const COURSE_CENTERS = {
   palmer:      { lat: 42.4260,   lng: -83.1197  },
@@ -59,6 +60,7 @@ const COURSE_CENTERS = {
   stony_creek: { lat: 42.7345,   lng: -83.0600  },
   ghesquiere:  { lat: 42.4334,   lng: -82.9138  },
   spindler: { lat: 42.47111, lng: -82.92012 },
+  acorn_knoll: { lat: 42.12102, lng: -83.37626 },
 }
 const COURSE_JSON_NAME = {
   palmer:      'Palmer Park Detroit DGC',
@@ -69,6 +71,7 @@ const COURSE_JSON_NAME = {
   stony_creek: 'Stony Creek Buckhorn North Blue',
   ghesquiere:  'Ahee Disc Golf Course Ghesquiere Park',
   spindler: 'Spindler Park',
+  acorn_knoll: 'Acorn Knoll',
 }
 
 // ─── Google Maps loader ───────────────────────────────────────────────────────
