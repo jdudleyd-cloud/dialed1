@@ -416,3 +416,23 @@ export function getHoleCoords(courseKey, holeNumber, teeType = 'short') {
 export function getCourseHoleCount(courseKey) {
   return COURSE_HOLES[courseKey]?.distances?.length ?? 18
 }
+
+// Returns true if this is a loop-format course:
+// fewer physical baskets than total holes (e.g. 9 baskets × 2 tees = 18 holes)
+// For loop courses Front/Back IS the tee selection — no separate short/long picker needed
+export function isLoopCourse(courseKey) {
+  const coords = COURSE_HOLE_COORDS[courseKey]
+  const meta   = COURSE_HOLES[courseKey]
+  if (!coords || !meta) return false
+  return coords.length < meta.distances.length
+}
+
+// Returns { start, end } hole numbers for a given range
+// range: 'front' | 'back' | 'full'
+export function getRoundRange(courseKey, range) {
+  const total = getCourseHoleCount(courseKey)
+  const half  = total / 2
+  if (range === 'front') return { start: 1,        end: half  }
+  if (range === 'back')  return { start: half + 1, end: total }
+  return                        { start: 1,        end: total }
+}

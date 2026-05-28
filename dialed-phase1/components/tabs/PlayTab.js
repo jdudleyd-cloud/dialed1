@@ -11,7 +11,7 @@ import {
 } from '../../utils/recommendations'
 import { loadHazards, scoreDiscRisk, inferWindRelation } from '../../utils/hazards'
 import { calculateFlightPath, getDiscReason } from '../../utils/flightPhysics'
-import { getHoleDistance, getHolePar, getCourseHoleCount, courseHasMultiTee, getHoleCoords, COURSE_HOLES } from '../../utils/courseData'
+import { getHoleDistance, getHolePar, getCourseHoleCount, courseHasMultiTee, isLoopCourse, getHoleCoords, getRoundRange, COURSE_HOLES } from '../../utils/courseData'
 
 const WIND_ICONS = { calm: '🌀', light: '💨', moderate: '🌬', strong: '⛈' }
 const THROW_ICONS = { backhand: 'BH', forehand: 'FH', sidearm: 'SA', tomahawk: 'TH' }
@@ -180,7 +180,9 @@ export default function PlayTab({
   // Wind override — null means use auto-detected values; set when player feels conditions differ from sensor
   const [showWindOverride, setShowWindOverride] = useState(false)
   const [windDirOverride, setWindDirOverride] = useState(null)
-  const [showTeeModal, setShowTeeModal] = useState(false)
+  const [showRoundModal, setShowRoundModal] = useState(false)
+  const [pendingRange, setPendingRange] = useState('full')
+  const [pendingTee, setPendingTee] = useState('short')
 
   const throws = roundThrows || []
 
@@ -243,21 +245,29 @@ export default function PlayTab({
 
   const COURSE_NAMES = { palmer: 'Palmer Park', kensington: 'Kensington', thorn: 'The Thorn', grizzly: 'Grizzly Oaks', cass_benton: 'Cass Benton', stony_creek: 'Stony Creek', ghesquiere: 'Ghesquiere', spindler: 'Spindler Park' }
 
-  const beginRound = (tee) => {
-    if (tee) setSelectedTee(tee)
+  const beginRound = (tee, range) => {
+    const resolvedTee = tee || pendingTee
+    const resolvedRange = range || pendingRange
+    if (resolvedTee) setSelectedTee(resolvedTee)
+    const { start, end } = getRoundRange(selectedCourse, resolvedRange)
+    setSelectedHole(start)
     const courseName = COURSE_NAMES[selectedCourse] || selectedCourse
-    const holeCount = getCourseHoleCount(selectedCourse)
-    const round = saveRound({ course: courseName, holeCount })
-    setCurrentRound(round)
+    const holeCount = end - start + 1
+    const round = saveRound({ course: courseName, holeCount, startHole: start, endHole: end, tee: resolvedTee, range: resolvedRange })
+    setCurrentRound({ ...round, startHole: start, endHole: end })
     setRoundThrows([])
-    setShowTeeModal(false)
+    setShowRoundModal(false)
   }
 
   const startRound = () => {
-    if (courseHasMultiTee(selectedCourse)) {
-      setShowTeeModal(true)
+    const total = getCourseHoleCount(selectedCourse)
+    // Show modal if course has multiple holes (range selection) or multi-tee
+    if (total > 9 || courseHasMultiTee(selectedCourse)) {
+      setPendingRange('full')
+      setPendingTee('short')
+      setShowRoundModal(true)
     } else {
-      beginRound(null)
+      beginRound(null, 'full')
     }
   }
 
@@ -289,8 +299,8 @@ export default function PlayTab({
     logThrowToFirebase({ ...throwData, sessionId }).catch(() => {})
     logGPSPoint(sessionId, location.lat, location.lon, selectedHole).catch(() => {})
     setRoundThrows(prev => [...(prev || []), saved])
-    const holeCount = getCourseHoleCount(selectedCourse)
-    if (selectedHole < holeCount) setSelectedHole(selectedHole + 1)
+    const endHole = currentRound?.endHole ?? getCourseHoleCount(selectedCourse)
+    if (selectedHole < endHole) setSelectedHole(selectedHole + 1)
     else endRound()
     setLogging(false)
   }
@@ -553,8 +563,8 @@ export default function PlayTab({
         })()}
       </div>
 
-      {/* Per-hole tee override — only shown during an active round on a multi-tee course */}
-      {currentRound && courseHasMultiTee(selectedCourse) && (
+      {/* Per-hole tee override — only for true multi-tee (non-loop) courses */}
+      {currentRound && courseHasMultiTee(selectedCourse) && !isLoopCourse(selectedCourse) && (
         <div className="broadcast-card p-2">
           <div className="text-[10px] text-gray-500 mb-1.5 text-center">TEE OVERRIDE — HOLE {selectedHole}</div>
           <div className="grid grid-cols-2 gap-2">
@@ -588,26 +598,90 @@ export default function PlayTab({
         <div className="text-center text-xs text-broadcast-cyan py-2">Select a disc to log throw</div>
       )}
 
-      {/* Tee picker modal — shown when starting a round on a multi-tee course */}
-      {showTeeModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80" onClick={() => setShowTeeModal(false)}>
-          <div className="bg-gray-900 border-2 border-broadcast-yellow rounded-xl p-6 mx-4 w-full max-w-sm" onClick={e => e.stopPropagation()}>
-            <div className="text-sm font-black text-broadcast-yellow font-saira mb-1 text-center">SELECT TEES</div>
-            <div className="text-[10px] text-gray-500 text-center mb-5">{COURSE_NAMES[selectedCourse] || selectedCourse}</div>
-            <div className="grid grid-cols-2 gap-3 mb-4">
-              <button onClick={() => beginRound('short')}
-                className="py-5 font-saira font-black text-sm rounded bg-broadcast-black border-2 border-broadcast-yellow text-broadcast-yellow">
-                SHORT<br/><span className="text-[10px] font-normal text-gray-400">Am tees</span>
+      {/* Round start modal — hole range + tee selection */}
+      {showRoundModal && (() => {
+        const total    = getCourseHoleCount(selectedCourse)
+        const half     = total / 2
+        const isLoop   = isLoopCourse(selectedCourse)
+        const multiTee = courseHasMultiTee(selectedCourse) && !isLoop
+        const showRange = total > 9
+
+        // Labels for front/back based on course size
+        const frontLabel = `FRONT ${half}`
+        const backLabel  = `BACK ${half}`
+        const fullLabel  = `FULL ${total}`
+
+        // For loop courses: front = short tees, back = long tees
+        const frontSub = isLoop ? 'Short tees' : `Holes 1–${half}`
+        const backSub  = isLoop ? 'Long tees'  : `Holes ${half + 1}–${total}`
+        const fullSub  = isLoop ? 'Both tees'  : `All ${total} holes`
+
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80" onClick={() => setShowRoundModal(false)}>
+            <div className="bg-gray-900 border-2 border-broadcast-yellow rounded-xl p-5 mx-4 w-full max-w-sm space-y-4" onClick={e => e.stopPropagation()}>
+              <div>
+                <div className="text-sm font-black text-broadcast-yellow font-saira text-center">START ROUND</div>
+                <div className="text-[10px] text-gray-500 text-center mt-0.5">{COURSE_NAMES[selectedCourse] || selectedCourse}</div>
+              </div>
+
+              {/* Hole range */}
+              {showRange && (
+                <div>
+                  <div className="text-[10px] text-broadcast-cyan font-bold mb-2">HOW MANY HOLES?</div>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[
+                      { key: 'front', label: frontLabel, sub: frontSub },
+                      { key: 'full',  label: fullLabel,  sub: fullSub  },
+                      { key: 'back',  label: backLabel,  sub: backSub  },
+                    ].map(({ key, label, sub }) => (
+                      <button key={key} onClick={() => setPendingRange(key)}
+                        className={`py-3 font-saira font-black text-xs rounded border-2 transition-colors ${
+                          pendingRange === key
+                            ? 'bg-broadcast-yellow text-broadcast-black border-broadcast-yellow'
+                            : 'bg-transparent text-broadcast-yellow border-broadcast-yellow opacity-60'
+                        }`}>
+                        {label}<br/>
+                        <span className="text-[9px] font-normal opacity-70">{sub}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Tee selection — only for true multi-tee (non-loop) courses */}
+              {multiTee && (
+                <div>
+                  <div className="text-[10px] text-broadcast-cyan font-bold mb-2">WHICH TEES?</div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button onClick={() => setPendingTee('short')}
+                      className={`py-4 font-saira font-black text-sm rounded border-2 transition-colors ${
+                        pendingTee === 'short'
+                          ? 'bg-broadcast-yellow text-broadcast-black border-broadcast-yellow'
+                          : 'bg-transparent text-broadcast-yellow border-broadcast-yellow opacity-60'
+                      }`}>
+                      SHORT<br/><span className="text-[10px] font-normal opacity-70">Am tees</span>
+                    </button>
+                    <button onClick={() => setPendingTee('long')}
+                      className={`py-4 font-saira font-black text-sm rounded border-2 transition-colors ${
+                        pendingTee === 'long'
+                          ? 'bg-broadcast-cyan text-broadcast-black border-broadcast-cyan'
+                          : 'bg-transparent text-broadcast-cyan border-broadcast-cyan opacity-60'
+                      }`}>
+                      LONG<br/><span className="text-[10px] font-normal opacity-70">Pro tees</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              <button onClick={() => beginRound(pendingTee, pendingRange)}
+                className="w-full py-3 bg-broadcast-yellow text-broadcast-black font-black font-saira text-sm rounded">
+                LET'S THROW
               </button>
-              <button onClick={() => beginRound('long')}
-                className="py-5 font-saira font-black text-sm rounded bg-broadcast-black border-2 border-broadcast-cyan text-broadcast-cyan">
-                LONG<br/><span className="text-[10px] font-normal text-gray-400">Pro tees</span>
-              </button>
+              <button onClick={() => setShowRoundModal(false)} className="w-full text-xs text-gray-600 py-1">Cancel</button>
             </div>
-            <button onClick={() => setShowTeeModal(false)} className="w-full text-xs text-gray-600 py-1">Cancel</button>
           </div>
-        </div>
-      )}
+        )
+      })()}
 
       {/* Wind override modal — opened when player feels sensor reading is wrong */}
       {showWindOverride && (

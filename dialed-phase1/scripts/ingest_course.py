@@ -276,6 +276,9 @@ def main():
     ap.add_argument('--key',   required=True, help='JS key e.g. oak_park')
     ap.add_argument('--label', required=True, help='Display name e.g. "Oak Park"')
     ap.add_argument('--holes', required=True, type=int, help='9 or 18')
+    ap.add_argument('--loop',     action='store_true',
+                    help='Single URL contains 2N holes: first N = short tees, last N = long tees '
+                         '(e.g. "White 12 + Black 12" style layouts)')
     ap.add_argument('--update',   action='store_true', help='Overwrite existing course')
     ap.add_argument('--dry-run',  action='store_true', help='Preview without writing')
     args = ap.parse_args()
@@ -283,18 +286,28 @@ def main():
     print(f'\n=== Dialed Course Ingest: {args.label} ===\n')
 
     # Scrape short tees
-    print(f'[1/5] Scraping short tees...')
+    print(f'[1/5] Scraping layout...')
     short_holes = scrape_udisc(args.short)
     print(f'   {len(short_holes)} holes extracted')
 
     # Scrape long tees (optional)
     long_holes = None
-    if args.long:
+    if args.loop:
+        # Single URL has 2N holes: split first half = short, second half = long
+        total = len(short_holes)
+        if total % 2 != 0:
+            sys.exit(f'ERROR: --loop expects an even number of holes, got {total}')
+        half = total // 2
+        long_holes  = short_holes[half:]   # second half = long tees
+        short_holes = short_holes[:half]   # first half  = short tees
+        print(f'   Split into {half} short-tee + {half} long-tee holes')
+        print(f'[2/5] Long tees split from same layout')
+    elif args.long:
         print(f'[2/5] Scraping long tees...')
         long_holes = scrape_udisc(args.long)
         print(f'   {len(long_holes)} holes extracted')
     else:
-        print(f'[2/5] No long tees URL provided — single-tee course')
+        print(f'[2/5] No long tees — single-tee course')
 
     # Build merged hole list
     if long_holes:
@@ -310,11 +323,14 @@ def main():
     short_dist = [haversine_ft(tee_pt(h)[0], tee_pt(h)[1], h['basket'][0], h['basket'][1])
                   for h in holes]
 
-    if long_holes and args.holes > len(holes):
+    if long_holes and args.loop:
+        # Loop-format (Ghesquiere/Spindler style): holes 1-N from short, N+1-2N from long
+        # distances array has 2N entries so getCourseHoleCount returns 2N correctly
         long_dist = [haversine_ft(h['longTee'][0], h['longTee'][1], h['basket'][0], h['basket'][1])
                      for h in holes]
         distances = short_dist + long_dist
     else:
+        # True multi-tee (Palmer style): 18 real holes, short tee is the default distance
         distances = short_dist
 
     pars = [3] * args.holes
@@ -323,7 +339,7 @@ def main():
     lngs = [tee_pt(h)[1] for h in holes]
     center = (sum(lats) / len(lats), sum(lngs) / len(lngs))
 
-    tee_type = 'multi-tee' if long_holes else 'single-tee'
+    tee_type = 'multi-tee (loop)' if args.loop else ('multi-tee' if long_holes else 'single-tee')
     print(f'\n   Course:    {args.label}  ({args.holes} holes, {tee_type})')
     print(f'   Center:    {center[0]:.5f}, {center[1]:.5f}')
     print(f'   Distances: {distances}')
