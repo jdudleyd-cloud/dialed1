@@ -48,6 +48,7 @@ const COURSES = [
   { key: 'cass_benton', label: 'Cass Benton',   holes: 18 },
   { key: 'stony_creek', label: 'Stony Creek',   holes: 18 },
   { key: 'ghesquiere',  label: 'Ghesquiere',    holes: 18 },
+  { key: 'spindler', label: 'Spindler Park', holes: 24 },
 ]
 const COURSE_CENTERS = {
   palmer:      { lat: 42.4260,   lng: -83.1197  },
@@ -57,6 +58,7 @@ const COURSE_CENTERS = {
   cass_benton: { lat: 42.41539,  lng: -83.47630 },
   stony_creek: { lat: 42.7345,   lng: -83.0600  },
   ghesquiere:  { lat: 42.4334,   lng: -82.9138  },
+  spindler: { lat: 42.47111, lng: -82.92012 },
 }
 const COURSE_JSON_NAME = {
   palmer:      'Palmer Park Detroit DGC',
@@ -66,6 +68,7 @@ const COURSE_JSON_NAME = {
   cass_benton: 'Cass Benton Hills',
   stony_creek: 'Stony Creek Buckhorn North Blue',
   ghesquiere:  'Ahee Disc Golf Course Ghesquiere Park',
+  spindler: 'Spindler Park',
 }
 
 // ─── Google Maps loader ───────────────────────────────────────────────────────
