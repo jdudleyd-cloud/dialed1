@@ -11,7 +11,7 @@ import {
 } from '../../utils/recommendations'
 import { loadHazards, scoreDiscRisk, inferWindRelation } from '../../utils/hazards'
 import { calculateFlightPath, getDiscReason } from '../../utils/flightPhysics'
-import { getHoleDistance, getHolePar, getCourseHoleCount, courseHasMultiTee, isLoopCourse, getHoleCoords, getRoundRange, COURSE_HOLES } from '../../utils/courseData'
+import { getHoleDistance, getHolePar, getCoursePar, getCourseHoleCount, courseHasMultiTee, isLoopCourse, getHoleCoords, getRoundRange, COURSE_HOLES } from '../../utils/courseData'
 
 const WIND_ICONS = { calm: '🌀', light: '💨', moderate: '🌬', strong: '⛈' }
 const THROW_ICONS = { backhand: 'BH', forehand: 'FH', sidearm: 'SA', tomahawk: 'TH' }
@@ -183,6 +183,7 @@ export default function PlayTab({
   const [showRoundModal, setShowRoundModal] = useState(false)
   const [pendingRange, setPendingRange] = useState('full')
   const [pendingTee, setPendingTee] = useState('short')
+  const [holeStrokes, setHoleStrokes] = useState(1)
 
   const throws = roundThrows || []
 
@@ -282,6 +283,7 @@ export default function PlayTab({
       discId: selectedDisc.id,
       discName: selectedDisc.name,
       hole: selectedHole,
+      strokes: holeStrokes,
       lat: location.lat,
       lon: location.lon,
       timestamp: new Date().toISOString(),
@@ -290,6 +292,7 @@ export default function PlayTab({
       windCondition,
       windRelation,
       course: selectedCourse,
+      tee: selectedTee || 'short',
       roundId: currentRound?.id || null,
       predictedDistance: flight.distance,
       predictedLateral: flight.lateral,
@@ -299,6 +302,7 @@ export default function PlayTab({
     logThrowToFirebase({ ...throwData, sessionId }).catch(() => {})
     logGPSPoint(sessionId, location.lat, location.lon, selectedHole).catch(() => {})
     setRoundThrows(prev => [...(prev || []), saved])
+    setHoleStrokes(1)  // reset counter for next hole
     const endHole = currentRound?.endHole ?? getCourseHoleCount(selectedCourse)
     if (selectedHole < endHole) setSelectedHole(selectedHole + 1)
     else endRound()
@@ -325,6 +329,43 @@ export default function PlayTab({
         return a.aiRec.rank - b.aiRec.rank
       })
   })()
+
+  // ── Par scoring ──────────────────────────────────────────────────────────────
+  const activeTee = selectedTee || 'short'
+
+  // Running score vs par across all holes logged so far this round
+  const runningParScore = (() => {
+    if (!currentRound || throws.length === 0) return null
+    // Last logged entry per hole wins (handles re-logs)
+    const holeScores = {}
+    throws.forEach(t => { holeScores[t.hole] = t.strokes ?? 1 })
+    let diff = 0
+    for (const [hole, strokes] of Object.entries(holeScores)) {
+      diff += strokes - getHolePar(selectedCourse, Number(hole), activeTee)
+    }
+    return diff
+  })()
+
+  const parDisplay = runningParScore === null ? null
+    : runningParScore === 0 ? 'E'
+    : runningParScore > 0   ? `+${runningParScore}`
+    : `${runningParScore}`
+
+  const parColor = runningParScore === null ? 'text-gray-400'
+    : runningParScore < 0   ? 'text-green-400'
+    : runningParScore === 0 ? 'text-broadcast-cyan'
+    : 'text-broadcast-red'
+
+  // For the current hole — what score will this give vs par?
+  const currentPar     = getHolePar(selectedCourse, selectedHole, activeTee)
+  const holeVsPar      = holeStrokes - currentPar
+  const holeParLabel   = holeVsPar === -2 ? '🦅 Eagle'
+    : holeVsPar === -1 ? '🐦 Birdie'
+    : holeVsPar ===  0 ? 'Par'
+    : holeVsPar ===  1 ? 'Bogey'
+    : holeVsPar ===  2 ? 'Dbl Bogey'
+    : holeVsPar  >   2 ? `+${holeVsPar}`
+    : `${holeVsPar}`
 
   return (
     <div className="p-4 space-y-4 pb-6">
@@ -374,19 +415,23 @@ export default function PlayTab({
                 {COURSE_NAMES[selectedCourse] || 'Palmer Park'}
               </div>
               <div className="text-xs text-gray-400">
-                {throws.length} throw{throws.length !== 1 ? 's' : ''} logged
+                {throws.length} hole{throws.length !== 1 ? 's' : ''} logged
                 {throws.length > 0 && ` · last: H${throws[throws.length - 1]?.hole}`}
               </div>
+              {parDisplay !== null && (
+                <div className={`text-sm font-black font-saira mt-0.5 ${parColor}`}>
+                  {parDisplay} PAR
+                </div>
+              )}
             </div>
             <div className="text-right">
               <div className="text-xs text-broadcast-cyan">HOLE</div>
               <div className="text-3xl font-black text-broadcast-yellow font-saira">{selectedHole}</div>
               {(() => {
-                const dist = getHoleDistance(selectedCourse, selectedHole)
-                const par = getHolePar(selectedCourse, selectedHole)
+                const dist = getHoleDistance(selectedCourse, selectedHole, activeTee)
                 return dist
-                  ? <div className="text-[10px] text-gray-400">{dist}ft · Par {par}</div>
-                  : <div className="text-[10px] text-gray-600">Par {par}</div>
+                  ? <div className="text-[10px] text-gray-400">{dist}ft · Par {currentPar}</div>
+                  : <div className="text-[10px] text-gray-600">Par {currentPar}</div>
               })()}
               <button onClick={endRound}
                 className="mt-0.5 px-3 py-1 bg-broadcast-red text-white font-black font-saira text-xs rounded">
@@ -397,12 +442,11 @@ export default function PlayTab({
         ) : (
           <div className="space-y-2">
             {(() => {
-              const dist = getHoleDistance(selectedCourse, selectedHole)
-              const par = getHolePar(selectedCourse, selectedHole)
+              const dist = getHoleDistance(selectedCourse, selectedHole, activeTee)
               return (
                 <div className="flex justify-between text-xs text-gray-500 px-1">
                   <span className="font-saira">H{selectedHole} · {COURSE_NAMES[selectedCourse] || 'Palmer Park'}</span>
-                  <span>{dist ? `${dist}ft · ` : ''}Par {par}</span>
+                  <span>{dist ? `${dist}ft · ` : ''}Par {currentPar}</span>
                 </div>
               )
             })()}
@@ -563,7 +607,7 @@ export default function PlayTab({
         })()}
       </div>
 
-      {/* Per-hole tee override — only for true multi-tee (non-loop) courses */}
+      {/* Per-hole tee override — only for true multi-tee courses (e.g. Palmer, not Spindler) */}
       {currentRound && courseHasMultiTee(selectedCourse) && !isLoopCourse(selectedCourse) && (
         <div className="broadcast-card p-2">
           <div className="text-[10px] text-gray-500 mb-1.5 text-center">TEE OVERRIDE — HOLE {selectedHole}</div>
@@ -584,37 +628,51 @@ export default function PlayTab({
         </div>
       )}
 
-      {/* Log Throw */}
+      {/* Stroke counter + Log Hole */}
       {currentRound && selectedDisc && (
-        <button
-          onClick={logThrow}
-          disabled={logging}
-          className="w-full py-4 font-black font-saira text-lg rounded bg-broadcast-yellow text-broadcast-black disabled:opacity-60"
-        >
-          {logging ? 'LOGGING...' : `LOG THROW — HOLE ${selectedHole}`}
-        </button>
+        <div className="broadcast-card p-3 space-y-2">
+          <div className="flex items-center justify-between">
+            <div className="text-[10px] text-broadcast-cyan font-bold">STROKES THIS HOLE</div>
+            <div className="text-[10px] text-gray-500">
+              Par {currentPar} · {holeVsPar === 0 ? <span className="text-broadcast-cyan">Par</span>
+                : holeVsPar < 0 ? <span className="text-green-400">{holeParLabel}</span>
+                : <span className="text-broadcast-red">{holeParLabel}</span>}
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setHoleStrokes(s => Math.max(1, s - 1))}
+              className="w-12 h-12 rounded-full bg-broadcast-black border-2 border-gray-600 text-white font-black text-xl font-saira flex items-center justify-center"
+            >−</button>
+            <div className="flex-1 text-center">
+              <div className="text-4xl font-black text-broadcast-yellow font-saira leading-none">{holeStrokes}</div>
+              <div className="text-[10px] text-gray-500 mt-0.5">throw{holeStrokes !== 1 ? 's' : ''}</div>
+            </div>
+            <button
+              onClick={() => setHoleStrokes(s => s + 1)}
+              className="w-12 h-12 rounded-full bg-broadcast-black border-2 border-gray-600 text-white font-black text-xl font-saira flex items-center justify-center"
+            >+</button>
+          </div>
+          <button
+            onClick={logThrow}
+            disabled={logging}
+            className="w-full py-3 font-black font-saira text-sm rounded bg-broadcast-yellow text-broadcast-black disabled:opacity-60"
+          >
+            {logging ? 'LOGGING...' : `LOG HOLE ${selectedHole} — ${holeStrokes} STROKE${holeStrokes !== 1 ? 'S' : ''}`}
+          </button>
+        </div>
       )}
       {currentRound && !selectedDisc && (
-        <div className="text-center text-xs text-broadcast-cyan py-2">Select a disc to log throw</div>
+        <div className="text-center text-xs text-broadcast-cyan py-2">Select a disc to log hole</div>
       )}
 
       {/* Round start modal — hole range + tee selection */}
       {showRoundModal && (() => {
         const total    = getCourseHoleCount(selectedCourse)
         const half     = total / 2
-        const isLoop   = isLoopCourse(selectedCourse)
-        const multiTee = courseHasMultiTee(selectedCourse) && !isLoop
+        const isShared = isLoopCourse(selectedCourse)                       // shared-basket course
+        const multiTee = courseHasMultiTee(selectedCourse) && !isShared    // true per-hole tee choice
         const showRange = total > 9
-
-        // Labels for front/back based on course size
-        const frontLabel = `FRONT ${half}`
-        const backLabel  = `BACK ${half}`
-        const fullLabel  = `FULL ${total}`
-
-        // For loop courses: front = short tees, back = long tees
-        const frontSub = isLoop ? 'Short tees' : `Holes 1–${half}`
-        const backSub  = isLoop ? 'Long tees'  : `Holes ${half + 1}–${total}`
-        const fullSub  = isLoop ? 'Both tees'  : `All ${total} holes`
 
         return (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80" onClick={() => setShowRoundModal(false)}>
@@ -624,15 +682,15 @@ export default function PlayTab({
                 <div className="text-[10px] text-gray-500 text-center mt-0.5">{COURSE_NAMES[selectedCourse] || selectedCourse}</div>
               </div>
 
-              {/* Hole range */}
+              {/* Hole range — Front / Full / Back */}
               {showRange && (
                 <div>
                   <div className="text-[10px] text-broadcast-cyan font-bold mb-2">HOW MANY HOLES?</div>
                   <div className="grid grid-cols-3 gap-2">
                     {[
-                      { key: 'front', label: frontLabel, sub: frontSub },
-                      { key: 'full',  label: fullLabel,  sub: fullSub  },
-                      { key: 'back',  label: backLabel,  sub: backSub  },
+                      { key: 'front', label: 'FRONT', sub: `Holes 1–${half}`         },
+                      { key: 'full',  label: 'FULL',  sub: `All ${total} holes`       },
+                      { key: 'back',  label: 'BACK',  sub: `Holes ${half + 1}–${total}` },
                     ].map(({ key, label, sub }) => (
                       <button key={key} onClick={() => setPendingRange(key)}
                         className={`py-3 font-saira font-black text-xs rounded border-2 transition-colors ${
@@ -648,7 +706,7 @@ export default function PlayTab({
                 </div>
               )}
 
-              {/* Tee selection — only for true multi-tee (non-loop) courses */}
+              {/* Tee selection — only for true multi-tee courses (e.g. Palmer) */}
               {multiTee && (
                 <div>
                   <div className="text-[10px] text-broadcast-cyan font-bold mb-2">WHICH TEES?</div>

@@ -337,18 +337,35 @@ export const COURSE_HOLES = {
 }
 
 // Returns distance in feet for a given course + 1-indexed hole number
-export function getHoleDistance(courseKey, holeNumber) {
-  return COURSE_HOLES[courseKey]?.distances[holeNumber - 1] ?? null
+// teeType: 'short' | 'long' — only matters for true multi-tee courses (e.g. Palmer)
+export function getHoleDistance(courseKey, holeNumber, teeType = 'short') {
+  const meta = COURSE_HOLES[courseKey]
+  if (!meta) return null
+  if (teeType === 'long' && meta.longDistances) return meta.longDistances[holeNumber - 1] ?? null
+  if (meta.shortDistances) return meta.shortDistances[holeNumber - 1] ?? null
+  return meta.distances?.[holeNumber - 1] ?? null
 }
 
 // Returns par for a given course + 1-indexed hole number
-export function getHolePar(courseKey, holeNumber) {
-  return COURSE_HOLES[courseKey]?.pars[holeNumber - 1] ?? 3
+// teeType: 'short' | 'long' — only matters for true multi-tee courses (e.g. Palmer)
+export function getHolePar(courseKey, holeNumber, teeType = 'short') {
+  const meta = COURSE_HOLES[courseKey]
+  if (!meta) return 3
+  if (teeType === 'long' && meta.longPars) return meta.longPars[holeNumber - 1] ?? 3
+  if (meta.shortPars) return meta.shortPars[holeNumber - 1] ?? 3
+  return meta.pars?.[holeNumber - 1] ?? 3
 }
 
-// Returns total par for a course
-export function getCoursePar(courseKey) {
-  return (COURSE_HOLES[courseKey]?.pars || []).reduce((s, p) => s + p, 0)
+// Returns total par for a course (or a subset of holes)
+// teeType: 'short' | 'long' — only matters for true multi-tee courses
+// startHole / endHole: 1-indexed, inclusive — defaults to full course
+export function getCoursePar(courseKey, teeType = 'short', startHole = 1, endHole = null) {
+  const meta = COURSE_HOLES[courseKey]
+  if (!meta) return 0
+  const pars = (teeType === 'long' && meta.longPars) ? meta.longPars
+             : (meta.shortPars ?? meta.pars ?? [])
+  const end = endHole ?? pars.length
+  return pars.slice(startHole - 1, end).reduce((s, p) => s + p, 0)
 }
 
 // Returns true if the course has separate short + long tee positions
@@ -376,20 +393,28 @@ export function getHoleCoords(courseKey, holeNumber, teeType = 'short') {
   }
 }
 
-// Returns hole count for a course
+// Returns total number of unique holes for a course
 export function getCourseHoleCount(courseKey) {
-  return COURSE_HOLES[courseKey]?.distances?.length ?? 18
+  const meta = COURSE_HOLES[courseKey]
+  // Prefer distances (works for single-tee and shared-basket courses)
+  // shortDistances is used for true multi-tee courses (Palmer-style)
+  return (meta?.distances ?? meta?.shortDistances)?.length ?? 18
 }
 
-// Returns true if this is a loop-format course:
-// fewer physical baskets than total holes (e.g. 9 baskets × 2 tees = 18 holes)
-// For loop courses Front/Back IS the tee selection — no separate short/long picker needed
-export function isLoopCourse(courseKey) {
+// Returns true if this course has fewer physical baskets than total unique holes.
+// Example: Spindler (12 baskets, 24 holes) or Ghesquiere (9 baskets, 18 holes).
+// These courses use different tee pads to the same basket — Front/Back IS the
+// hole selection. No separate short/long tee picker is needed or appropriate.
+export function isSharedBasketCourse(courseKey) {
   const coords = COURSE_HOLE_COORDS[courseKey]
   const meta   = COURSE_HOLES[courseKey]
   if (!coords || !meta) return false
-  return coords.length < meta.distances.length
+  const totalHoles = (meta.distances ?? meta.shortDistances)?.length ?? 0
+  return coords.length < totalHoles
 }
+
+// Alias for backward-compat — isLoopCourse is the old name
+export { isSharedBasketCourse as isLoopCourse }
 
 // Returns { start, end } hole numbers for a given range
 // range: 'front' | 'back' | 'full'

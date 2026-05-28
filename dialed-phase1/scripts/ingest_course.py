@@ -125,6 +125,7 @@ def scrape_udisc(url: str) -> list:
                 .sort((a, b) => a.holeNumber - b.holeNumber)
                 .map(h => ({
                     hole:   h.holeNumber,
+                    par:    h.par ?? h.parCount ?? h.parValue ?? 3,
                     tee:    [h.teePosition.latitude,    h.teePosition.longitude],
                     basket: [h.targetPosition.latitude, h.targetPosition.longitude]
                 }));
@@ -138,7 +139,7 @@ def scrape_udisc(url: str) -> list:
             'Make sure the URL ends with /caddie-book and the course exists on UDisc.'
         )
 
-    return [{'tee': h['tee'], 'basket': h['basket']} for h in holes_raw]
+    return [{'tee': h['tee'], 'basket': h['basket'], 'par': h.get('par', 3)} for h in holes_raw]
 
 
 # ── Merge short + long into multi-tee format ─────────────────────────────────
@@ -168,7 +169,8 @@ def _coord_entry(h):
     return f'    {{ tee: {_fmt(h["tee"])}, basket: {_fmt(h["basket"])} }},'
 
 
-def update_course_data(key, label, holes, distances, pars, dry_run, update=False):
+def update_course_data(key, label, holes, distances, pars, dry_run, update=False,
+                       long_distances=None, short_pars=None, long_pars=None):
     path = FILES['courseData']
     src  = path.read_text(encoding='utf-8')
     already = f'  {key}:' in src
@@ -202,9 +204,24 @@ def update_course_data(key, label, holes, distances, pars, dry_run, update=False
     idx = src.index(anchor)
     src = src[:idx] + coord_block + src[idx:]
 
-    dist_str = ', '.join(str(d) for d in distances)
-    pars_str = ', '.join(str(p) for p in pars)
-    holes_block = f'  {key}: {{\n    distances: [{dist_str}],\n    pars: [{pars_str}],\n  }},\n'
+    # True multi-tee (Palmer-style): separate distances + pars per tee type
+    if long_distances is not None and short_pars is not None and long_pars is not None:
+        sd_str = ', '.join(str(d) for d in distances)
+        ld_str = ', '.join(str(d) for d in long_distances)
+        sp_str = ', '.join(str(p) for p in short_pars)
+        lp_str = ', '.join(str(p) for p in long_pars)
+        holes_block = (
+            f'  {key}: {{\n'
+            f'    shortDistances: [{sd_str}],\n'
+            f'    longDistances:  [{ld_str}],\n'
+            f'    shortPars: [{sp_str}],\n'
+            f'    longPars:  [{lp_str}],\n'
+            f'  }},\n'
+        )
+    else:
+        dist_str = ', '.join(str(d) for d in distances)
+        pars_str = ', '.join(str(p) for p in pars)
+        holes_block = f'  {key}: {{\n    distances: [{dist_str}],\n    pars: [{pars_str}],\n  }},\n'
 
     anchor2 = '\n}\n\n// Returns'
     if anchor2 not in src:
@@ -325,33 +342,52 @@ def main():
     short_dist = [haversine_ft(tee_pt(h)[0], tee_pt(h)[1], h['basket'][0], h['basket'][1])
                   for h in holes]
 
-    if long_holes and args.loop:
-        # Loop-format (Ghesquiere/Spindler style): holes 1-N from short, N+1-2N from long
-        # distances array has 2N entries so getCourseHoleCount returns 2N correctly
+    # Pars — scraped from UDisc per hole
+    short_pars_raw = [h.get('par', 3) for h in short_holes[:len(holes)]]
+
+    # True multi-tee (Palmer-style: --long without --loop)
+    # Store separate distances + pars for each tee type
+    long_dist_out  = None
+    short_pars_out = None
+    long_pars_out  = None
+
+    if long_holes and not args.loop:
+        long_raw  = long_holes[:len(holes)]
+        long_dist_out  = [haversine_ft(h['longTee'][0], h['longTee'][1], h['basket'][0], h['basket'][1])
+                          for h in holes]
+        short_pars_out = short_pars_raw
+        long_pars_out  = [h.get('par', 3) for h in long_raw]
+        distances      = short_dist          # default distances = short tee
+        pars           = short_pars_raw      # not used (overridden by short_pars_out/long_pars_out)
+    elif long_holes and args.loop:
+        # Shared-basket format (Spindler/Ghesquiere): 2N unique holes
         long_dist = [haversine_ft(h['longTee'][0], h['longTee'][1], h['basket'][0], h['basket'][1])
                      for h in holes]
         distances = short_dist + long_dist
+        pars      = short_pars_raw + [h.get('par', 3) for h in long_holes[:len(holes)]]
     else:
-        # True multi-tee (Palmer style): 18 real holes, short tee is the default distance
         distances = short_dist
-
-    pars = [3] * args.holes
+        pars      = short_pars_raw
 
     lats = [tee_pt(h)[0] for h in holes]
     lngs = [tee_pt(h)[1] for h in holes]
     center = (sum(lats) / len(lats), sum(lngs) / len(lngs))
 
-    tee_type = 'multi-tee (loop)' if args.loop else ('multi-tee' if long_holes else 'single-tee')
+    tee_type = 'shared-basket' if args.loop else ('multi-tee' if long_holes else 'single-tee')
     print(f'\n   Course:    {args.label}  ({args.holes} holes, {tee_type})')
     print(f'   Center:    {center[0]:.5f}, {center[1]:.5f}')
     print(f'   Distances: {distances}')
+    print(f'   Pars:      {pars}')
+    if long_pars_out:
+        print(f'   Long pars: {long_pars_out}')
 
     if args.dry_run:
         print('\n[dry-run] No files written.\n')
         return
 
     print(f'\n[3/5] Updating source files...')
-    update_course_data(args.key, args.label, holes, distances, pars, args.dry_run, args.update)
+    update_course_data(args.key, args.label, holes, distances, pars, args.dry_run, args.update,
+                       long_distances=long_dist_out, short_pars=short_pars_out, long_pars=long_pars_out)
     print('   OK courseData.js')
     update_course_tab(args.key, args.label, args.holes, center, args.dry_run, args.update)
     print('   OK CourseTab.js')
