@@ -51,6 +51,7 @@ const COURSES = [
   { key: 'spindler', label: 'Spindler Park', holes: 24 },
   { key: 'acorn_knoll', label: 'Acorn Knoll', holes: 18 },
   { key: 'hudson_mills_monster', label: 'Hudson Mills Monster', holes: 18 },
+  { key: 'hudson_mills_original_18', label: 'Hudson Mills Original (18)', holes: 18 },
 ]
 const COURSE_CENTERS = {
   palmer:      { lat: 42.4260,   lng: -83.1197  },
@@ -63,6 +64,7 @@ const COURSE_CENTERS = {
   spindler: { lat: 42.47111, lng: -82.92012 },
   acorn_knoll: { lat: 42.12102, lng: -83.37626 },
   hudson_mills_monster: { lat: 42.37425, lng: -83.90618 },
+  hudson_mills_original_18: { lat: 42.37434, lng: -83.91151 },
 }
 const COURSE_JSON_NAME = {
   palmer:      'Palmer Park Detroit DGC',
@@ -75,6 +77,7 @@ const COURSE_JSON_NAME = {
   spindler: 'Spindler Park',
   acorn_knoll: 'Acorn Knoll',
   hudson_mills_monster: 'Hudson Mills Monster',
+  hudson_mills_original_18: 'Hudson Mills Original (18)',
 }
 
 // ─── Google Maps loader ───────────────────────────────────────────────────────

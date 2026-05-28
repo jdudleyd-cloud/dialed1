@@ -17,7 +17,7 @@ const PARS = {
   cass_benton: [3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,4],
 }
 
-const COURSE_NAMES = { palmer: 'Palmer Park', kensington: 'Kensington', thorn: 'The Thorn', grizzly: 'Grizzly Oaks', cass_benton: 'Cass Benton', stony_creek: 'Stony Creek', ghesquiere: 'Ghesquiere', spindler: 'Spindler Park', palmer: 'Palmer Park', acorn_knoll: 'Acorn Knoll', hudson_mills_monster: 'Hudson Mills Monster' }
+const COURSE_NAMES = { palmer: 'Palmer Park', kensington: 'Kensington', thorn: 'The Thorn', grizzly: 'Grizzly Oaks', cass_benton: 'Cass Benton', stony_creek: 'Stony Creek', ghesquiere: 'Ghesquiere', spindler: 'Spindler Park', palmer: 'Palmer Park', acorn_knoll: 'Acorn Knoll', hudson_mills_monster: 'Hudson Mills Monster', hudson_mills_original_18: 'Hudson Mills Original (18)' }
 
 function getCoursePars(course) {
   return PARS[course] || PARS.palmer

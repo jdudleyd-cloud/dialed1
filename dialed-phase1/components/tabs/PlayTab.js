@@ -244,7 +244,7 @@ export default function PlayTab({
     return scoreDiscRisk(disc, windCondition, windRelation, hazards)
   }
 
-  const COURSE_NAMES = { palmer: 'Palmer Park', kensington: 'Kensington', thorn: 'The Thorn', grizzly: 'Grizzly Oaks', cass_benton: 'Cass Benton', stony_creek: 'Stony Creek', ghesquiere: 'Ghesquiere', spindler: 'Spindler Park', acorn_knoll: 'Acorn Knoll', hudson_mills_monster: 'Hudson Mills Monster' }
+  const COURSE_NAMES = { palmer: 'Palmer Park', kensington: 'Kensington', thorn: 'The Thorn', grizzly: 'Grizzly Oaks', cass_benton: 'Cass Benton', stony_creek: 'Stony Creek', ghesquiere: 'Ghesquiere', spindler: 'Spindler Park', acorn_knoll: 'Acorn Knoll', hudson_mills_monster: 'Hudson Mills Monster', hudson_mills_original_18: 'Hudson Mills Original (18)' }
 
   const beginRound = (tee, range) => {
     const resolvedTee = tee || pendingTee
