@@ -179,12 +179,14 @@ def update_course_data(key, label, holes, distances, pars, dry_run, update=False
 
     if already:
         # Strip old coord block
+        # Use '\n  ],' to anchor the search to a line start, avoiding false
+        # matches inside coordinate values like "      -83.xxx      ],"
         s = src.index(f'  {key}: [')
-        e = src.index('  ],', s) + 4
+        e = src.index('\n  ],', s) + len('\n  ],')
         src = src[:s] + src[e:].lstrip('\n')
         # Strip old COURSE_HOLES entry
         s2 = src.index(f'  {key}: {{')
-        e2 = src.index('  },\n', s2) + 4
+        e2 = src.index('\n  },\n', s2) + len('\n  },\n')
         src = src[:s2] + src[e2:].lstrip('\n')
 
     lines = [f'  {key}: [', f'    // {label}']
