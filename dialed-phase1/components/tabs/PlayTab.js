@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { loadBag } from '../../utils/discData'
 import { getWeather } from '../../utils/weather'
 import { saveThrow, saveRound } from '../../utils/storage'
@@ -33,6 +33,48 @@ function bearing(lat1, lon1, lat2, lon2) {
 function loadCustomPins() {
   if (typeof window === 'undefined') return {}
   try { return JSON.parse(localStorage.getItem('dialed_pins') || '{}') } catch { return {} }
+}
+
+function toRad(v) { return v * Math.PI / 180 }
+function toDeg(v) { return v * 180 / Math.PI }
+
+function offsetPoint(lat, lon, distanceFt, headingDeg) {
+  const earthRadiusFt = 3958.8 * 5280
+  const d = distanceFt / earthRadiusFt
+  const brng = toRad(headingDeg)
+  const lat1 = toRad(lat)
+  const lon1 = toRad(lon)
+  const lat2 = Math.asin(Math.sin(lat1) * Math.cos(d) + Math.cos(lat1) * Math.sin(d) * Math.cos(brng))
+  const lon2 = lon1 + Math.atan2(Math.sin(brng) * Math.sin(d) * Math.cos(lat1), Math.cos(d) - Math.sin(lat1) * Math.sin(lat2))
+  return { lat: toDeg(lat2), lon: toDeg(lon2) }
+}
+
+function localPoint(lat, lon, origin) {
+  const cosLat = Math.cos(toRad(origin.lat))
+  const x = (lon - origin.lon) * 364000 * cosLat
+  const y = (lat - origin.lat) * 364000
+  return { x, y }
+}
+
+function loadGoogleMapsScript(apiKey) {
+  return new Promise((resolve, reject) => {
+    if (window.google?.maps) { resolve(window.google.maps); return }
+    if (document.getElementById('gmap-script')) {
+      const interval = setInterval(() => {
+        if (window.google?.maps) { clearInterval(interval); resolve(window.google.maps) }
+      }, 100)
+      setTimeout(() => { clearInterval(interval); reject(new Error('timeout')) }, 10000)
+      return
+    }
+    window.__gmapsCb = () => resolve(window.google.maps)
+    const s = document.createElement('script')
+    s.id = 'gmap-script'
+    s.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=drawing,geometry&callback=__gmapsCb`
+    s.async = true
+    s.defer = true
+    s.onerror = reject
+    document.head.appendChild(s)
+  })
 }
 
 // ─── Compass widget ───────────────────────────────────────────────────────────
@@ -85,6 +127,89 @@ function CompassWidget({ windDeg, basketBearing }) {
         )
       })()}
       <circle cx={cx} cy={cx} r={3} fill="#fff" />
+    </svg>
+  )
+}
+
+function HoleCorridorMap({ location, teePin, basketPin, throws }) {
+  if (!teePin || !basketPin) return null
+
+  const heading = bearing(teePin.lat, teePin.lon, basketPin.lat, basketPin.lon)
+  const start = offsetPoint(teePin.lat, teePin.lon, 100, heading + 180)
+  const end = offsetPoint(basketPin.lat, basketPin.lon, 100, heading)
+  const origin = {
+    lat: (teePin.lat + basketPin.lat) / 2,
+    lon: (teePin.lon + basketPin.lon) / 2,
+  }
+
+  const startLocal = localPoint(start.lat, start.lon, origin)
+  const endLocal = localPoint(end.lat, end.lon, origin)
+  const teeLocal = localPoint(teePin.lat, teePin.lon, origin)
+  const basketLocal = localPoint(basketPin.lat, basketPin.lon, origin)
+  const playerLocal = location ? localPoint(location.lat, location.lon, origin) : null
+
+  const corridorWidth = 70
+  const axisX = endLocal.x - startLocal.x
+  const axisY = endLocal.y - startLocal.y
+  const axisLen = Math.hypot(axisX, axisY) || 1
+  const ux = axisX / axisLen
+  const uy = axisY / axisLen
+  const vx = -uy
+  const vy = ux
+
+  const sideA = {
+    x: startLocal.x + vx * (corridorWidth / 2),
+    y: startLocal.y + vy * (corridorWidth / 2),
+  }
+  const sideB = {
+    x: startLocal.x - vx * (corridorWidth / 2),
+    y: startLocal.y - vy * (corridorWidth / 2),
+  }
+
+  const buildPoint = (pt) => {
+    const p = localPoint(pt.lat, pt.lon, origin)
+    const dx = p.x - startLocal.x
+    const dy = p.y - startLocal.y
+    return {
+      x: dx * ux + dy * uy,
+      y: dx * vx + dy * vy,
+    }
+  }
+
+  const teePt = buildPoint(teePin)
+  const basketPt = buildPoint(basketPin)
+  const playerPt = playerLocal ? buildPoint(location) : null
+  const throwPts = (throws || []).filter(t => Number.isFinite(t.lat) && Number.isFinite(t.lon)).map(t => buildPoint({ lat: t.lat, lon: t.lon }))
+
+  const minX = Math.min(0, teePt.x, basketPt.x, ...(throwPts.map(p => p.x)), playerPt ? playerPt.x : 0)
+  const maxX = Math.max(axisLen + 20, teePt.x, basketPt.x, ...(throwPts.map(p => p.x)), playerPt ? playerPt.x : 0)
+  const minY = Math.min(-corridorWidth / 2 - 10, teePt.y, basketPt.y, ...(throwPts.map(p => p.y)), playerPt ? playerPt.y : 0)
+  const maxY = Math.max(corridorWidth / 2 + 10, teePt.y, basketPt.y, ...(throwPts.map(p => p.y)), playerPt ? playerPt.y : 0)
+
+  const width = Math.max(260, maxX - minX)
+  const height = Math.max(140, maxY - minY)
+  const scale = Math.min(320 / width, 180 / height)
+  const sx = (p) => ((p.x - minX) * scale) + 12
+  const sy = (p) => (height - (p.y - minY) * scale) + 8
+
+  return (
+    <svg viewBox={`0 0 ${Math.max(260, width * scale + 24)} ${Math.max(140, height * scale + 16)}`} className="w-full h-[180px] bg-black">
+      <defs>
+        <linearGradient id="corridor" x1="0" x2="1">
+          <stop offset="0%" stopColor="rgba(0,212,255,0.08)" />
+          <stop offset="100%" stopColor="rgba(255,235,59,0.18)" />
+        </linearGradient>
+      </defs>
+      <rect x="0" y="0" width="100%" height="100%" fill="#07111f" />
+      <path d={`M ${sx({ x: 0, y: corridorWidth / 2 })} ${sy({ x: 0, y: corridorWidth / 2 })} L ${sx({ x: axisLen, y: corridorWidth / 2 })} ${sy({ x: axisLen, y: corridorWidth / 2 })} L ${sx({ x: axisLen, y: -corridorWidth / 2 })} ${sy({ x: axisLen, y: -corridorWidth / 2 })} L ${sx({ x: 0, y: -corridorWidth / 2 })} ${sy({ x: 0, y: -corridorWidth / 2 })} Z`} fill="url(#corridor)" stroke="#00d4ff" strokeWidth="1" opacity="0.8" />
+      <line x1={sx({ x: 0, y: 0 })} y1={sy({ x: 0, y: 0 })} x2={sx({ x: axisLen, y: 0 })} y2={sy({ x: axisLen, y: 0 })} stroke="#ffeb3b" strokeWidth="3" />
+      <line x1={sx({ x: 0, y: corridorWidth / 2 })} y1={sy({ x: 0, y: corridorWidth / 2 })} x2={sx({ x: axisLen, y: corridorWidth / 2 })} y2={sy({ x: axisLen, y: corridorWidth / 2 })} stroke="#00d4ff" strokeOpacity="0.4" strokeWidth="1" />
+      <line x1={sx({ x: 0, y: -corridorWidth / 2 })} y1={sy({ x: 0, y: -corridorWidth / 2 })} x2={sx({ x: axisLen, y: -corridorWidth / 2 })} y2={sy({ x: axisLen, y: -corridorWidth / 2 })} stroke="#00d4ff" strokeOpacity="0.4" strokeWidth="1" />
+      <circle cx={sx({ x: 0, y: 0 })} cy={sy({ x: 0, y: 0 })} r="5" fill="#ffeb3b" />
+      <circle cx={sx({ x: axisLen, y: 0 })} cy={sy({ x: axisLen, y: 0 })} r="6" fill="#00d4ff" />
+      {playerPt && <circle cx={sx(playerPt)} cy={sy(playerPt)} r="6" fill="#22c55e" stroke="#052e16" strokeWidth="2" />}
+      {throwPts.map((pt, i) => <circle key={i} cx={sx(pt)} cy={sy(pt)} r="4" fill="#ffb703" stroke="#111827" strokeWidth="1.5" />)}
+      <text x={sx({ x: axisLen * 0.5, y: 0 })} y={sy({ x: axisLen * 0.5, y: -corridorWidth / 1.6 }) - 4} fill="#8b9bb6" fontSize="9" textAnchor="middle">Hole corridor</text>
     </svg>
   )
 }
@@ -239,6 +364,142 @@ export default function PlayTab({
     ? bearing(location.lat, location.lon, basketPin.lat, basketPin.lon)
     : undefined
 
+  const [mapError, setMapError] = useState(false)
+  const mapRef = useRef(null)
+  const mapInstanceRef = useRef(null)
+
+  const mapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+  const hasRealMapsKey = Boolean(mapsApiKey) && !/YOUR_GOOGLE_MAPS_API_KEY_HERE/i.test(mapsApiKey)
+
+  useEffect(() => {
+    if (!mapRef.current || !location) return
+    const apiKey = mapsApiKey
+    if (!hasRealMapsKey || !apiKey) { setMapError(true); return }
+
+    loadGoogleMapsScript(apiKey).then(gmaps => {
+      if (!mapRef.current) return
+      const center = { lat: location.lat, lng: location.lon }
+      const map = mapInstanceRef.current || new gmaps.Map(mapRef.current, {
+        center,
+        zoom: 18,
+        mapTypeId: 'satellite',
+        tilt: 0,
+        disableDefaultUI: true,
+        zoomControl: true,
+      })
+      mapInstanceRef.current = map
+
+      if (teePin && basketPin) {
+        const tee = new gmaps.LatLng(teePin.lat, teePin.lon)
+        const basket = new gmaps.LatLng(basketPin.lat, basketPin.lon)
+        const heading = bearing(teePin.lat, teePin.lon, basketPin.lat, basketPin.lon)
+        const corridorLength = gmaps.geometry.spherical.computeDistanceBetween(tee, basket) + 200
+        const corridorWidth = 80
+        const start = gmaps.geometry.spherical.computeOffset(tee, 100, heading + 180)
+        const end = gmaps.geometry.spherical.computeOffset(basket, 100, heading)
+        const mid = gmaps.geometry.spherical.computeOffset(tee, corridorLength / 2, heading)
+        const left = gmaps.geometry.spherical.computeOffset(mid, corridorWidth / 2, heading + 90)
+        const right = gmaps.geometry.spherical.computeOffset(mid, corridorWidth / 2, heading - 90)
+
+        const bounds = new gmaps.LatLngBounds()
+        bounds.extend(start)
+        bounds.extend(end)
+        bounds.extend(left)
+        bounds.extend(right)
+
+        map.setOptions({ heading, tilt: 0 })
+        map.fitBounds(bounds, 18)
+        map.setCenter(bounds.getCenter())
+      } else {
+        map.setCenter(center)
+        map.setZoom(18)
+      }
+
+      const markers = []
+
+      markers.push(new gmaps.Marker({
+        position: center,
+        map,
+        title: 'You are here',
+        zIndex: 20,
+        icon: {
+          path: gmaps.SymbolPath.CIRCLE,
+          scale: 10,
+          fillColor: '#00ff88',
+          fillOpacity: 1,
+          strokeColor: '#0b0f1a',
+          strokeWeight: 2,
+        },
+      }))
+
+      if (teePin) {
+        markers.push(new gmaps.Marker({
+          position: { lat: teePin.lat, lng: teePin.lon },
+          map,
+          title: 'Tee',
+          icon: {
+            path: gmaps.SymbolPath.CIRCLE,
+            scale: 8,
+            fillColor: '#ffeb3b',
+            fillOpacity: 1,
+            strokeColor: '#111827',
+            strokeWeight: 2,
+          },
+        }))
+      }
+
+      if (basketPin) {
+        markers.push(new gmaps.Marker({
+          position: { lat: basketPin.lat, lng: basketPin.lon },
+          map,
+          title: 'Basket',
+          icon: {
+            path: gmaps.SymbolPath.CIRCLE,
+            scale: 9,
+            fillColor: '#00d4ff',
+            fillOpacity: 1,
+            strokeColor: '#111827',
+            strokeWeight: 2,
+          },
+        }))
+      }
+
+      const throwPath = (roundThrows || [])
+        .filter(t => Number.isFinite(t?.lat) && Number.isFinite(t?.lon))
+        .map(t => ({ lat: t.lat, lng: t.lon }))
+
+      if (throwPath.length > 1) {
+        new gmaps.Polyline({
+          path: throwPath,
+          map,
+          geodesic: true,
+          strokeColor: '#ffb703',
+          strokeOpacity: 0.95,
+          strokeWeight: 3,
+        })
+      }
+
+      throwPath.forEach((pt, idx) => {
+        markers.push(new gmaps.Marker({
+          position: pt,
+          map,
+          title: `Throw ${idx + 1}`,
+          label: { text: `${idx + 1}`, color: '#111827', fontSize: '10px', fontWeight: '900' },
+          icon: {
+            path: gmaps.SymbolPath.CIRCLE,
+            scale: 7,
+            fillColor: '#ffb703',
+            fillOpacity: 1,
+            strokeColor: '#111827',
+            strokeWeight: 2,
+          },
+        }))
+      })
+
+      return () => markers.forEach(m => m.setMap(null))
+    }).catch(() => setMapError(true))
+  }, [location, teePin, basketPin, roundThrows, selectedCourse, selectedHole, mapsApiKey, hasRealMapsKey])
+
   const hazardScore = (disc) => {
     if (!disc || hazards.length === 0) return null
     return scoreDiscRisk(disc, windCondition, windRelation, hazards)
@@ -359,6 +620,7 @@ export default function PlayTab({
   // For the current hole — what score will this give vs par?
   const currentPar     = getHolePar(selectedCourse, selectedHole, activeTee)
   const holeVsPar      = holeStrokes - currentPar
+  const showNativeMap = !hasRealMapsKey || mapError
   const holeParLabel   = holeVsPar === -2 ? '🦅 Eagle'
     : holeVsPar === -1 ? '🐦 Birdie'
     : holeVsPar ===  0 ? 'Par'
@@ -369,6 +631,26 @@ export default function PlayTab({
 
   return (
     <div className="p-4 space-y-4 pb-6">
+      {/* Live map for spotting and throw tracking */}
+      <div className="broadcast-card p-3">
+        <div className="flex items-center justify-between mb-2">
+          <div>
+            <div className="text-xs text-broadcast-cyan">LIVE PLAY MAP</div>
+            <div className="text-[10px] text-gray-500">You · tee · basket · recent throw path</div>
+          </div>
+          <div className="text-[10px] text-gray-400">{(roundThrows || []).length} throw{(roundThrows || []).length === 1 ? '' : 's'}</div>
+        </div>
+        {showNativeMap ? (
+          <div className="rounded border border-gray-800 overflow-hidden bg-black">
+            <HoleCorridorMap location={location} teePin={teePin} basketPin={basketPin} throws={roundThrows || []} />
+          </div>
+        ) : (
+          <div className="rounded border border-gray-800 overflow-hidden bg-black">
+            <div ref={mapRef} style={{ width: '100%', height: 180 }} />
+          </div>
+        )}
+      </div>
+
       {/* Weather Strip + Compass */}
       {weather && (
         <div className="broadcast-card p-3">
