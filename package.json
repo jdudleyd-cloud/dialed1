@@ -1,0 +1,7 @@
+{
+  "name": "dialed-monorepo-root",
+  "private": true,
+  "scripts": {
+    "build": "npm --prefix dialed-phase1 install && npm --prefix dialed-phase1 run build"
+  }
+}
