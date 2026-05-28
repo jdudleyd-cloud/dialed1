@@ -1,5 +1,4 @@
 {
-  "rootDirectory": "dialed-phase1",
   "buildCommand": "npm run build",
   "outputDirectory": ".next"
 }
