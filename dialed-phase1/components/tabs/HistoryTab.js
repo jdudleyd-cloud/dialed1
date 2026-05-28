@@ -324,7 +324,7 @@ export default function HistoryTab() {
         </div>
       )}
 
-      {/* Throws View — flat list of all throws */}
+      {/* Throws View — flat list of all throws and shared player logs */}
       {view === 'throws' && (
         <div className="space-y-2">
           {(() => {

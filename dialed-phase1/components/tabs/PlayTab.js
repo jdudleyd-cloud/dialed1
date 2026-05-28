@@ -528,6 +528,7 @@ export default function PlayTab({
     const sessionId = currentRound?.id || Date.now()
 
     const flight = calculateFlightPath(selectedDisc, throwType, windCondition, windRelation, null)
+    // Player-tagged throws are stored for shared history and analytics.
     const playerName = typeof window !== 'undefined' ? (localStorage.getItem('dialed_player_name') || 'Anonymous') : 'Anonymous'
 
     const throwData = {
