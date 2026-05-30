@@ -108,7 +108,7 @@ function PersonaCard({ persona, selected, onSelect }) {
         selected ? 'border-broadcast-yellow bg-yellow-950' : 'border-gray-700 bg-broadcast-black hover:border-gray-500'
       }`}>
       <div className="flex items-start gap-1.5">
-        <span className="text-xl leading-none">{persona.avatar}</span>
+        <img src={persona.avatar} alt={persona.name} className="w-8 h-8 object-contain flex-shrink-0" style={{ imageRendering: 'pixelated' }} />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1 flex-wrap">
             <span className="font-black text-white font-saira text-xs leading-tight truncate">{persona.name}</span>
@@ -130,7 +130,7 @@ function BanterBubble({ persona, line }) {
   if (!line || !persona) return null
   return (
     <div className="flex items-start gap-2">
-      <span className="text-2xl flex-shrink-0 mt-0.5">{persona.avatar}</span>
+      <img src={persona.avatar} alt={persona.name} className="w-8 h-8 object-contain flex-shrink-0 mt-0.5" style={{ imageRendering: 'pixelated' }} />
       <div className="rounded-xl px-3 py-2 max-w-[85%] bg-gray-800 text-white rounded-tl-none">
         <div className="text-[10px] font-bold text-gray-400 mb-0.5">{persona.name}</div>
         <div className="text-sm leading-snug italic">"{line}"</div>
@@ -549,7 +549,7 @@ export default function VsTab({
     return (
       <div className="p-4 space-y-4 pb-6">
         <div className="broadcast-card p-5 text-center">
-          <div className="text-5xl mb-2">{won ? '🏆' : mainOpp.avatar}</div>
+          <div className="mb-2 flex justify-center">{won ? <span className="text-5xl">🏆</span> : <img src={mainOpp.avatar} alt={mainOpp.name} className="w-16 h-16 object-contain" style={{ imageRendering: 'pixelated' }} />}</div>
           <div className={`font-black font-saira text-2xl ${won ? 'text-broadcast-yellow' : 'text-broadcast-red'}`}>
             {won ? 'YOU WIN' : `${mainOpp.name.toUpperCase()} WINS`}
           </div>
@@ -621,7 +621,7 @@ export default function VsTab({
           </div>
 
           <div className="text-right">
-            <div className="text-3xl leading-none">{mainOpp.avatar}</div>
+            <img src={mainOpp.avatar} alt={mainOpp.name} className="w-10 h-10 object-contain ml-auto" style={{ imageRendering: 'pixelated' }} />
             <div className="text-xs text-broadcast-cyan font-saira font-black">{mainOpp.name}</div>
             <TierBadge tier={mainOpp.tier} />
           </div>

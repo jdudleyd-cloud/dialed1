@@ -8,7 +8,7 @@ export const PERSONAS = [
 
   {
     id: 'paul', name: 'Paul', difficulty: 99, tier: 4,
-    avatar: '🧙',
+    avatar: '/avatars/paul.png',
     traits: 'Silent. Dominant. Every word lands like a putt from 10 feet.',
     banter: {
       tee: [
@@ -78,7 +78,7 @@ export const PERSONAS = [
 
   {
     id: 'ricky', name: 'Ricky', difficulty: 97, tier: 4,
-    avatar: '🪓',
+    avatar: '/avatars/ricky.png',
     traits: 'Raw power with precision. Loves headwinds. Competitive to his core.',
     banter: {
       tee: [
@@ -149,7 +149,7 @@ export const PERSONAS = [
 
   {
     id: 'karny', name: 'Karny', difficulty: 98, tier: 4,
-    avatar: '🥷',
+    avatar: '/avatars/karny.png',
     traits: 'Calculating. Strategic. Always three moves ahead. Slightly unsettling.',
     banter: {
       tee: [
@@ -220,7 +220,7 @@ export const PERSONAS = [
 
   {
     id: 'paige', name: 'Paige', difficulty: 96, tier: 4,
-    avatar: '🏹',
+    avatar: '/avatars/paige.png',
     traits: 'Mechanically perfect. Unflappable. Form is the same whether up 10 or down 10.',
     banter: {
       tee: [
@@ -291,7 +291,7 @@ export const PERSONAS = [
 
   {
     id: 'dudley', name: 'Dudley', difficulty: 95, tier: 4,
-    avatar: '🛡️',
+    avatar: '/avatars/dudley.png',
     traits: 'Technical perfectionist. Lives in flight numbers. Analyzes every disc choice.',
     banter: {
       tee: [
@@ -362,7 +362,7 @@ export const PERSONAS = [
 
   {
     id: 'valarie', name: 'Valarie', difficulty: 94, tier: 4,
-    avatar: '🧛',
+    avatar: '/avatars/valarie.png',
     traits: 'Strategic. Plays the course not the player. Cold, patient, psychological.',
     banter: {
       tee: [
@@ -433,7 +433,7 @@ export const PERSONAS = [
 
   {
     id: 'james', name: 'James', difficulty: 93, tier: 4,
-    avatar: '🐉',
+    avatar: '/avatars/james.png',
     traits: 'Clutch gene. Rises with the moment. Back nine is his home.',
     banter: {
       tee: [
@@ -504,7 +504,7 @@ export const PERSONAS = [
 
   {
     id: 'ken', name: 'Ken', difficulty: 93, tier: 4,
-    avatar: '⚔️',
+    avatar: '/avatars/ken.png',
     traits: 'Old school. 30 years of experience. Every plastic ever pressed. Endless wisdom.',
     banter: {
       tee: [
@@ -575,7 +575,7 @@ export const PERSONAS = [
 
   {
     id: 'nate', name: 'Nate', difficulty: 92, tier: 4,
-    avatar: '🕵️',
+    avatar: '/avatars/nate.png',
     traits: 'Smooth. Effortless. Scores well and barely seems to notice.',
     banter: {
       tee: [
@@ -646,7 +646,7 @@ export const PERSONAS = [
 
   {
     id: 'barry', name: 'Barry', difficulty: 91, tier: 4,
-    avatar: '🤖',
+    avatar: '/avatars/barry.png',
     traits: 'Grinder. Never quits. Makes you earn every stroke. Working class hero.',
     banter: {
       tee: [
@@ -719,7 +719,7 @@ export const PERSONAS = [
 
   {
     id: 'simon', name: 'Simon', difficulty: 88, tier: 3,
-    avatar: '🧝',
+    avatar: '/avatars/simon.png',
     traits: 'Distance monster. Loses the putting battle every round. Zero self-awareness about it.',
     banter: {
       tee: [
@@ -790,7 +790,7 @@ export const PERSONAS = [
 
   {
     id: 'eagle', name: 'Eagle', difficulty: 85, tier: 3,
-    avatar: '🦅',
+    avatar: '/avatars/eagle.png',
     traits: 'Creative. Flashy. Throws lines nobody else sees. Spectacular when it works.',
     banter: {
       tee: [
@@ -861,7 +861,7 @@ export const PERSONAS = [
 
   {
     id: 'calvin', name: 'Calvin', difficulty: 87, tier: 3,
-    avatar: '🐙',
+    avatar: '/avatars/calvin.png',
     traits: 'Reliable. Boring. Steady. Wins without doing anything interesting.',
     banter: {
       tee: [
@@ -932,7 +932,7 @@ export const PERSONAS = [
 
   {
     id: 'kristin', name: 'Kristin', difficulty: 83, tier: 3,
-    avatar: '☠️',
+    avatar: '/avatars/kristin.png',
     traits: 'Fiercely competitive. Gives trash talk back harder than she receives it.',
     banter: {
       tee: [
@@ -1003,7 +1003,7 @@ export const PERSONAS = [
 
   {
     id: 'catrina', name: 'Catrina', difficulty: 84, tier: 3,
-    avatar: '🧙‍♀️',
+    avatar: '/avatars/catrina.png',
     traits: 'Patient. Psychological. Waits for you to beat yourself.',
     banter: {
       tee: [
@@ -1074,7 +1074,7 @@ export const PERSONAS = [
 
   {
     id: 'drew', name: 'Drew', difficulty: 82, tier: 3,
-    avatar: '🪖',
+    avatar: '/avatars/drew.png',
     traits: 'Long hitter. Approach game falls apart. Refuses to admit the driving is only half the game.',
     banter: {
       tee: [
@@ -1145,7 +1145,7 @@ export const PERSONAS = [
 
   {
     id: 'henna', name: 'Henna', difficulty: 80, tier: 3,
-    avatar: '🧚',
+    avatar: '/avatars/henna.png',
     traits: 'Weather obsessed. Reads conditions better than anyone. Explains the wind to people who didn\'t ask.',
     banter: {
       tee: [
@@ -1216,7 +1216,7 @@ export const PERSONAS = [
 
   {
     id: 'isaac', name: 'Isaac', difficulty: 78, tier: 3,
-    avatar: '👺',
+    avatar: '/avatars/isaac.png',
     traits: 'The underdog. Quietly good. Nobody sees him coming. Likes it that way.',
     banter: {
       tee: [
@@ -1287,7 +1287,7 @@ export const PERSONAS = [
 
   {
     id: 'joel', name: 'Joel', difficulty: 75, tier: 3,
-    avatar: '🃏',
+    avatar: '/avatars/joel.png',
     traits: 'Streaky. Volatile. Incredible when hot, catastrophic when cold. Lives in extremes.',
     banter: {
       tee: [
@@ -1358,7 +1358,7 @@ export const PERSONAS = [
 
   {
     id: 'chandler', name: 'Chandler', difficulty: 72, tier: 3,
-    avatar: '🐂',
+    avatar: '/avatars/chandler.png',
     traits: 'Muscle over brains. Throws everything as hard as possible. Somehow still advanced.',
     banter: {
       tee: [
@@ -1431,7 +1431,7 @@ export const PERSONAS = [
 
   {
     id: 'brodie', name: 'Brodie', difficulty: 65, tier: 2,
-    avatar: '🦊',
+    avatar: '/avatars/brodie.png',
     traits: 'Adventure golfer. Hero shots every hole. Zero regrets. Occasionally brilliant.',
     banter: {
       tee: [
@@ -1502,7 +1502,7 @@ export const PERSONAS = [
 
   {
     id: 'harriet', name: 'Hyzer Harriet', difficulty: 63, tier: 2,
-    avatar: '🍄',
+    avatar: '/avatars/harriet.png',
     traits: 'Hyzer purist. Won\'t throw anything flat. Rolls her eyes at rollers.',
     banter: {
       tee: [
@@ -1573,7 +1573,7 @@ export const PERSONAS = [
 
   {
     id: 'hannah', name: 'Hannah', difficulty: 62, tier: 2,
-    avatar: '🐱',
+    avatar: '/avatars/hannah.png',
     traits: 'Steady player. Easily tilted by trash talk. Tries not to show it.',
     banter: {
       tee: [
@@ -1644,7 +1644,7 @@ export const PERSONAS = [
 
   {
     id: 'ace', name: 'Ace McGee', difficulty: 60, tier: 2,
-    avatar: '🎩',
+    avatar: '/avatars/ace.png',
     traits: 'Self-styled legend. Named himself after a throw he\'s never actually made.',
     banter: {
       tee: [
@@ -1715,7 +1715,7 @@ export const PERSONAS = [
 
   {
     id: 'kevin', name: 'Kevin', difficulty: 58, tier: 2,
-    avatar: '🤠',
+    avatar: '/avatars/kevin.png',
     traits: 'Plays this course every weekend. Still can\'t execute. But knows every tree personally.',
     banter: {
       tee: [
@@ -1786,7 +1786,7 @@ export const PERSONAS = [
 
   {
     id: 'mason', name: 'Mason', difficulty: 55, tier: 2,
-    avatar: '🏴‍☠️',
+    avatar: '/avatars/mason.png',
     traits: 'Collegiate athlete who just picked up disc golf. Doesn\'t know the terms. Incredible raw form.',
     banter: {
       tee: [
@@ -1857,7 +1857,7 @@ export const PERSONAS = [
 
   {
     id: 'charlie', name: 'Chains Charlie', difficulty: 52, tier: 2,
-    avatar: '💀',
+    avatar: '/avatars/charlie.png',
     traits: 'Elite putter. Absolute disaster off the tee. Happiest near the basket.',
     banter: {
       tee: [
@@ -1928,7 +1928,7 @@ export const PERSONAS = [
 
   {
     id: 'dylan', name: 'Dylan', difficulty: 50, tier: 2,
-    avatar: '👽',
+    avatar: '/avatars/dylan.png',
     traits: 'Grips every disc like it owes him money. Turns everything over. Always.',
     banter: {
       tee: [
@@ -1999,7 +1999,7 @@ export const PERSONAS = [
 
   {
     id: 'skip', name: 'Skip Rollins', difficulty: 48, tier: 2,
-    avatar: '🦝',
+    avatar: '/avatars/skip.png',
     traits: 'Only throws rollers. Every shot. Every situation. Zero exceptions.',
     banter: {
       tee: [
@@ -2070,7 +2070,7 @@ export const PERSONAS = [
 
   {
     id: 'buster', name: 'Buster', difficulty: 45, tier: 2,
-    avatar: '🦁',
+    avatar: '/avatars/buster.png',
     traits: 'Maximum distance, zero course management. Somehow lovable.',
     banter: {
       tee: [
@@ -2143,7 +2143,7 @@ export const PERSONAS = [
 
   {
     id: 'chris', name: 'Chris Fadansen', difficulty: 35, tier: 1,
-    avatar: '🧌',
+    avatar: '/avatars/chris.png',
     traits: 'Every disc fades hard left into the woods. Blames the disc.',
     banter: {
       tee: [
@@ -2214,7 +2214,7 @@ export const PERSONAS = [
 
   {
     id: 'freddy', name: 'Flat Top Freddy', difficulty: 25, tier: 1,
-    avatar: '😐',
+    avatar: '/avatars/freddy.png',
     traits: 'Throws everything flat. No hyzer. No anhyzer. Just flat. Always flat.',
     banter: {
       tee: [
@@ -2285,7 +2285,7 @@ export const PERSONAS = [
 
   {
     id: 'jim', name: 'Jim Jansen', difficulty: 28, tier: 1,
-    avatar: '🧐',
+    avatar: '/avatars/jim.png',
     traits: 'Disc golf encyclopedia. Can recite every flight number ever printed. Can\'t throw any of them.',
     banter: {
       tee: [
@@ -2356,7 +2356,7 @@ export const PERSONAS = [
 
   {
     id: 'peter', name: 'Peter Parktit', difficulty: 22, tier: 1,
-    avatar: '😬',
+    avatar: '/avatars/peter.png',
     traits: 'Calls every throw a park job regardless of result. Completely delusional. Lovably so.',
     banter: {
       tee: [
@@ -2427,7 +2427,7 @@ export const PERSONAS = [
 
   {
     id: 'ted', name: 'Turnover Ted', difficulty: 30, tier: 1,
-    avatar: '🔄',
+    avatar: '/avatars/ted.png',
     traits: 'Every disc turns over. Every throw. Has never seen a disc that fades.',
     banter: {
       tee: [
@@ -2498,7 +2498,7 @@ export const PERSONAS = [
 
   {
     id: 'tommy', name: 'Tommy Two Shoes', difficulty: 18, tier: 1,
-    avatar: '😁',
+    avatar: '/avatars/tommy.png',
     traits: 'Pure joy. Has two discs. Throws both wrong. Best time of his life regardless.',
     banter: {
       tee: [
@@ -2569,7 +2569,7 @@ export const PERSONAS = [
 
   {
     id: 'randy', name: 'Randy Rollit', difficulty: 20, tier: 1,
-    avatar: '🎱',
+    avatar: '/avatars/randy.png',
     traits: 'Invented his own putting technique. Calls it the Rollit Technique. It does not work.',
     banter: {
       tee: [
@@ -2640,7 +2640,7 @@ export const PERSONAS = [
 
   {
     id: 'butterhand', name: 'Sir Butterhand', difficulty: 15, tier: 1,
-    avatar: '🧤',
+    avatar: '/avatars/butterhand.png',
     traits: 'Drops every disc. Blames wind, humidity, gravity, anything but his hands.',
     banter: {
       tee: [
@@ -2711,7 +2711,7 @@ export const PERSONAS = [
 
   {
     id: 'bogey', name: 'Bogey McBogeyface', difficulty: 8, tier: 1,
-    avatar: '🤡',
+    avatar: '/avatars/bogey.png',
     traits: 'Shows up once a year. No idea what\'s happening. Absolute riot.',
     banter: {
       tee: [
@@ -2782,7 +2782,7 @@ export const PERSONAS = [
 
   {
     id: 'wally', name: 'Wobbly Wally', difficulty: 12, tier: 1,
-    avatar: '😵‍💫',
+    avatar: '/avatars/wally.png',
     traits: 'Every disc wobbles violently off the tee. Every. Single. One.',
     banter: {
       tee: [
