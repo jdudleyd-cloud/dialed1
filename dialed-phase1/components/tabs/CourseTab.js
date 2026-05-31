@@ -165,8 +165,8 @@ function ElevationChart({ profiles }) {
     <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ height: H }}>
       <defs>
         <linearGradient id="gl" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="#00d4ff" stopOpacity="0.35"/>
-          <stop offset="100%" stopColor="#00d4ff" stopOpacity="0.02"/>
+          <stop offset="0%" stopColor="#3a7d6e" stopOpacity="0.35"/>
+          <stop offset="100%" stopColor="#3a7d6e" stopOpacity="0.02"/>
         </linearGradient>
         <linearGradient id="gc" x1="0" x2="0" y1="0" y2="1">
           <stop offset="0%" stopColor="#ffeb3b" stopOpacity="0.30"/>
@@ -207,13 +207,13 @@ function ElevationChart({ profiles }) {
       <path d={fillRight}  fill="url(#gr)" opacity="0.6"/>
 
       {/* Lines */}
-      <path d={leftPath}   fill="none" stroke="#00d4ff" strokeWidth="1.5" strokeLinejoin="round" opacity="0.7"/>
+      <path d={leftPath}   fill="none" stroke="#3a7d6e" strokeWidth="1.5" strokeLinejoin="round" opacity="0.7"/>
       <path d={rightPath}  fill="none" stroke="#4ade80" strokeWidth="1.5" strokeLinejoin="round" opacity="0.7"/>
       <path d={centerPath} fill="none" stroke="#ffeb3b" strokeWidth="2.5" strokeLinejoin="round" filter="url(#glow-c)"/>
 
       {/* Endpoint dots */}
       <circle cx={toX(0)}   cy={toY(profiles.center_line[0])}                              r="4" fill="#ffeb3b" stroke="#000" strokeWidth="1"/>
-      <circle cx={toX(100)} cy={toY(profiles.center_line[profiles.center_line.length-1])} r="4" fill="#00d4ff" stroke="#000" strokeWidth="1"/>
+      <circle cx={toX(100)} cy={toY(profiles.center_line[profiles.center_line.length-1])} r="4" fill="#3a7d6e" stroke="#000" strokeWidth="1"/>
     </svg>
   )
 }
@@ -580,7 +580,7 @@ export default function CourseTab({
     markersRef.current.push(new gmaps.Marker({
       position: { lat: basket.lat, lng: basket.lon }, map: mapInstanceRef.current,
       zIndex: 10,
-      icon: { path: gmaps.SymbolPath.CIRCLE, scale: 11, fillColor: '#00d4ff', fillOpacity: 1, strokeColor: '#000', strokeWeight: 2 },
+      icon: { path: gmaps.SymbolPath.CIRCLE, scale: 11, fillColor: '#3a7d6e', fillOpacity: 1, strokeColor: '#000', strokeWeight: 2 },
       label: { text: '⛳', color: '#000', fontSize: '11px' },
     }))
   }, [mapLoaded, holeData, selectedHole, customPins, selectedCourse])
@@ -693,7 +693,7 @@ export default function CourseTab({
             <div className="text-xs text-broadcast-cyan mb-1 flex justify-between">
               <span>ELEVATION — HOLE {selectedHole}</span>
               <span className="flex gap-3 text-[10px]">
-                <span className="text-[#00d4ff]">▬ Left</span>
+                <span className="text-[#3a7d6e]">▬ Left</span>
                 <span className="text-broadcast-yellow">▬ Center</span>
                 <span className="text-green-400">▬ Right</span>
               </span>

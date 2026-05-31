@@ -109,10 +109,10 @@ function CompassWidget({ windDeg, basketBearing }) {
         const e = arrowEnd(windRad, 32)
         return (
           <g>
-            <line x1={s.x} y1={s.y} x2={e.x} y2={e.y} stroke="#00d4ff" strokeWidth="2.5" strokeLinecap="round" />
+            <line x1={s.x} y1={s.y} x2={e.x} y2={e.y} stroke="#3a7d6e" strokeWidth="2.5" strokeLinecap="round" />
             <polygon
               points={`${e.x},${e.y} ${e.x + Math.cos(windRad + 2.5) * 8},${e.y + Math.sin(windRad + 2.5) * 8} ${e.x + Math.cos(windRad - 2.5) * 8},${e.y + Math.sin(windRad - 2.5) * 8}`}
-              fill="#00d4ff" />
+              fill="#3a7d6e" />
           </g>
         )
       })()}
@@ -201,12 +201,12 @@ function HoleCorridorMap({ location, teePin, basketPin, throws }) {
         </linearGradient>
       </defs>
       <rect x="0" y="0" width="100%" height="100%" fill="#07111f" />
-      <path d={`M ${sx({ x: 0, y: corridorWidth / 2 })} ${sy({ x: 0, y: corridorWidth / 2 })} L ${sx({ x: axisLen, y: corridorWidth / 2 })} ${sy({ x: axisLen, y: corridorWidth / 2 })} L ${sx({ x: axisLen, y: -corridorWidth / 2 })} ${sy({ x: axisLen, y: -corridorWidth / 2 })} L ${sx({ x: 0, y: -corridorWidth / 2 })} ${sy({ x: 0, y: -corridorWidth / 2 })} Z`} fill="url(#corridor)" stroke="#00d4ff" strokeWidth="1" opacity="0.8" />
+      <path d={`M ${sx({ x: 0, y: corridorWidth / 2 })} ${sy({ x: 0, y: corridorWidth / 2 })} L ${sx({ x: axisLen, y: corridorWidth / 2 })} ${sy({ x: axisLen, y: corridorWidth / 2 })} L ${sx({ x: axisLen, y: -corridorWidth / 2 })} ${sy({ x: axisLen, y: -corridorWidth / 2 })} L ${sx({ x: 0, y: -corridorWidth / 2 })} ${sy({ x: 0, y: -corridorWidth / 2 })} Z`} fill="url(#corridor)" stroke="#3a7d6e" strokeWidth="1" opacity="0.8" />
       <line x1={sx({ x: 0, y: 0 })} y1={sy({ x: 0, y: 0 })} x2={sx({ x: axisLen, y: 0 })} y2={sy({ x: axisLen, y: 0 })} stroke="#ffeb3b" strokeWidth="3" />
-      <line x1={sx({ x: 0, y: corridorWidth / 2 })} y1={sy({ x: 0, y: corridorWidth / 2 })} x2={sx({ x: axisLen, y: corridorWidth / 2 })} y2={sy({ x: axisLen, y: corridorWidth / 2 })} stroke="#00d4ff" strokeOpacity="0.4" strokeWidth="1" />
-      <line x1={sx({ x: 0, y: -corridorWidth / 2 })} y1={sy({ x: 0, y: -corridorWidth / 2 })} x2={sx({ x: axisLen, y: -corridorWidth / 2 })} y2={sy({ x: axisLen, y: -corridorWidth / 2 })} stroke="#00d4ff" strokeOpacity="0.4" strokeWidth="1" />
+      <line x1={sx({ x: 0, y: corridorWidth / 2 })} y1={sy({ x: 0, y: corridorWidth / 2 })} x2={sx({ x: axisLen, y: corridorWidth / 2 })} y2={sy({ x: axisLen, y: corridorWidth / 2 })} stroke="#3a7d6e" strokeOpacity="0.4" strokeWidth="1" />
+      <line x1={sx({ x: 0, y: -corridorWidth / 2 })} y1={sy({ x: 0, y: -corridorWidth / 2 })} x2={sx({ x: axisLen, y: -corridorWidth / 2 })} y2={sy({ x: axisLen, y: -corridorWidth / 2 })} stroke="#3a7d6e" strokeOpacity="0.4" strokeWidth="1" />
       <circle cx={sx({ x: 0, y: 0 })} cy={sy({ x: 0, y: 0 })} r="5" fill="#ffeb3b" />
-      <circle cx={sx({ x: axisLen, y: 0 })} cy={sy({ x: axisLen, y: 0 })} r="6" fill="#00d4ff" />
+      <circle cx={sx({ x: axisLen, y: 0 })} cy={sy({ x: axisLen, y: 0 })} r="6" fill="#3a7d6e" />
       {playerPt && <circle cx={sx(playerPt)} cy={sy(playerPt)} r="6" fill="#22c55e" stroke="#052e16" strokeWidth="2" />}
       {throwPts.map((pt, i) => <circle key={i} cx={sx(pt)} cy={sy(pt)} r="4" fill="#ffb703" stroke="#111827" strokeWidth="1.5" />)}
       <text x={sx({ x: axisLen * 0.5, y: 0 })} y={sy({ x: axisLen * 0.5, y: -corridorWidth / 1.6 }) - 4} fill="#8b9bb6" fontSize="9" textAnchor="middle">Hole corridor</text>
@@ -233,7 +233,7 @@ function FlightPrediction({ disc, throwType, windCondition, windRelation }) {
         </div>
         <div className="text-center">
           <div className="text-lg font-black font-saira leading-tight" style={{
-            color: lateralAbs > 30 ? '#ff6600' : lateralAbs > 15 ? '#ffeb3b' : '#00d4ff'
+            color: lateralAbs > 30 ? '#f0b4b0' : lateralAbs > 15 ? '#FFD400' : '#3a7d6e'
           }}>
             {lateralAbs > 5 ? `${lateralAbs}ft ${lateralDir}` : 'CENTER'}
           </div>
@@ -259,9 +259,9 @@ function FlightPrediction({ disc, throwType, windCondition, windRelation }) {
               className="absolute top-1 bottom-1 w-2 rounded-full"
               style={{
                 left: `${clampedPct}%`,
-                backgroundColor: '#ff6600',
+                backgroundColor: '#f0b4b0',
                 transform: 'translateX(-50%)',
-                boxShadow: '0 0 6px #ff6600',
+                boxShadow: '0 0 6px #f0b4b0',
               }}
             />
           )
@@ -445,7 +445,7 @@ export default function PlayTab({
           icon: {
             path: gmaps.SymbolPath.CIRCLE,
             scale: 9,
-            fillColor: '#00d4ff',
+            fillColor: '#3a7d6e',
             fillOpacity: 1,
             strokeColor: '#111827',
             strokeWeight: 2,
