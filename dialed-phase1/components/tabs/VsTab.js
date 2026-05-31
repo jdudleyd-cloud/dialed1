@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import { PERSONAS } from '../../utils/personas'
 import { attemptBanter, updateDramaState, initialDramaState, getRivalryLabel, getRivalryColor } from '../../utils/dramaEngine'
 import { saveThrow, saveRound } from '../../utils/storage'
+import HoleStamp from '../HoleStamp'
 
 // ─── Course par tables ────────────────────────────────────────────────────────
 // Pars sourced from UDisc (Short Tees) and course directories
@@ -604,7 +605,7 @@ export default function VsTab({
         <div className="flex justify-between items-center">
           <div>
             <div className="text-xs text-gray-500">HOLE</div>
-            <div className="text-3xl font-black text-broadcast-yellow font-saira leading-none">{currentHole}</div>
+            <HoleStamp number={currentHole} size="lg" />
             <div className="text-xs text-gray-500">PAR {currentPar}</div>
           </div>
 
