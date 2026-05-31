@@ -8,13 +8,31 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'broadcast-black': '#0a0a0a',
-        'broadcast-yellow': '#ffeb3b',
-        'broadcast-red': '#ff4444',
-        'broadcast-cyan': '#00d4ff',
+        // existing tokens — values swapped, names preserved (no JSX changes needed)
+        'broadcast-black':  '#1a1d18',
+        'broadcast-yellow': '#FFD400',
+        'broadcast-red':    '#c44a3a',
+        'broadcast-cyan':   '#3a7d6e',
+        // new palette tokens
+        'paper':       '#f0ead8',
+        'ink':         '#1a1d18',
+        'signal':      '#FFD400',
+        'teal-ox':     '#3a7d6e',
+        'red-live':    '#c44a3a',
+        'mono-label':  '#5a5440',
+        'mute':        '#8a8472',
+        'surface':     '#2a2820',
+        'surface-2':   '#f7f1de',
+        'sage':        '#c2d4bc',
+        'blush':       '#f0b4b0',
       },
       fontFamily: {
-        'saira': ['Saira Condensed', 'sans-serif'],
+        // saira remapped to Bricolage Grotesque — font-saira classes work unchanged
+        'saira':   ['Bricolage Grotesque', 'system-ui', 'sans-serif'],
+        'display': ['Bricolage Grotesque', 'system-ui', 'sans-serif'],
+        'slab':    ['Roboto Slab', 'Georgia', 'serif'],
+        'body':    ['Switzer', 'system-ui', 'sans-serif'],
+        'mono':    ['JetBrains Mono', 'SF Mono', 'monospace'],
       },
     },
   },

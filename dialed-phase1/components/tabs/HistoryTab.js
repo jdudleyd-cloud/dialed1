@@ -51,8 +51,8 @@ function ThrowMapModal({ throwData, onClose }) {
       })
       new gmaps.Circle({
         map, center: pos, radius: 5,
-        strokeColor: '#00d4ff', strokeOpacity: 0.6, strokeWeight: 1.5,
-        fillColor: '#00d4ff', fillOpacity: 0.08,
+        strokeColor: '#3a7d6e', strokeOpacity: 0.6, strokeWeight: 1.5,
+        fillColor: '#3a7d6e', fillOpacity: 0.08,
       })
     }).catch(() => setMapError(true))
   }, [throwData])
