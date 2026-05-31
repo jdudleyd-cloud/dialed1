@@ -89,7 +89,7 @@ function parStr(val) {
 function TierBadge({ tier }) {
   const cfg = {
     4: { label: 'ELITE',    color: '#ffeb3b', bg: '#3d3000' },
-    3: { label: 'ADV',      color: '#3a7d6e', bg: 'rgba(184,210,170,0.18)' },
+    3: { label: 'ADV',      color: '#c4a890', bg: 'rgba(184,210,170,0.18)' },
     2: { label: 'CASUAL',   color: '#aaa',    bg: '#222' },
     1: { label: 'BEGINNER', color: '#888',    bg: '#1a1a1a' },
   }[tier] || { label: '?', color: '#aaa', bg: '#222' }
@@ -117,7 +117,7 @@ function PersonaCard({ persona, selected, onSelect }) {
           </div>
           <div className="text-[9px] text-gray-500 leading-snug mt-0.5 line-clamp-2">{persona.traits}</div>
           <div className="text-[9px] font-bold mt-0.5"
-            style={{ color: persona.difficulty >= 91 ? '#FFD400' : persona.difficulty >= 71 ? '#3a7d6e' : '#888' }}>
+            style={{ color: persona.difficulty >= 91 ? '#FFD400' : persona.difficulty >= 71 ? '#c4a890' : '#888' }}>
             {persona.difficulty}
           </div>
         </div>
