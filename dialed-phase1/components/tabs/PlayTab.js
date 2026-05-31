@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import { loadBag } from '../../utils/discData'
 import { getWeather } from '../../utils/weather'
 import { saveThrow, saveRound } from '../../utils/storage'
+import HoleStamp from '../HoleStamp'
 import { logThrowToFirebase, logGPSPoint } from '../../utils/firebase'
 import {
   getDiscRecommendations,
@@ -700,7 +701,7 @@ export default function PlayTab({
             </div>
             <div className="text-right">
               <div className="text-xs text-broadcast-cyan">HOLE</div>
-              <div className="text-3xl font-black text-broadcast-yellow font-saira">{selectedHole}</div>
+              <HoleStamp number={selectedHole} size="lg" />
               {(() => {
                 const dist = getHoleDistance(selectedCourse, selectedHole, activeTee)
                 return dist

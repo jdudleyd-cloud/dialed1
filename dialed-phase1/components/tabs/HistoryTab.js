@@ -2,6 +2,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { getThrows, getRounds, deleteThrow, deleteRound } from '../../utils/storage'
 import { fetchSharedThrows } from '../../utils/firebase'
+import HoleStamp from '../HoleStamp'
 
 function loadGoogleMapsScript(apiKey) {
   return new Promise((resolve, reject) => {
@@ -147,7 +148,7 @@ function RoundDetail({ round, allThrows, onBack, onSelectThrow, onDeleteThrow })
       ) : (
         holes.map(hole => (
           <div key={hole} className="broadcast-card p-3">
-            <div className="text-xs text-broadcast-cyan font-bold mb-2">HOLE {hole}</div>
+            <div className="mb-2"><HoleStamp number={hole} size="sm" /></div>
             <div className="space-y-2">
               {byHole[hole].map((t, i) => (
                 <div key={t.id || i} className="flex items-center gap-2">
