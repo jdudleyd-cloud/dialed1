@@ -4,6 +4,7 @@ import { loadBag } from '../../utils/discData'
 import { getWeather } from '../../utils/weather'
 import { saveThrow, saveRound } from '../../utils/storage'
 import HoleStamp from '../HoleStamp'
+import TeeScreen from '../TeeScreen'
 import { logThrowToFirebase, logGPSPoint } from '../../utils/firebase'
 import {
   getDiscRecommendations,
@@ -439,7 +440,7 @@ export default function PlayTab({
       }
 
       if (basketPin) {
-        markers.push(new gmaps.Marker({
+        const basketMarker = new gmaps.Marker({
           position: { lat: basketPin.lat, lng: basketPin.lon },
           map,
           title: 'Basket',
@@ -451,7 +452,14 @@ export default function PlayTab({
             strokeColor: '#111827',
             strokeWeight: 2,
           },
-        }))
+        })
+        let pressTimer = null
+        basketMarker.addListener('mousedown', () => {
+          pressTimer = setTimeout(() => { console.log('caddy summoned') }, 600)
+        })
+        basketMarker.addListener('mouseup',   () => clearTimeout(pressTimer))
+        basketMarker.addListener('mouseout',  () => clearTimeout(pressTimer))
+        markers.push(basketMarker)
       }
 
       const throwPath = (roundThrows || [])
@@ -623,323 +631,53 @@ export default function PlayTab({
     : `${holeVsPar}`
 
   return (
-    <div className="p-4 space-y-4 pb-6">
-      {/* Live map for spotting and throw tracking */}
-      <div className="broadcast-card p-3">
-        <div className="flex items-center justify-between mb-2">
-          <div>
-            <div className="text-xs text-broadcast-cyan">LIVE PLAY MAP</div>
-            <div className="text-[10px] text-gray-500">You · tee · basket · recent throw path</div>
-          </div>
-          <div className="text-[10px] text-gray-400">{(roundThrows || []).length} throw{(roundThrows || []).length === 1 ? '' : 's'}</div>
-        </div>
-        {showNativeMap ? (
-          <div className="rounded border border-gray-800 overflow-hidden bg-black">
-            <HoleCorridorMap location={location} teePin={teePin} basketPin={basketPin} throws={roundThrows || []} />
-          </div>
-        ) : (
-          <div className="rounded border border-gray-800 overflow-hidden bg-black">
-            <div ref={mapRef} style={{ width: '100%', height: 180 }} />
-          </div>
-        )}
-      </div>
-
-      {/* Weather Strip + Compass */}
-      {weather && (
-        <div className="broadcast-card p-3">
-          <div className="flex gap-3 items-center">
-            <CompassWidget windDeg={windDeg} basketBearing={basketBearing} />
-            <div className="flex-1 grid grid-cols-2 gap-2 text-center">
-              <WeatherStat value={`${weather.temp}°`} label={weather.description} />
-              {/* Tappable wind stat — opens manual override when sensor reading feels wrong */}
-              <button onClick={() => setShowWindOverride(true)} className="text-center w-full">
-                <div className="broadcast-stat text-base flex items-center justify-center gap-1">
-                  {weather.windSpeed}mph
-                  {windDirOverride !== null && <span className="text-[9px] text-orange-400">●</span>}
-                </div>
-                <div className="text-[10px] text-broadcast-cyan leading-tight">
-                  Wind {windCardinal} {windCondition !== 'calm' ? `· ${windCondition}` : ''}
-                </div>
-              </button>
-              <WeatherStat value={`${weather.humidity}%`} label="Humidity" />
-              <WeatherStat
-                value={windRelation ? windRelation.replace('_', ' ').toUpperCase() : `${effectiveWindDeg || '—'}°`}
-                label="vs Fairway" />
-            </div>
-          </div>
-          {basketBearing !== undefined && (
-            <div className="mt-2 text-xs text-gray-500 text-center">
-              Basket: <span className="text-broadcast-yellow">{Math.round(basketBearing)}° ({degToCardinal(basketBearing)})</span>
-              {' · '}
-              <span className="text-broadcast-cyan">Yellow = basket · Peach = wind</span>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Round Status */}
-      <div className="broadcast-card p-4">
-        {currentRound ? (
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse inline-block" />
-                <div className="text-xs text-green-400 font-bold font-saira">ROUND IN PROGRESS</div>
-              </div>
-              <div className="text-lg font-black text-broadcast-yellow font-saira mt-0.5">
-                {COURSE_NAMES[selectedCourse] || 'Palmer Park'}
-              </div>
-              <div className="text-xs text-gray-400">
-                {throws.length} hole{throws.length !== 1 ? 's' : ''} logged
-                {throws.length > 0 && ` · last: H${throws[throws.length - 1]?.hole}`}
-              </div>
-              {parDisplay !== null && (
-                <div className={`text-sm font-black font-saira mt-0.5 ${parColor}`}>
-                  {parDisplay} PAR
-                </div>
-              )}
-            </div>
-            <div className="text-right">
-              <div className="text-xs text-broadcast-cyan">HOLE</div>
-              <HoleStamp number={selectedHole} size="lg" />
-              {(() => {
-                const dist = getHoleDistance(selectedCourse, selectedHole, activeTee)
-                return dist
-                  ? <div className="text-[10px] text-gray-400">{dist}ft · Par {currentPar}</div>
-                  : <div className="text-[10px] text-gray-600">Par {currentPar}</div>
-              })()}
-              <button onClick={endRound}
-                className="mt-0.5 px-3 py-1 bg-broadcast-red text-white font-black font-saira text-xs rounded">
-                END ROUND
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div className="space-y-2">
-            {(() => {
-              const dist = getHoleDistance(selectedCourse, selectedHole, activeTee)
-              return (
-                <div className="flex justify-between text-xs text-gray-500 px-1">
-                  <span className="font-saira">H{selectedHole} · {COURSE_NAMES[selectedCourse] || 'Palmer Park'}</span>
-                  <span>{dist ? `${dist}ft · ` : ''}Par {currentPar}</span>
-                </div>
-              )
-            })()}
-            <button onClick={startRound} className="w-full broadcast-btn font-saira py-3">
-              START ROUND
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* Throw Type Selector */}
-      <div className="broadcast-card p-3">
-        <div className="text-xs text-broadcast-cyan mb-2">THROW TYPE</div>
-        <div className="grid grid-cols-4 gap-2">
-          {THROW_TYPES.map(t => (
-            <button key={t} onClick={() => setThrowType(t)}
-              className={`py-2 font-saira font-black text-xs rounded transition-all ${
-                throwType === t
-                  ? 'bg-broadcast-yellow text-broadcast-black'
-                  : 'bg-broadcast-black border border-broadcast-yellow text-broadcast-yellow'
-              }`}>
-              <div className="text-base leading-tight">{THROW_ICONS[t]}</div>
-              <div className="text-[10px]">{getThrowLabel(t).toUpperCase()}</div>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Bag + Caddy — ordered by AI rank */}
-      <div className="broadcast-card p-3">
-        <div className="flex justify-between items-center mb-2">
-          <div>
-            <div className="text-xs text-broadcast-cyan">YOUR BAG</div>
-            {recommendations && !recsLoading && (
-              <div className="text-[9px] text-gray-500">
-                {recommendations.throwName} · {recommendations.conditionName}
-              </div>
-            )}
-          </div>
-          <button
-            onClick={() => setShowCaddy(c => !c)}
-            className={`px-2 py-0.5 font-saira font-bold text-[10px] rounded border transition-colors ${
-              showCaddy
-                ? 'bg-broadcast-cyan text-broadcast-black border-broadcast-cyan'
-                : 'bg-transparent text-broadcast-cyan border-broadcast-cyan'
-            }`}
-          >
-            🎙 CADDY
-          </button>
-        </div>
-
-        {recsLoading && <div className="text-[9px] text-gray-500 mb-1">Loading caddy...</div>}
-
-        <div className="grid grid-cols-4 gap-1.5">
-          {bagRanked.map(disc => {
-            const hr = hazardScore(disc)
-            const hasWarning = hr?.penalty > 0
-            const reasons = showCaddy
-              ? getDiscReason(disc, throwType, windCondition, windRelation, hazards, null)
-              : []
-            const topReason = reasons.find(r => !r.startsWith('⚠'))
-            return (
-              <button
-                key={disc.id}
-                onClick={() => setSelectedDisc(disc)}
-                className={`py-1.5 rounded text-center font-saira font-bold text-[10px] transition-all relative ${
-                  selectedDisc?.id === disc.id
-                    ? 'bg-broadcast-yellow text-broadcast-black border-2 border-broadcast-red'
-                    : hasWarning
-                      ? 'bg-broadcast-black border border-orange-500 text-white'
-                      : 'bg-broadcast-black border border-gray-600 text-white'
-                }`}
-                title={`${disc.name} — ${disc.type}`}
-              >
-                {disc.aiRec?.rank && disc.aiRec.rank <= 3 && (
-                  <span className="absolute top-0.5 left-0.5 text-[8px] font-black text-broadcast-yellow leading-none">
-                    #{disc.aiRec.rank}
-                  </span>
-                )}
-                <div className="w-3 h-3 rounded-full mx-auto mb-0.5" style={{ backgroundColor: disc.color }} />
-                <div className="truncate px-0.5">{(disc.customLabel || disc.name).slice(0, 6).toUpperCase()}</div>
-                {showCaddy && topReason && (
-                  <div className="text-[8px] text-gray-400 px-0.5 leading-tight mt-0.5 truncate">
-                    {topReason.slice(0, 28)}
-                  </div>
-                )}
-                {hasWarning && (
-                  <span className="absolute -top-1 -right-1 bg-orange-500 text-black text-[8px] rounded-full w-3.5 h-3.5 flex items-center justify-center font-bold">!</span>
-                )}
-              </button>
-            )
-          })}
-
-          {/* Last slot — opens full bag selector */}
-          <button
-            onClick={() => setShowBagAll(true)}
-            className="py-1.5 rounded text-center font-saira font-bold text-[10px] bg-broadcast-black border border-gray-600 text-gray-500 flex flex-col items-center justify-center"
-          >
-            <span className="text-base leading-none">···</span>
-            <span>ALL</span>
-          </button>
-        </div>
-
-        {/* Selected disc detail */}
-        {selectedDisc && (() => {
-          const hr = hazardScore(selectedDisc)
-          return (
-            <div className="mt-3 p-2 bg-broadcast-black rounded border border-gray-700">
-              <div className="flex justify-between items-center">
-                <div>
-                  <div className="font-black text-broadcast-yellow font-saira">
-                    {selectedDisc.customLabel || selectedDisc.name}
-                  </div>
-                  {selectedDisc.customLabel && (
-                    <div className="text-xs text-gray-500">{selectedDisc.name}</div>
-                  )}
-                  <div className="text-xs text-broadcast-cyan">
-                    {selectedDisc.type} · {selectedDisc.stability}
-                  </div>
-                </div>
-                <div className="flex gap-3 text-xs text-center">
-                  <FlightNum label="SPD" value={selectedDisc.speed} />
-                  <FlightNum label="GLI" value={selectedDisc.glide} />
-                  <FlightNum label="TRN" value={selectedDisc.turn} />
-                  <FlightNum label="FAD" value={selectedDisc.fade} />
-                </div>
-              </div>
-              {hr?.warnings?.map((w, i) => (
-                <div key={i} className="mt-1 text-[10px] text-orange-300 bg-orange-950 rounded px-2 py-0.5">{w}</div>
-              ))}
-
-              <FlightPrediction
-                disc={selectedDisc}
-                throwType={throwType}
-                windCondition={windCondition}
-                windRelation={windRelation}
-              />
-
-              {(() => {
-                const reasons = getDiscReason(selectedDisc, throwType, windCondition, windRelation, hazards, null)
-                return reasons.length > 0 ? (
-                  <div className="mt-2">
-                    <div className="text-[10px] text-broadcast-cyan font-bold mb-1">AI CADDY SAYS</div>
-                    <div className="space-y-1">
-                      {reasons.map((r, i) => (
-                        <div key={i} className={`text-[10px] rounded px-2 py-1 leading-snug ${
-                          r.startsWith('⚠') ? 'bg-orange-950 text-orange-300' : 'bg-gray-900 text-gray-300'
-                        }`}>
-                          {r}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ) : null
-              })()}
-            </div>
-          )
-        })()}
-      </div>
-
-      {/* Per-hole tee override — only for true multi-tee courses (e.g. Palmer, not Spindler) */}
-      {currentRound && courseHasMultiTee(selectedCourse) && !isLoopCourse(selectedCourse) && (
-        <div className="broadcast-card p-2">
-          <div className="text-[10px] text-gray-500 mb-1.5 text-center">TEE OVERRIDE — HOLE {selectedHole}</div>
-          <div className="grid grid-cols-2 gap-2">
-            <button onClick={() => setSelectedTee('short')}
-              className={`py-2 font-saira font-black text-xs rounded border transition-colors ${
-                selectedTee === 'short'
-                  ? 'bg-broadcast-yellow text-broadcast-black border-broadcast-yellow'
-                  : 'bg-transparent text-broadcast-yellow border-broadcast-yellow'
-              }`}>SHORT TEE</button>
-            <button onClick={() => setSelectedTee('long')}
-              className={`py-2 font-saira font-black text-xs rounded border transition-colors ${
-                selectedTee === 'long'
-                  ? 'bg-broadcast-cyan text-broadcast-black border-broadcast-cyan'
-                  : 'bg-transparent text-broadcast-cyan border-broadcast-cyan'
-              }`}>LONG TEE</button>
-          </div>
-        </div>
-      )}
-
-      {/* Stroke counter + Log Hole */}
-      {currentRound && selectedDisc && (
-        <div className="broadcast-card p-3 space-y-2">
-          <div className="flex items-center justify-between">
-            <div className="text-[10px] text-broadcast-cyan font-bold">STROKES THIS HOLE</div>
-            <div className="text-[10px] text-gray-500">
-              Par {currentPar} · {holeVsPar === 0 ? <span className="text-broadcast-cyan">Par</span>
-                : holeVsPar < 0 ? <span className="text-green-400">{holeParLabel}</span>
-                : <span className="text-broadcast-red">{holeParLabel}</span>}
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setHoleStrokes(s => Math.max(1, s - 1))}
-              className="w-12 h-12 rounded-full bg-broadcast-black border-2 border-gray-600 text-white font-black text-xl font-saira flex items-center justify-center"
-            >−</button>
-            <div className="flex-1 text-center">
-              <div className="text-4xl font-black text-broadcast-yellow font-saira leading-none">{holeStrokes}</div>
-              <div className="text-[10px] text-gray-500 mt-0.5">throw{holeStrokes !== 1 ? 's' : ''}</div>
-            </div>
-            <button
-              onClick={() => setHoleStrokes(s => s + 1)}
-              className="w-12 h-12 rounded-full bg-broadcast-black border-2 border-gray-600 text-white font-black text-xl font-saira flex items-center justify-center"
-            >+</button>
-          </div>
-          <button
-            onClick={logThrow}
-            disabled={logging}
-            className="w-full py-3 font-black font-saira text-sm rounded bg-broadcast-yellow text-broadcast-black disabled:opacity-60"
-          >
-            {logging ? 'LOGGING...' : `LOG HOLE ${selectedHole} — ${holeStrokes} STROKE${holeStrokes !== 1 ? 'S' : ''}`}
-          </button>
-        </div>
-      )}
-      {currentRound && !selectedDisc && (
-        <div className="text-center text-xs text-broadcast-cyan py-2">Select a disc to log hole</div>
-      )}
+    <div>
+      <TeeScreen
+        location={location}
+        showNativeMap={showNativeMap}
+        mapRef={mapRef}
+        windDeg={effectiveWindDeg}
+        windCardinal={windCardinal}
+        windCondition={windCondition}
+        windRelation={windRelation}
+        windDirOverride={windDirOverride}
+        setShowWindOverride={setShowWindOverride}
+        basketBearing={basketBearing}
+        teePin={teePin}
+        basketPin={basketPin}
+        selectedCourse={selectedCourse}
+        selectedHole={selectedHole}
+        currentRound={currentRound}
+        activeTee={activeTee}
+        currentPar={currentPar}
+        bagRanked={bagRanked}
+        selectedDisc={selectedDisc}
+        setSelectedDisc={setSelectedDisc}
+        showCaddy={showCaddy}
+        setShowCaddy={setShowCaddy}
+        recommendations={recommendations}
+        recsLoading={recsLoading}
+        hazardScore={hazardScore}
+        hazards={hazards}
+        throwType={throwType}
+        setThrowType={setThrowType}
+        holeStrokes={holeStrokes}
+        setHoleStrokes={setHoleStrokes}
+        logging={logging}
+        logThrow={logThrow}
+        endRound={endRound}
+        startRound={startRound}
+        roundThrows={roundThrows}
+        COURSE_NAMES={COURSE_NAMES}
+        throws={throws}
+        parDisplay={parDisplay}
+        parColor={parColor}
+        holeVsPar={holeVsPar}
+        holeParLabel={holeParLabel}
+        setShowBagAll={setShowBagAll}
+        selectedTee={selectedTee}
+        setSelectedTee={setSelectedTee}
+      />
 
       {/* Round start modal — hole range + tee selection */}
       {showRoundModal && (() => {
