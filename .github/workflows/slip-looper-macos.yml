@@ -1,0 +1,57 @@
+name: SlipLoop macOS build
+
+# Builds the SlipLoop VST3 + AU (Universal: Apple Silicon + Intel), runs the
+# engine tests, validates with auval + pluginval, and uploads the plugins.
+# Only runs when slip-looper/ changes — does not touch the Dialed app.
+on:
+  push:
+    paths: [ "slip-looper/**", ".github/workflows/slip-looper-macos.yml" ]
+  pull_request:
+    paths: [ "slip-looper/**", ".github/workflows/slip-looper-macos.yml" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        run: cmake -S slip-looper -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --config Release -j 4
+
+      - name: Engine tests
+        run: ctest --test-dir build --output-on-failure
+
+      - name: Install for validation
+        run: |
+          mkdir -p ~/Library/Audio/Plug-Ins/Components ~/Library/Audio/Plug-Ins/VST3
+          cp -R build/SlipLoop_artefacts/Release/AU/SlipLoop.component ~/Library/Audio/Plug-Ins/Components/
+          cp -R build/SlipLoop_artefacts/Release/VST3/SlipLoop.vst3 ~/Library/Audio/Plug-Ins/VST3/
+          lipo -info build/SlipLoop_artefacts/Release/VST3/SlipLoop.vst3/Contents/MacOS/SlipLoop
+          killall -9 AudioComponentRegistrar || true
+
+      - name: auval
+        run: auval -v aufx Slp1 Slpl
+
+      - name: pluginval
+        run: |
+          curl -sSL -o pluginval.zip https://github.com/Tracktion/pluginval/releases/download/v1.0.4/pluginval_macOS.zip
+          unzip -q pluginval.zip
+          ./pluginval.app/Contents/MacOS/pluginval --strictness-level 10 --validate-in-process \
+            --validate ~/Library/Audio/Plug-Ins/VST3/SlipLoop.vst3
+
+      - name: Package
+        run: |
+          cd build/SlipLoop_artefacts/Release
+          ditto -c -k --keepParent VST3/SlipLoop.vst3 ../../../SlipLoop-VST3.zip
+          ditto -c -k --keepParent AU/SlipLoop.component ../../../SlipLoop-AU.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SlipLoop-macOS-universal
+          path: |
+            SlipLoop-VST3.zip
+            SlipLoop-AU.zip
